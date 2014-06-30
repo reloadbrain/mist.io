@@ -85,6 +85,7 @@ define( 'app', [
     'app/views/monitoring',
     'app/views/rule',
     'app/views/rule_edit',
+    'app/views/side_menu',
     'app/views/user_menu',
     'ember'
 ], function($,
@@ -148,6 +149,7 @@ define( 'app', [
     MonitoringView,
     RuleView,
     RuleEditView,
+    SideMenuView,
     UserMenuView) {
 
     function initialize() {
@@ -298,6 +300,7 @@ define( 'app', [
         App.set('keyEditView', KeyEditDialog);
         App.set('backendAddView', BackendAdd);
         App.set('ruleEditView', RuleEditView);
+        App.set('sideMenuView', SideMenuView);
         App.set('metricAddView', MetricAddView);
         App.set('backendEditView', BackendEdit);
         App.set('imageListView', ImageListView);

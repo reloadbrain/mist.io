@@ -36,6 +36,7 @@ if (!JS_BUILD) {
     'text!app/templates/monitoring.html',
     'text!app/templates/rule.html',
     'text!app/templates/rule_edit.html',
+    'text!app/templates/side_menu.html',
     'text!app/templates/user_menu.html',
     'ember'],
   function() {
@@ -73,7 +74,8 @@ if (!JS_BUILD) {
     Ember.TEMPLATES['monitoring/html'] = Ember.Handlebars.compile(arguments[31]);
     Ember.TEMPLATES['rule/html'] = Ember.Handlebars.compile(arguments[32]);
     Ember.TEMPLATES['rule_edit/html'] = Ember.Handlebars.compile(arguments[33]);
-    Ember.TEMPLATES['user_menu/html'] = Ember.Handlebars.compile(arguments[34]);
+    Ember.TEMPLATES['side_menu/html'] = Ember.Handlebars.compile(arguments[34]);
+    Ember.TEMPLATES['user_menu/html'] = Ember.Handlebars.compile(arguments[35]);
   });
   return;
 }
@@ -3347,6 +3349,15 @@ function program5(depth0,data) {
     'target': ("view")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(">Save</a>\n            </div>\n        </div>\n    </div>\n</div>\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES["side_menu/html"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '';
+
+
   return buffer;
   
 });
