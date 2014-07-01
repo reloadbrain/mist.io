@@ -3,7 +3,9 @@
     width: 260px;
     left: 0;
     float: left;
+    position: fixed;
     height: 100%;
+    overflow: scroll;
 }
 #side-menu-btn {
     display: none;
