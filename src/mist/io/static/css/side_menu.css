@@ -41,4 +41,7 @@
     #side-menu-btn {
         display: block;
     }
+    #side-menu {
+        left: -260px;
+    }
 }

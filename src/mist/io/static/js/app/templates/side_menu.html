@@ -3,7 +3,14 @@
     ui-panel-display-overlay ui-body-b ui-panel-animate ui-panel-open">
 
     <div class="ui-panel-inner">
-        <ul data-role="listview" data-inset="true">
+
+        <!--
+
+            NAVIGATION
+
+        -->
+
+        <ul id="side-menu-navigation" data-role="listview" data-inset="true">
             <li data-icon="false">
                 {{#link-to "index"}}Home{{/link-to}}
             </li>
@@ -29,6 +36,18 @@
                 {{/link-to}}
             </li>
         </ul>
+
+
+        <!--
+
+            MACHINE CONTROLS
+
+        -->
+
+
+        <div id="side-menu-machine">
+
+        </div>
     </div>
 </div>
 
