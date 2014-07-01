@@ -3,7 +3,32 @@
     ui-panel-display-overlay ui-body-b ui-panel-animate ui-panel-open">
 
     <div class="ui-panel-inner">
-        stuff
+        <ul data-role="listview" data-inset="true">
+            <li data-icon="false">
+                {{#link-to "index"}}Home{{/link-to}}
+            </li>
+            <li data-icon="false">
+                {{#link-to "machines"}}Machines
+                    <span class="ui-li-count">
+                        {{Mist.backendsController.machineCount}}
+                    </span>
+                {{/link-to}}
+            </li>
+            <li data-icon="false">
+                {{#link-to "images"}}Images
+                    <span class="ui-li-count">
+                        {{Mist.backendsController.imageCount}}
+                    </span>
+                {{/link-to}}
+            </li>
+            <li data-icon="false">
+                {{#link-to "keys"}}Keys
+                    <span class="ui-li-count">
+                        {{Mist.keysController.content.length}}
+                    </span>
+                {{/link-to}}
+            </li>
+        </ul>
     </div>
 </div>
 

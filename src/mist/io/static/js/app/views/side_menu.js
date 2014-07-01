@@ -29,10 +29,10 @@ define('app/views/side_menu', ['app/views/controlled'],
             //
 
 
-            init: function () {
-                this._super();
+            load: function () {
+                this._renderPanel();
                 this._handleWindowResize();
-            },
+            }.on('didInsertElement'),
 
 
             //
@@ -52,6 +52,20 @@ define('app/views/side_menu', ['app/views/controlled'],
             close: function () {
                 $(this.element).css('left', '-' + $(this.element).width() + 'px');
                 $(this.elementOverlay).hide();
+            },
+
+
+            //
+            //
+            // Pseudo-Private Methods
+            //
+            //
+
+
+            _renderPanel: function () {
+                Ember.run.later(this, function () {
+                    $(this.element).trigger('create');
+                }, 500);
             },
 
 
