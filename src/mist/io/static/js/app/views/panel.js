@@ -71,6 +71,7 @@ define('app/views/panel', ['app/views/controlled'],
 
 
             handlePanelWidth: function () {
+                info('fuck');
                 $('.ui-panel-dismiss-position-right').css('right',
                     $('.ui-panel-position-right.ui-panel-open').width()
                 );
@@ -78,6 +79,7 @@ define('app/views/panel', ['app/views/controlled'],
 
 
             handlePageHeight: function () {
+                info('fock');
                 Ember.run.next(function () {
                     var panelHeight = $('.ui-panel-open').height(),
                         pageHeight = $('.ui-page-active').height();

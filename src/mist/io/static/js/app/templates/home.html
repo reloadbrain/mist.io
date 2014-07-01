@@ -3,6 +3,7 @@
     <div data-role="header" data-theme="b">
 
         <h1>mist.io</h1>
+        {{view Mist.sideMenuButtonView}}
         {{view Mist.userMenuView}}
 
     </div>
@@ -34,7 +35,7 @@
                     <span class="ui-li-count">{{Mist.backendsController.machineCount}}</span>
                 {{/link-to}}
             </li>
-            
+
             <li>
                 {{#link-to "images"}}Images
                     {{#if Mist.backendsController.loadingImages}}
