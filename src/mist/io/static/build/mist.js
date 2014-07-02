@@ -55,8 +55,8 @@ code.google.com/p/crypto-js/wiki/License
    * @api public
    */
 
-/*	SWFObject v2.2 <http://code.google.com/p/swfobject/> 
-	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+/*	SWFObject v2.2 <http://code.google.com/p/swfobject/>
+	is released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
 */
 
 // Copyright: Hiroshi Ichikawa <http://gimite.net/en/>

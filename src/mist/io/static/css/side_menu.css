@@ -1,0 +1,47 @@
+#side-menu {
+    transition: 0.5s;
+    width: 260px;
+    left: 0;
+    float: left;
+    position: fixed;
+    height: 100%;
+    overflow: scroll;
+}
+#side-menu-btn {
+    display: none;
+}
+
+#side-menu-overlay {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: none;
+}
+
+.ui-page > .ui-header {
+    transition: 0.5s;
+    margin-left: 260px;
+}
+.ui-page > .ui-content {
+    transition: 0.5s;
+    margin-left: 260px;
+}
+
+@media only screen and (max-width: 700px) {
+
+    .ui-page > .ui-header {
+        margin-left: 0;
+    }
+    .ui-page > .ui-content {
+        margin-left: 0;
+    }
+    #side-menu-btn {
+        display: block;
+    }
+    #side-menu {
+        left: -260px;
+    }
+}

@@ -51,6 +51,7 @@ define( 'app', [
     'app/controllers/notification',
     'app/controllers/rule_edit',
     'app/controllers/rules',
+    'app/controllers/side_menu',
     'app/templates/templates',
     'app/views/backend_add',
     'app/views/backend_button',
@@ -87,6 +88,8 @@ define( 'app', [
     'app/views/monitoring',
     'app/views/rule',
     'app/views/rule_edit',
+    'app/views/side_menu',
+    'app/views/side_menu_button',
     'app/views/user_menu',
     'ember'
 ], function($,
@@ -114,6 +117,7 @@ define( 'app', [
     NotificationController,
     RuleEditController,
     RulesController,
+    SideMenuController,
     TemplatesBuild,
     BackendAdd,
     BackendButton,
@@ -150,6 +154,8 @@ define( 'app', [
     MonitoringView,
     RuleView,
     RuleEditView,
+    SideMenuView,
+    SideMenuButtonView,
     UserMenuView) {
 
     function initialize() {
@@ -315,6 +321,7 @@ define( 'app', [
         App.set('keyEditView', KeyEditDialog);
         App.set('backendAddView', BackendAdd);
         App.set('ruleEditView', RuleEditView);
+        App.set('sideMenuView', SideMenuView);
         App.set('metricAddView', MetricAddView);
         App.set('backendEditView', BackendEdit);
         App.set('imageListView', ImageListView);
@@ -333,6 +340,7 @@ define( 'app', [
         App.set('machinePowerView', MachinePowerView);
         App.set('machineShellView', MachineShellView);
         App.set('machineListItemView', MachineListItem);
+        App.set('sideMenuButtonView', SideMenuButtonView);
         App.set('confirmationDialog', ConfirmationDialog);
         App.set('metricAddCustomView', MetricAddCustomView);
         App.set('machineKeysListItemView', MachineKeysListItemView);
@@ -349,6 +357,7 @@ define( 'app', [
         App.set('metricsController', MetricsController.create());
         App.set('keyEditController', KeyEditController.create());
         App.set('ruleEditController', RuleEditController.create());
+        App.set('sideMenuController', SideMenuController.create());
         App.set('backendsController', BackendsController.create());
         App.set('metricAddController', MetricAddController.create());
         App.set('fileUploadController', FileUploadController.create());
