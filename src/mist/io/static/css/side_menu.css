@@ -1,7 +1,8 @@
 #side-menu {
-    transition: 0.5s;
+    transition:;
     width: 260px;
     left: 0;
+    top: 2.8em;
     float: left;
     position: fixed;
     height: 100%;
@@ -21,20 +22,12 @@
     display: none;
 }
 
-.ui-page > .ui-header {
-    transition: 0.5s;
-    margin-left: 260px;
-}
 .ui-page > .ui-content {
-    transition: 0.5s;
     margin-left: 260px;
 }
 
 @media only screen and (max-width: 700px) {
 
-    .ui-page > .ui-header {
-        margin-left: 0;
-    }
     .ui-page > .ui-content {
         margin-left: 0;
     }
@@ -42,6 +35,8 @@
         display: block;
     }
     #side-menu {
+        transition: 0.5s;
         left: -260px;
+        top: 0;
     }
 }
