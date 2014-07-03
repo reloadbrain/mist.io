@@ -1,11 +1,14 @@
 #side-menu {
-    transition: 0.5s;
+    transition:;
     width: 260px;
+    box-shadow: none;
     left: 0;
+    top: 2.8em;
     float: left;
-    position: fixed;
+    position: absolute;
     height: 100%;
     overflow: scroll;
+    background-color: #EEE;
 }
 #side-menu-btn {
     display: none;
@@ -13,7 +16,7 @@
 
 #side-menu-overlay {
     height: 100%;
-    position: absolute;
+    position: fixed;
     width: 100%;
     top: 0;
     left: 0;
@@ -21,27 +24,24 @@
     display: none;
 }
 
-.ui-page > .ui-header {
-    transition: 0.5s;
-    margin-left: 260px;
-}
-.ui-page > .ui-content {
-    transition: 0.5s;
+.ui-page > .ui-content,
+.single-machine-header {
     margin-left: 260px;
 }
 
 @media only screen and (max-width: 700px) {
 
-    .ui-page > .ui-header {
-        margin-left: 0;
-    }
-    .ui-page > .ui-content {
+    .ui-page > .ui-content,
+    .single-machine-header {
         margin-left: 0;
     }
     #side-menu-btn {
         display: block;
     }
     #side-menu {
+        transition: 0.5s;
+        box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.4);
         left: -260px;
+        top: 0;
     }
 }

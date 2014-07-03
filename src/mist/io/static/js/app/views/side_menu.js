@@ -63,9 +63,13 @@ define('app/views/side_menu', ['app/views/controlled'],
 
 
             _renderPanel: function () {
-                Ember.run.later(this, function () {
+                Ember.run.next(this, function () {
                     $(this.element).trigger('create');
-                }, 500);
+                    if (!$('#side-menu-navigation').hasClass('ui-listview'))
+                        Ember.run.later(this, function () {
+                            this._renderPanel();
+                        }, 100);
+                });
             },
 
 
