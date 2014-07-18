@@ -33,9 +33,16 @@ define('app/controllers/machines', ['app/models/machine'],
              *
              */
 
-            load: function() {
-                if (!this.backend.enabled) return;
-                this.set('loading', true);                
+            init: function () {
+                this._super();
+                this.set('content', []);
+                this.set('loadint', true);
+            },
+
+
+            load: function (machines) {
+                this._updateContent(machines);
+                this.set('loading', false);
             },
 
 
@@ -178,15 +185,6 @@ define('app/controllers/machines', ['app/models/machine'],
             },
 
 
-            clear: function() {
-                Ember.run(this, function() {
-                    this.set('content', []);
-                    this.set('loading', false);
-                    this.trigger('onMachineListChange');
-                });
-            },
-
-
             getMachine: function(machineId) {
                 return this.content.findBy('id', machineId);
             },
@@ -197,18 +195,11 @@ define('app/controllers/machines', ['app/models/machine'],
             },
 
 
-
             /**
              *
              *  Pseudo-Private Methods
              *
              */
-
-            _reload: function() {
-                Ember.run.later(this, function() {
-                    this.load();
-                }, this.backend.poll_interval);
-            },
 
 
             _updateContent: function(machines) {
@@ -252,11 +243,6 @@ define('app/controllers/machines', ['app/models/machine'],
                                 if (attr == 'pubic_ips') continue;
                                 old_machine.set(attr, machine[attr]);
                             }
-
-                            // Set machine on probing loop
-                            if (prevState != 'running'
-                                && machine.state == 'running')
-                                    old_machine.probe();
 
                         } else {
 

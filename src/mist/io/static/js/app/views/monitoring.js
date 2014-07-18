@@ -61,7 +61,6 @@ define('app/views/monitoring', ['app/views/templated'],
             setUpGraphs: function () {
                 this.renderControls();
                 this.handleWindowResize();
-                Mist.rulesController.redrawRules();
                 Mist.monitoringController.initGraphs({
                     graphs: this.graphs,
                     machineModel: this.machine
@@ -74,7 +73,8 @@ define('app/views/monitoring', ['app/views/templated'],
                 $(window).on('resize', function () {
                     var newWidth = $('#GraphsArea').width() - 2;
                     that.graphs.forEach(function (graph) {
-                        graph.view.changeWidth(newWidth);
+                        if (graph.view)
+                            graph.view.changeWidth(newWidth);
                     });
                 });
             },

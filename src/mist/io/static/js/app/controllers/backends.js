@@ -1,15 +1,22 @@
-define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'ember'],
-    /**
-     *  Backends Controller
-     *
-     *  @returns Class
-     */
-    function(Backend, Rule) {
+define('app/controllers/backends', ['app/models/backend', 'ember'],
+    //
+    //  Backends Controller
+    //
+    //  @returns Class
+    //
+    function (Backend) {
+
+        'use strict';
+
         return Ember.ArrayController.extend(Ember.Evented, {
 
-            /**
-             *  Properties
-             */
+
+            //
+            //
+            //  Properties
+            //
+            //
+
 
             content: [],
             imageCount: 0,
@@ -23,31 +30,39 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
             checkedMonitoring: false,
             checkingMonitoring: false,
 
-            loading: false,
+            loading: true,
             loadingImages: false,
             loadingMachines: false,
 
-            /**
-             *
-             *  Initialization
-             *
-             */
 
-            load: function() {
-                var that = this;
-                this.set('loading', true);
-            }.on('init'),
+            //
+            //
+            //  Initialization
+            //
+            //
 
 
-            /**
-             *
-             *  Methods
-             *
-             */
+            load: function (backends) {
+                this._updateContent(backends);
+                this.set('loading', false);
+                // <TODO (gtsop): Move this into app.js
+                $('#splash').fadeOut(650);
+                // />
+            },
 
-            addBackend: function(title, provider, apiKey, apiSecret, apiUrl,
+
+            //
+            //
+            //  Methods
+            //
+            //
+
+
+            // <TODO (gtsop): THIS IS UGLY! use an args object instead
+            addBackend: function (title, provider, apiKey, apiSecret, apiUrl,
                                  region, tenant, computeEndpoint, dockerUrl,
                                  port, key, callback) {
+            // />
                 var that = this;
                 this.set('addingBackend', true);
                 Mist.ajax.POST('/backends', {
@@ -65,7 +80,7 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
                     'machine_ip'  : apiKey,    // For bare-metal
                     'machine_user': apiSecret  // For bare-metal
                 }).success(function(backend) {
-                    that._addBackend(backend, key);
+                    //that._addBackend(backend, key);
                 }).error(function(message) {
                     Mist.notificationController.notify('Failed to add backend: ' + message);
                 }).complete(function(success, backend) {
@@ -144,17 +159,18 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
                 Mist.ajax.POST('/backends/' + machine.backend.id + '/machines/' + machine.id + '/probe', {
                     'host': host,
                     'key': keyId
-                }).success(machine.probeSuccess).error(function(message) {
+                }).success(function (data) {
+                    machine.probeSuccess(data);
+                }).error(function(message) {
                     if (!machine.backend || !machine.backend.enabled) return;
                     if (key) Mist.notificationController.notify(message);
                 }).complete(function(success, data) {
                     if (!machine.backend || !machine.backend.enabled) return;
-                    if (key) {
+                    if (key)
                         key.set('probing', false);
-                    }
                     machine.set('probing', false);
                     that.trigger('onMachineProbe');
-                    if (callback) callback(!!uptime, data);
+                    if (callback) callback(!!data.uptime, data);
                 });
             },
 
@@ -169,6 +185,7 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
                 this.set('machineCount', count);
                 this.trigger('updateMachines');
             }.observes('content.length'),
+
 
             updateImageCount: function() {
                 var count = 0;
@@ -223,29 +240,37 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
             },
 
 
-            /**
-             *
-             *  Psudo-Private Methods
-             *
-             */
-
-            _reload: function() {
-                Ember.run.later(this, function() {
-                    this.load();
-                }, 2000);
-            },
+            //
+            //
+            //  Psudo-Private Methods
+            //
+            //
 
 
-            _setContent: function(backends) {
-                var that = this;
-                Ember.run(function() {
-                    that.set('content', []);
-                    backends.forEach(function(backend) {
-                        if (backend.provider == 'bare_metal')
-                            backend.isBareMetal = true;
-                        that.content.pushObject(Backend.create(backend));
-                    });
-                    that.trigger('onBackendListChange');
+            _updateContent: function (backends) {
+                Ember.run(this, function() {
+
+                    // Remove deleted backends
+                    this.content.forEach(function (backend) {
+                        if (!backends.findBy('id', backend.id))
+                            this.content.removeObject(backend);
+                    }, this);
+
+                    backends.forEach(function (backend) {
+
+                        var oldBackend = this.getBackend(backend.id);
+
+                        if (oldBackend)
+                            // Update existing backends
+                            forIn(backend, function (value, property) {
+                                oldBackend.set(property, value);
+                            });
+                        else
+                            // Add new backends
+                            this._addBackend(backend);
+                    }, this);
+
+                    this.trigger('onBackendListChange');
                 });
             },
 
@@ -254,13 +279,14 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
                 Ember.run(this, function() {
                     var backendModel = Backend.create(backend);
                     this.content.pushObject(backendModel);
+                    // <TODO (gtsop): move this code into backend model
                     backendModel.one('onMachineListChange', function() {
                         if (backendModel.provider == 'bare_metal') {
                             backendModel.set('isBareMetal', true);
                             Mist.keysController._associateKey(keyId, backendModel.machines.content[0]);
                         }
                     });
-                    this.trigger('onBackendListChange');
+                    // />
                     this.trigger('onBackendAdd');
                 });
             },
@@ -269,7 +295,6 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
             _deleteBackend: function(id) {
                 Ember.run(this, function() {
                     this.content.removeObject(this.getBackend(id));
-                    this.trigger('onBackendListChange');
                     this.trigger('onBackendDelete');
                 });
             },
@@ -316,24 +341,14 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
 
 
             _updateLoadingImages: function() {
-                Ember.run(this, function() {
-                    var loadingImages = false;
-                    this.content.some(function(backend) {
-                        if (backend.loadingImages) return loadingImages = true;
-                    });
-                    this.set('loadingImages', loadingImages);
-                });
+                this.set('loadingImages',
+                    !!this.content.findBy('loadingImages', true));
             },
 
 
             _updateLoadingMachines: function() {
-                Ember.run(this, function() {
-                    var loadingMachines = false;
-                    this.content.some(function(backend) {
-                        if (backend.loadingMachines) return loadingMachines = true;
-                    });
-                    this.set('loadingMachines', loadingMachines);
-                });
+                this.set('loadingMachines',
+                    !!this.content.findBy('loadingMachines', true));
             },
 
 
@@ -349,11 +364,12 @@ define('app/controllers/backends', ['app/models/backend', 'app/models/rule', 'em
             },
 
 
-            /**
-             *
-             *  Observers
-             *
-             */
+            //
+            //
+            //  Observers
+            //
+            //
+
 
             imageCountObserver: function() {
                 Ember.run.once(this, '_updateImageCount');

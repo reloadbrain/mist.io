@@ -176,18 +176,11 @@ define( 'app', [
 
             App.set('isJQMInitialized',true);
 
-            initSocket();
-            setInterval(function() {
-                if (Mist.socket == undefined){
-                    warn('socket undefined! Initializing...');
-                    initSocket();
-                } else if (!Mist.socket.socket.connected){
-                    warn('Socket not connected! Connecting...');
-                    Mist.socket.socket.connect();
-                    if (Mist.socket.socket.connected)
-                        Mist.socket.emit('ready');
-                }
-            }, 1000);
+            Mist.set('socket', Socket({
+                namespace: '/mist',
+                onInit: initSocket,
+            }));
+
         });
 
         // Hide error boxes on page unload
@@ -208,6 +201,7 @@ define( 'app', [
 
         // Globals
 
+        App.set('debugSocket', false);
         App.set('isCore', !!IS_CORE);
         App.set('authenticated', AUTH || IS_CORE);
         App.set('ajax', new AJAX(CSRF_TOKEN));
@@ -384,8 +378,6 @@ define( 'app', [
                 'disabled'
             ]
         });
-
-
         App.TextArea = Ember.TextArea.extend({
             autocapitalize: 'off',
             attributeBindings: [
@@ -421,41 +413,17 @@ define( 'app', [
                 }
             }
         });
-        App.ShellTextField = App.TextField.extend({
-
-            keyDown: function(event, view) {
-                var keyCode = event.keyCode;
-                var commandHistoryIndex = Mist.machineShellController.commandHistoryIndex;
-                var commandHistory = Mist.machineShellController.machine.commandHistory;
-                switch (keyCode) {
-                    case 38: // Up
-                        if (commandHistoryIndex < commandHistory.length - 1) {
-                            commandHistoryIndex++;
-                        }
-                        Mist.machineShellController.set('command', commandHistory[commandHistoryIndex].command);
-                        Mist.machineShellController.set('commandHistoryIndex', commandHistoryIndex);
-                        break;
-                    case 40: // Down
-                        if (commandHistoryIndex >= 0) {
-                            commandHistoryIndex--;
-                        }
-                        if (commandHistoryIndex >= 0) {
-                            Mist.machineShellController.set('command', commandHistory[commandHistoryIndex].command);
-                        } else if (commandHistoryIndex == -1) {
-                            Mist.machineShellController.set('command', '');
-                        }
-                        Mist.machineShellController.set('commandHistoryIndex', commandHistoryIndex);
-                        break;
-                    case 13: // Enter
-                        Mist.machineShellController.submit();
-                        break;
-                }
-                if (keyCode == 38 || keyCode == 40 && event.preventDefault) // Up or Down
-                    event.preventDefault();
-            }
-        });
 
         // Mist functions
+
+        App.prettyTime = function(date) {
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            return (hour < 10 ? '0' : '') + hour + ':' +
+                (min < 10 ? '0' : '') + min + ':' +
+                (sec < 10 ? '0' : '') + sec;
+        };
 
         App.getKeyIdByUrl = function() {
             return window.location.href.split('/')[5];
@@ -761,6 +729,100 @@ define( 'app', [
     preloadImages(initialize);
 });
 
+/**
+ *
+ *  Socket wrapper
+ *
+ */
+
+function Socket (args) {
+
+    var socket = undefined;
+    var initialized = false;
+    var namespace = args.namespace;
+
+    function init () {
+        if (!initialized) {
+            info(namespace, 'initializing');
+            handleDisconnection();
+            addDebuggingWrapper();
+        }
+        if (args.onInit instanceof Function)
+            args.onInit(socket, initialized);
+        initialized = true;
+    };
+
+    function connect () {
+
+        if (socket === undefined) {
+            socket = io.connect(namespace);
+            reconnect();
+        } else if (socket.socket.connected) {
+            info(namespace, 'connected');
+            init();
+        } else if (socket.socket.connecting) {
+            info(namespace, 'connecting');
+            reconnect();
+        } else {
+            socket.socket.connect();
+            reconnect();
+        }
+    }
+
+    function reconnect () {
+        setTimeout(connect, 500);
+    }
+
+    function handleDisconnection () {
+
+        // keep socket connections alive by default
+        if (args.keepAlive !== undefined ? args.keepAlive : true) {
+            // Reconnect if connection fails
+            socket.on('disconnect', function () {
+                warn(namespace, 'disconnected');
+                reconnect();
+            });
+        }
+    }
+
+    function addDebuggingWrapper () {
+
+        // This process basically overrides the .on()
+        // function to enable debugging info on every
+        // response received by the client
+
+        // 1. keep a copy of the original socket.on() function
+        var sockon = socket.on;
+
+        // 2. overide the socket's .on() function
+        socket.on = function (event, callback)  {
+
+            // i. keep a copy of the original callback
+            // This is the function written by us to handle
+            // the response data
+            var cb = callback;
+
+            // ii. overide callback to first print the debugging
+            // information and then call the original callback function
+            // (which is saved in cb variable)
+            callback = function (data) {
+                if (Mist.debugSocket)
+                    info(Mist.prettyTime(new Date()) +
+                        ' | ' + namespace + '/' + event + ' ', data);
+                cb(data);
+            };
+
+            // iii. Call the original .on() function using the modified
+            // callback function
+            return sockon.apply(socket, arguments);
+        };
+    }
+
+    connect();
+
+    return socket;
+}
+
 //LOGLEVEL comes from home python view and home.pt
 function log() {
     try {
@@ -794,133 +856,64 @@ function error() {
     } catch(err) {console.log(err);}
 }
 
+function initSocket (socket, initialized) {
 
-function appendShell(output, command_id) {
-
-    var machine = Mist.machineShellController.machine;
-
-    if (!machine) return;
-
-    var command = machine.commandHistory.findBy('id', command_id);
-
-    if (!command) return;
-
-    // Replace break with new line
-    var output = output.trim().replace('<br/>', String.fromCharCode(13));
-
-    if (output.length)
-        warn(Date() + ': ' + output);
-
-    command.set('response', command.response + output);
-    Ember.run.next(function(){
-        $('.output').scrollTop(1000000);
-    });
-}
-
-function completeShell(ret, command_id) {
-    $('iframe#' + command_id).remove();
-    Mist.machineShellController.machine.commandHistory.findBy('id', command_id).set('pendingResponse', false);
-}
-
-function getTemplate(name) {
-    if (JS_BUILD || true) { // The "|| true" part is just for debuging as for now
-        //info('Getting precompiled template for: ' + name);
-        // Return precompiled template
-        return Ember.TEMPLATES[name + '/html'];
-    } else {
-        info('Compiling template for: ' + name);
-        return Ember.Handlebars.compile('text!app/templates/'+ name + '.html');
-    }
-};
-
-function initSocket() {
-    warn('Socket init');
-    var sock = undefined, retry = 0;
-    while (!sock) {
-        sock = io.connect('/mist');
-        retry += 1;
-        if (retry > 5){
-            alert('failed to connect after ' + retry + ' retries');
-            return false;
-        }
-    }
-
-    Mist.set('socket', sock);
-
-    Mist.socket.emit('ready');
-
-    Mist.socket.on('list_backends', function(backends){
-        Mist.backendsController._setContent(backends);
-        Mist.backendsController.set('loading', false);
-        $('#splash').fadeOut(650);
-    });
-
-    Mist.socket.on('list_keys', function(keys){
-        Mist.keysController._setContent(keys);
-        Mist.keysController.set('loading', false);
-    });
-
-    Mist.socket.on('list_sizes', function(data){
-        var backend = Mist.backendsController.getBackend(data.backend_id);
-        if (backend) {
-            backend.get('sizes')._setContent(data.sizes);
-            backend.get('sizes').set('loading', false);
-        }
-    });
-
-    Mist.socket.on('list_locations', function(data){
-        var backend = Mist.backendsController.getBackend(data.backend_id);
-        if (backend) {
-            backend.get('locations')._setContent(data.locations);
-            backend.get('locations').set('loading', false);
-            backend.set('loadingLocations', false);
-        }
-    });
-
-    Mist.socket.on('list_images', function(data){
-        var backend = Mist.backendsController.getBackend(data.backend_id);
-        if (backend) {
-            backend.get('images')._setContent(data.images);
-            backend.get('images').set('loading', false);
-        }
-    });
-
-    Mist.socket.on('list_machines', function(data){
-        Ember.run.next(function(){
+    if (!initialized) {
+        socket.on('list_keys', function (keys) {
+            Mist.keysController.load(keys);
+        })
+        .on('list_backends', function (backends) {
+            Mist.backendsController.load(backends);
+        })
+        .on('list_sizes', function (data) {
             var backend = Mist.backendsController.getBackend(data.backend_id);
-            if (backend) {
-                backend.get('machines')._updateContent(data.machines);
-                backend.get('machines').set('loading', false);
+            if (backend)
+                backend.sizes.load(data.sizes);
+        })
+        .on('list_images', function (data) {
+            var backend = Mist.backendsController.getBackend(data.backend_id);
+            if (backend)
+                backend.images.load(data.images);
+        })
+        .on('list_machines', function (data) {
+            var backend = Mist.backendsController.getBackend(data.backend_id);
+            if (backend)
+                backend.machines.load(data.machines);
+        })
+        .on('list_locations', function (data) {
+            var backend = Mist.backendsController.getBackend(data.backend_id);
+            if (backend)
+                backend.locations.load(data.locations);
+        })
+        .on('monitoring',function(data){
+            Mist.monitoringController._updateMonitoringData(data);
+            Mist.monitoringController.trigger('onMonitoringDataUpdate');
+            Mist.backendsController.set('checkedMonitoring', true);
+        })
+        .on('stats', function(data){
+            Mist.monitoringController.request.updateMetrics(
+                data.metrics, data.start, data.stop, data.requestID);
+        })
+        .on('notify',function(data){
+            if (data.message) {
+                Mist.notificationController.set('msgHeader', data.title);
+                Mist.notificationController.set('msgCmd', data.message.substr(1));
+                Mist.notificationController.showMessagebox();
+            } else {
+                Mist.notificationController.notify(data.title);
             }
+        })
+        .on('probe', onProbe)
+        .on('ping', onProbe);
+    }
 
-        });
-    });
+    socket.emit('ready');
 
-    Mist.socket.on('probe', function(data){
-        Ember.run.next(function(){
-            var machine = Mist.backendsController.getMachine(data.machine_id, data.backend_id);
-            if (machine)
-                machine.probeSuccess(data.result);
-        });
-    });
-
-    Mist.socket.on('monitoring',function(data){
-        Mist.monitoringController._updateMonitoringData(data);
-        Mist.monitoringController.trigger('onMonitoringDataUpdate');
-        Mist.backendsController.set('checkedMonitoring', true);
-    });
-
-    Mist.socket.on('notify',function(data){
-        Mist.notificationController.notify(data);
-    });
-
-    Mist.socket.on('stats', function(data){
-        warn('stats!');
-        warn(data);
-        //var machine = Mist.backendsController.getMachine(data.machine_id, data.backend_id);
-        Mist.monitoringController.request.updateMetrics(data.metrics, data.start, data.stop, data.requestID);
-
-    });
+    function onProbe(data) {
+        var machine = Mist.backendsController.getMachine(data.machine_id, data.backend_id);
+        if (machine)
+            machine.probeSuccess(data.result);
+    }
 }
 
 
@@ -941,3 +934,15 @@ var virtualKeyboardHeight = function () {
     return keyboardHeight;
 };
 
+// forEach like function on objects
+function forIn () {
+
+    var object = arguments[arguments.length - 2];
+    var callback = arguments[arguments.length - 1];
+    var thisArg = arguments.length == 3 ? arguments[0] : undefined;
+
+    var keys = Object.keys(object);
+    var keysLength = keys.length;
+    for (var i = 0; i < keysLength; i++)
+        callback.call(thisArg, object[keys[i]], keys[i]);
+};

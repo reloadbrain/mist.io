@@ -1,26 +1,33 @@
 define('app/controllers/machine_shell', ['app/models/command', 'ember'],
-    /**
-     * Machine Shell Controller
-     *
-     * @returns Class
-     */
+    //
+    //  Machine Shell Controller
+    //
+    //  @returns Class
+    //
     function (Command) {
+
+        'use strict';
+
         return Ember.Object.extend(Ember.Evented, {
 
-            /**
-             *  Properties
-             */
 
-            command: null,
+            //
+            //
+            //  Properties
+            //
+            //
+
+
+            view: null,
             machine: null,
-            commandHistoryIndex: -1,
 
 
-            /**
-             *
-             *  Methods
-             *
-             */
+            //
+            //
+            //  Methods
+            //
+            //
+
 
             open: function (machine) {
                 this._clear();
@@ -28,93 +35,27 @@ define('app/controllers/machine_shell', ['app/models/command', 'ember'],
 
                 // Get the first ipv4 public ip to connect to
                 var host = '';
-                for (var i=0;i<machine.public_ips.length;i++){
-                    if (machine.public_ips[i].search(':') == -1){
-                        host = machine.public_ips[i];
-                    }
-
-                }
-                if (host == '')
-                    return false;
-
-                // Open shell socket, give it a few shots
-                var sock = undefined, retry = 0;
-                while (sock == undefined) {
-                    if (retry) {
-                        warn('retry ' + retry);
-                    }
-
-                    sock = io.connect('/shell');
-                    retry += 1;
-                    if (retry > 5){
-                        warn('failed to connect to shell socket after ' + retry + ' retries');
-                        return false;
-                    }
-                }
-
-                Mist.set('shell', sock);
-
-                $('.ui-footer').hide(500);
-                $('#machine-shell-popup').on('popupafteropen',
-                    function(){
-                        $('#machine-shell-popup').off('blur');
-                        $(document).off('focusin');
-                    }
-                ).popup( "option", "dismissible", false ).popup('open');
-
-                $(window).on('resize', function(){
-
-                    if (window.innerWidth/(window.innerHeight-virtualKeyboardHeight()) > 1.5){
-                        warn('height constrained');
-                        var height = window.innerHeight - Math.max(virtualKeyboardHeight()+70, 160);
-                        var h = Math.max(height, 130);
-                        var fontSize = Math.max(h/33, 6);
-                    } else {
-                        warn('width constrained');
-                        var width = window.innerWidth - 40;
-                        var w = Math.max(width, 200);
-                        var fontSize = Math.max((w-60)/47.6 , 6);
-                    }
-
-                    $('#shell-return').css('font-size', fontSize + 'px');
-                    var lineHeight = $('#shell-return').css('line-height').split('px')[0];
-                    fontSize = $('#shell-return').css('font-size').split('px')[0];
-
-                    // Set width & height
-                    $('#shell-return').height(24*lineHeight+20); // Makes some sense, right?
-                    $('#shell-return').width(fontSize*47.6+40); // Just because!
-
-                    // Put popup it in the center
-                    $('#machine-shell-popup-popup').css('left', ((window.innerWidth - $('#machine-shell-popup-popup').width())/2)+'px');
-
-                    if (Terminal._textarea){ // Tap should trigger resize on touchscreens
-                        $('#shell-return').bind('tap',function(){
-                            $(window).trigger('resize');
-                        });
-                    } else
-                        $('.terminal').focus();
-
-                    // Make the hidden textfield focusable on android
-                    if (Mist.term && Mist.term.isAndroid){
-                        $(Terminal._textarea).width('100%');
-                        $(Terminal._textarea).height($('#shell-return').height() + 60);
-                    }
-                    /*
-                    if (Terminal._textarea){
-                        $('html, body').animate({
-                                            scrollTop: $('#shell-return').offset().top+(Mist.term.y-5)*$('#shell-return').height()/24
-                                        }, 500);
-                    }*/
-
-                    return true;
+                machine.public_ips.forEach(function (ip) {
+                    if (ip.search(':') == -1)
+                        host = ip;
                 });
-                $(window).trigger('resize');
+                if (!host) {
+                    this.close();
+                    return;
+                }
+
+                // Open shell socket
+                Mist.set('shell', Socket({
+                    namespace: '/shell',
+                    keepAlive: false,
+                }));
 
                 var term = new Terminal({
                   cols: 80,
                   rows: 24,
                   screenKeys: true
                 });
+
                 term.on('data', function(data) {
                     Mist.shell.emit('shell_data', data);
                 });
@@ -137,29 +78,45 @@ define('app/controllers/machine_shell', ['app/models/command', 'ember'],
                 term.write('Connecting to ' + host + '...\r\n');
                 Mist.set('term', term);
 
+                Ember.run.next(function(){
+                    $(window).trigger('resize');
+                });
+
                 if(Terminal._textarea) {
                     // iOS virtual keyboard focus fix
                     $(document).off('focusin');
-                }
 
+                    // Tap should trigger resize on Android for virtual keyboard to appear
+                    if (Mist.term && Mist.term.isAndroid){
+                        $('#shell-return').bind('tap',function(){
+                            $(window).trigger('resize');
+                        });
+                    }
+                    $(Terminal._textarea).show();
+                }
+                this.view.open();
             },
 
             close: function () {
                 warn('closing shell');
-                Mist.shell.emit('shell_close');
-                Mist.term.destroy();
-                Mist.shell.disconnect();
-                $('#machine-shell-popup').popup('close');
-                $(window).off('resize');
-                this._clear();
-                $('.ui-footer').show(500);
+                this.view.close();
+                Ember.run.later(this, function () {
+                    Mist.shell.emit('shell_close');
+                    Mist.term.destroy();
+                    Mist.shell.disconnect();
+                    this._clear();
+                    if (Terminal._textarea)
+                        $(Terminal._textarea).hide();
+                }, 500);
             },
 
-            /**
-             *
-             *  Pseudo-Private Methods
-             *
-             */
+
+            //
+            //
+            //  Pseudo-Private Methods
+            //
+            //
+
 
             _clear: function () {
                 Ember.run(this, function () {
@@ -170,18 +127,7 @@ define('app/controllers/machine_shell', ['app/models/command', 'ember'],
 
             _giveCallback: function (success, action) {
                 if (this.callback) this.callback(success, action);
-            },
-
-
-            /**
-             *
-             *  Observers
-             *
-             */
-
-            machinesObserver: function () {
-                Ember.run.once(this, '_updateActions');
-            }.observes('machines')
+            }
         });
     }
 );
