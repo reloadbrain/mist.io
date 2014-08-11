@@ -47,6 +47,8 @@ def given_backend(context, backend):
         creds = "LINODE"
     elif "docker" in backend.lower():
         creds = "DOCKER"
+    elif "digitalocean" in backend.lower():
+        creds = "DIGITALOCEAN"
     else:
         assert False, u'Could not find credentials for %s' % backend
 
@@ -81,7 +83,7 @@ def backend_creds(context, backend):
         username_input.send_keys(context.credentials['HP']['username'])
         pass_input = context.browser.find_element_by_id("new-backend-second-field")
         pass_input.send_keys(context.credentials['HP']['password'])
-        tenant_input = context.browser.find_element_by_id("new-backend-openstack-tenant")
+        tenant_input = context.browser.find_element_by_id("new-backend-hpcloud-tenant")
         tenant_input.send_keys(context.credentials['HP']['tenant'])
     elif "SOFTLAYER" in backend:
         api_key_input = context.browser.find_element_by_id("new-backend-first-field")
@@ -106,6 +108,11 @@ def backend_creds(context, backend):
     elif "DOCKER" in backend:
         username_input = context.browser.find_element_by_id("new-backend-docker-url")
         username_input.send_keys(context.credentials['DOCKER']['host'])
+    elif "DIGITALOCEAN" in backend:
+        username_input = context.browser.find_element_by_id("new-backend-first-field")
+        username_input.send_keys(context.credentials['DIGITALOCEAN']['client_id'])
+        api_key_input = context.browser.find_element_by_id("new-backend-second-field")
+        api_key_input.send_keys(context.credentials['DIGITALOCEAN']['api_key'])
 
 
 @when(u'I rename the backend to "{new_name}"')

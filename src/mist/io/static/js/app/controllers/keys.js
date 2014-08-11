@@ -1,4 +1,4 @@
-define('app/controllers/keys', ['app/models/key'],
+define('app/controllers/keys', ['app/models/key' , 'ember'],
     //
     //  Keys Controller
     //
@@ -268,7 +268,7 @@ define('app/controllers/keys', ['app/models/key'],
             _addKey: function(key) {
                 Ember.run(this, function() {
                     if (this.keyExists(key.id)) return;
-                    this.content.pushObject(Key.create(key));
+                    this.content.addObject(Key.create(key));
                     this.trigger('onKeyAdd');
                 });
             },

@@ -38,12 +38,13 @@ define('app/controllers/rules', ['app/models/rule', 'ember'],
 
             _addRule: function (rule) {
                 Ember.run(this, function () {
+                    if (this.ruleExists(rule.id)) return;
                     rule.actionToTake = rule.action;
                     rule.operator = this.getOperatorByTitle(rule.operator);
                     rule.metric = Mist.metricsController.getMetric(rule.metric);
                     rule.machine = Mist.backendsController.getMachine(
                         rule.machine, rule.backend) || rule.machine;
-                    this.content.pushObject(Rule.create(rule));
+                    this.content.addObject(Rule.create(rule));
                     this.trigger('onRuleAdd');
                 });
             },
@@ -85,6 +86,11 @@ define('app/controllers/rules', ['app/models/rule', 'ember'],
 
                     this.trigger('onRuleListChange');
                 });
+            },
+
+
+            ruleExists: function (ruleId) {
+                return !!this.getRuleById(ruleId);
             },
 
 
