@@ -150,8 +150,8 @@ define('app/views/machine_add', ['app/views/templated', 'ember'],
                     $('#create-machine-key').addClass('ui-state-disabled');
                     $('#create-machine-network .ui-collapsible').addClass('ui-state-disabled');
 
-                    // Openstack networks
-                    if (backend.provider == 'openstack') {
+                    // Show networks
+                    if (backend.get('hasNetworks')) {
                         if (backend.networks.content.length > 0) {
                             $('#create-machine-network').show();
                             $('label[for=create-machine-script]').text('8. Script:');
