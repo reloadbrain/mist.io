@@ -37,10 +37,9 @@ define('app/controllers/backends', ['app/models/backend', 'ember'],
             loadingImages: false,
             loadingMachines: false,
 
-
-            hasOpenStack: function () {
-                return !!this.content.findBy('isOpenStack', true);
-            }.property('content.@each.isOpenStack'),
+            hasNetworks: function () {
+                return !!this.content.findBy('hasNetworks', true);
+            }.property('content.@each.hasNetworks'),
 
 
             //
@@ -382,7 +381,7 @@ define('app/controllers/backends', ['app/models/backend', 'ember'],
                 Ember.run(this, function() {
                     var counter = 0;
                     this.content.forEach(function (backend) {
-                        if (backend.enabled && backend.provider == 'openstack')
+                        if (backend.enabled && backend.get('hasNetworks'))
                             counter += backend.networkCount;
                     });
                     this.set('networkCount', counter);
