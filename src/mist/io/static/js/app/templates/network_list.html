@@ -29,7 +29,7 @@
             class="checkbox-list">
             {{#each Mist.backendsController.content}}
                 {{#if this.enabled}}
-                    {{#if this.isOpenStack}}
+                    {{#if this.hasNetworks}}
                       {{#each this.networks.content}}
                           {{view Mist.networkListItemView
                               networkBinding="this"
