@@ -38,6 +38,7 @@ define('app/views/network', ['app/views/mistscreen'],
                     this.updateCurrentNetwork();
                     if (this.network.id) {
                         this.updateExtra();
+                        this.renderSubnets();
                     }
                 });
             }.on('didInsertElement'),
@@ -58,16 +59,26 @@ define('app/views/network', ['app/views/mistscreen'],
             //
 
 
-            updateCurrentNetwork: function() {
+            updateCurrentNetwork: function () {
                 Ember.run(this, function() {
                     var network = Mist.backendsController.getRequestedNetwork();
                     if (network)
                         this.get('controller').set('model', network);
 
                     this.set('network', this.get('controller').get('model'));
+                    info('id', this.network.id)
                     if (this.network.id) {
                         this.updateExtra();
+                        this.renderSubnets();
                     }
+                });
+            },
+
+
+            renderSubnets: function () {
+                Ember.run.next(this, function () {
+                    if (this.network.get('hasSubnets'))
+                        $('#single-network-subnets').collapsible();
                 });
             },
 
@@ -104,6 +115,11 @@ define('app/views/network', ['app/views/mistscreen'],
             //
 
 
+            modelObserver: function() {
+                Ember.run.once(this, 'load');
+            }.observes('controller.model'),
+
+
             updateExtra: function () {
                 var newExtra = [];
                 if (this.network.extra instanceof Object)
@@ -117,7 +133,7 @@ define('app/views/network', ['app/views/mistscreen'],
                 Ember.run.next(function () {
                     $('#single-network-extra').collapsible();
                 });
-            }.observes('network.extra.@each'),
+            }.observes('network.extra.@each')
         });
     }
 );

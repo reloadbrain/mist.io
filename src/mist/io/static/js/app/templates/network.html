@@ -25,14 +25,17 @@
                     <td>Id</td>
                     <td>{{id}}</td>
                 </tr>
+                {{#if status}}
                 <tr>
                     <td>Status</td>
                     <td>{{status}}</td>
                 </tr>
+                {{/if}}
             </table>
 
         </div>
 
+        {{#if subnets.length}}
         <div id="single-network-subnets" data-role="collapsible" data-collapsed="false">
 
             <h3>Subnets ({{subnets.length}})</h3>
@@ -51,10 +54,12 @@
                         <td>Cidr</td>
                         <td>{{this.cidr}}</td>
                     </tr>
+                    {{#if this.enable_dhcp}}
                     <tr>
                         <td>DHCP Enabled</td>
                         <td>{{this.enable_dhcp}}</td>
                     </tr>
+                    {{/if}}
                     <tr>
                         <td>Gateway IP</td>
                         <td>{{this.gateway_ip}}
@@ -79,6 +84,7 @@
                 </table>
             {{/each}}
         </div>
+        {{/if}}
 
         <div class="mid-padding"></div>
 

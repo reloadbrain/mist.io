@@ -24,6 +24,10 @@ define('app/models/network', ['ember'],
             subnets: null,
             backend: null,
             selected: null,
+
+            hasSubnets: function () {
+                return this.subnets instanceof Array ? !!this.subnets.length : false;
+            }.property('subnets'),
         });
     }
 );
