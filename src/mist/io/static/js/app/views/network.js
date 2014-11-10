@@ -66,7 +66,6 @@ define('app/views/network', ['app/views/mistscreen'],
                         this.get('controller').set('model', network);
 
                     this.set('network', this.get('controller').get('model'));
-                    info('id', this.network.id)
                     if (this.network.id) {
                         this.updateExtra();
                         this.renderSubnets();
