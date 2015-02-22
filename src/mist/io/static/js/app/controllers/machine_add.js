@@ -104,13 +104,6 @@ define('app/controllers/machine_add', ['ember'],
                         return;
                     }
                 }
-                if (providerName == 'Google Compute Engine') {
-                    var re = /^[0-9a-z-]*$/;
-                    if (!re.test(machineName)) {
-                        Mist.notificationController.timeNotify('Name must be lowercase letters, numbers, and hyphens', 7000);
-                        return;
-                    }
-                }
                 if (providerName == 'SoftLayer') {
                     var re = /^[0-9a-zA-Z.-]*$/;
                     if (machineName.length > 253 || !re.test(machineName)) {
