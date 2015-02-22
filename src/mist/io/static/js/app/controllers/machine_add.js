@@ -97,22 +97,6 @@ define('app/controllers/machine_add', ['ember'],
                         }
                     }
                 }
-                if (providerName == 'Azure') {
-                    var re = /^[0-9a-zA-Z-]*$/;
-                    if (!re.test(machineName)) {
-                        Mist.notificationController.timeNotify('The name can contain only letters, numbers, and hyphens. The name must start with a letter and must end with a letter or a number.', 7000);
-                        return;
-                    }
-                }
-                if (providerName == 'SoftLayer') {
-                    var re = /^[0-9a-zA-Z.-]*$/;
-                    if (machineName.length > 253 || !re.test(machineName)) {
-                        Mist.notificationController.timeNotify(
-                            'Server name in Softlayer must be an alphanumeric string,' +
-                            ' that may contain period (\'.\') and dash (\'-\') special characters.', 7000);
-                        return;
-                    }
-                }
 
                 var that = this;
                 this.newMachineProvider.machines.newMachine(
