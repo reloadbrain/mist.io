@@ -1,0 +1,11 @@
+#graph-list-control #pick-range .input-wrapper > .ui-input-text {
+    display: none;
+}
+
+#graph-list-control #pick-range {
+    width: 20em;
+}
+
+#graph-list-control #pick-range .input-wrapper {
+    margin-bottom: 1.3em;
+}

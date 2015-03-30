@@ -15,6 +15,7 @@ require.config({
         ember: 'lib/ember-1.6.0.min',
         jquery: 'lib/jquery-2.1.1.min',
         jqm: 'lib/jquery.mobile-1.4.5.min',
+        jqmdate: 'lib/jqm-datebox',
         handlebars: 'lib/handlebars-1.3.0.min',
         md5: 'lib/md5',
         d3: 'lib/d3.min',
@@ -34,6 +35,9 @@ require.config({
         },
         'd3': {
             deps: ['jquery']
+        },
+        'jqmdate': {
+            deps: ['jquery', 'jqm']
         }
     }
 });
@@ -669,7 +673,9 @@ var loadApp = function (
         attributeBindings: [
             'data-theme',
             'placeholder',
-            'autocapitalize'
+            'autocapitalize',
+            'data-options',
+            'data-role'
         ],
         keyUp: function(e) {
             if(this.get('parentView').keyUp) {
@@ -1518,6 +1524,12 @@ var extendEmberView = function () {
 
 String.prototype.decapitalize = function () {
     return this.charAt(0).toLowerCase() + this.slice(1);
+};
+
+Date.prototype.mergeTime = function (date) {
+    this.setHours(date.getHours());
+    this.setMinutes(date.getMinutes());
+    return this;
 };
 
 Date.prototype.isFuture = function () {

@@ -82,7 +82,7 @@
                 ui-popup-hidden
                 ui-popup-truncate">
             <div id="pick-range"
-                class="small-popup
+                class="
                     ui-popup
                     ui-body-inherit
                     ui-overlay-shadow
@@ -96,14 +96,70 @@
                     <h1 class="ui-title">Select Range</h1>
                 </div>
                 <div class="ui-content ui-body-a" role="main">
+
+
                     <label>From:</label>
-                    {{view Mist.TextField
-                        id="range-start"
-                        placeholder="range start"}}
+                    <div class="ok-cancel
+                            ui-controlgroup
+                            ui-controlgroup-horizontal
+                            ui-group-theme-c
+                            ui-corner-all"
+                        data-role="controlgroup"
+                        data-type="horizontal">
+                        <a class="ui-btn"
+                            {{action "rangeFromDateClicked" target="view"}}>
+                                {{view.fromDate}}
+                        </a>
+                        <a class="ui-btn"
+                            {{action "rangeFromTimeClicked" target="view"}}>
+                                {{view.fromTime}}
+                        </a>
+                    </div>
+                    <div class="input-wrapper">
+                        {{view Mist.TextField
+                            class="range-input"
+                            id="range-from-date"
+                            data-role="datebox"
+                            valueBinding="view.fromDate"
+                            data-options='{"mode":"calbox", "useInlineBlind":true}'}}
+                        {{view Mist.TextField
+                            class="range-input"
+                            id="range-from-time"
+                            data-role="datebox"
+                            valueBinding="view.fromTime"
+                            data-options='{"mode":"timebox", "useInlineBlind":true}'}}
+                    </div>
                     <label>To:</label>
-                    {{view Mist.TextField
-                        id="range-stop"
-                        placeholder="range stop"}}
+                    <div class="ok-cancel
+                            ui-controlgroup
+                            ui-controlgroup-horizontal
+                            ui-group-theme-c
+                            ui-corner-all"
+                        data-role="controlgroup"
+                        data-type="horizontal">
+                        <a class="ui-btn"
+                            {{action "rangeToDateClicked" target="view"}}>
+                                {{view.toDate}}
+                        </a>
+                        <a class="ui-btn"
+                            {{action "rangeToTimeClicked" target="view"}}>
+                                {{view.toTime}}
+                        </a>
+                    </div>
+                    <div class="input-wrapper">
+                        {{view Mist.TextField
+                            class="range-input"
+                            id="range-to-date"
+                            data-role="datebox"
+                            valueBinding="view.toDate"
+                            data-options='{"mode":"calbox", "useInlineBlind":true}'}}
+                        {{view Mist.TextField
+                            class="range-input"
+                            id="range-to-time"
+                            data-role="datebox"
+                            valueBinding="view.toTime"
+                            data-options='{"mode":"timebox", "useInlineBlind":true}'}}
+                    </div>
                     <div class="ok-cancel
                             ui-controlgroup
                             ui-controlgroup-horizontal
@@ -116,7 +172,7 @@
                             {{action "rangeBackClicked" target="view"}}>
                                 Back
                         </a>
-                        <a id="key-add-ok" class="ui-btn ui-btn-d"
+                        <a class="ui-btn ui-btn-d"
                             {{action "rangeOkClicked" target="view"}}>
                                 OK
                         </a>

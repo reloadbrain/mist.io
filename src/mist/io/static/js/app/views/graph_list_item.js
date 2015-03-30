@@ -1107,7 +1107,7 @@ define('app/views/graph_list_item', ['app/views/templated', 'd3'],
 
         function labelTicksFixed (axisInstance, format, timeDisplayed) {
             // Check Time Displayed
-            axisInstance.ticks(4);
+            axisInstance.ticks(Math.PI);
             return axisInstance;
         };
 
