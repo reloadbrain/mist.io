@@ -48,7 +48,6 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
 
             load: function () {
                 Ember.run.next(this, function () {
-                    // Make sure element is rendered
                     this.$().trigger('create');
                 });
             }.on('didInsertElement'),
@@ -70,13 +69,15 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
                     $('#range-from-time').datebox('setTheDate', new Date(from));
                     $('#range-to-date').datebox('setTheDate', new Date(until));
                     $('#range-to-time').datebox('setTheDate', new Date(until));
-                    this.set('openPicker', '');
+                    this._closeDateBoxes();
                 }, 300);
             },
 
 
             _closeRangeSelectionPopup: function () {
                 $('#pick-range').popup('close');
+                this.set('fetchingStats', false);
+                this._closeDateBoxes();
             },
 
 
@@ -109,10 +110,12 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
 
 
             _closeDateBoxes: function () {
+                if (!this.get('openPicker')) return;
                 $('#range-from-date').datebox('close');
                 $('#range-from-time').datebox('close');
                 $('#range-to-date').datebox('close');
                 $('#range-to-time').datebox('close');
+                this.set('openPicker', '');
             },
 
 
@@ -124,9 +127,6 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
                         $(selector).datebox('open');
                         this.set('openPicker', selector);
                     }, 150);
-                else {
-                    this.set('openPicker', '');
-                }
             },
 
 
@@ -184,6 +184,7 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
                     var from = range.from;
                     var until = range.until;
                     if (this._validateRange(from, until)) {
+                        this.set('fetchingStats', true);
                         Mist.graphsController.history.change({
                             timeWindow: 'range',
                             from: from.getTime(),
@@ -200,6 +201,7 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
                 },
 
                 rangeBackClicked: function () {
+                    this._closeDateBoxes();
                     this._closeRangeSelectionPopup();
                 },
 
@@ -212,7 +214,24 @@ define('app/views/graph_list_control', ['app/views/templated', 'jqmdate'],
                 forwardClicked: function () {
                     Mist.graphsController.history.goForward();
                 }
-            }
+            },
+
+
+            //
+            //
+            //  Observers
+            //
+            //
+
+
+            fromDateChanged: function () {
+                this._closeDateBoxes();
+            }.observes('fromDate'),
+
+
+            toDateChanged: function () {
+                this._closeDateBoxes();
+            }.observes('toDate')
         });
     }
 );

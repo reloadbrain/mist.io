@@ -675,7 +675,7 @@ var loadApp = function (
             'placeholder',
             'autocapitalize',
             'data-options',
-            'data-role'
+            'data-role',
         ],
         keyUp: function(e) {
             if(this.get('parentView').keyUp) {
