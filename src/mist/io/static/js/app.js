@@ -268,7 +268,6 @@ var loadFiles = function (callback) {
         'app/controllers/backend_add',
         'app/controllers/backend_edit',
         'app/controllers/backends',
-        'app/controllers/confirmation',
         'app/controllers/cookies',
         'app/controllers/datasources',
         'app/controllers/dialog',
@@ -300,7 +299,6 @@ var loadFiles = function (callback) {
         'app/views/backend_add',
         'app/views/backend_button',
         'app/views/backend_edit',
-        'app/views/confirmation_dialog',
         'app/views/dialog',
         'app/views/file_upload',
         'app/views/graph_button',
@@ -361,7 +359,6 @@ var loadApp = function (
     BackendAddController,
     BackendEditController,
     BackendsController,
-    ConfirmationController,
     CookiesController,
     DatasourcesController,
     DialogController,
@@ -630,7 +627,6 @@ var loadApp = function (
     App.set('imageSearchController', ImageSearchController.create());
     App.set('datasourcesController', DatasourcesController.create());
     App.set('machineShellController', MachineShellController.create());
-    App.set('confirmationController', ConfirmationController.create());
     App.set('notificationController', NotificationController.create());
     App.set('dialogController', DialogController.create());
     App.set('machinePowerController', MachinePowerController.create());
@@ -880,12 +876,12 @@ var setupSocketEvents = function (socket, callback) {
     .on('list_sizes', function (data) {
         var backend = Mist.backendsController.getBackend(data.backend_id);
         if (backend)
-            backend.sizes.load(data.sizes);
+            backend.sizes.setContent(data.sizes);
     })
     .on('list_images', function (data) {
         var backend = Mist.backendsController.getBackend(data.backend_id);
         if (backend)
-            backend.images.load(data.images);
+            backend.images.setContent(data.images);
     })
     .on('list_machines', function (data) {
         var backend = Mist.backendsController.getBackend(data.backend_id);
@@ -895,7 +891,7 @@ var setupSocketEvents = function (socket, callback) {
     .on('list_locations', function (data) {
         var backend = Mist.backendsController.getBackend(data.backend_id);
         if (backend)
-            backend.locations.load(data.locations);
+            backend.locations.setContent(data.locations);
     })
     .on('list_networks', function (data) {
         var backend = Mist.backendsController.getBackend(data.backend_id);
@@ -2034,68 +2030,50 @@ var PROVIDER_MAP = {
     ]
 };
 
-/*
-var SCRIPT_ADD_FIELDS = [
-    {
-        name: 'name',
-        type: 'text'
-    },
-    {
-        name: 'type',
-        type: 'select',
-        options: [
-            {
-                value: 'executable',
-                selected: true
-            },
-            {
-                value: 'ansible'
-            }
-        ]
-    },
-    {
-        name: 'source',
-        type: 'select',
-        options: [
-            {
-                value: 'github',
-                selected: true
-            },
-            {
-                value: 'url',
-            },
-            {
-                value: 'inline'
-            }
-        ]
-    },
-    {
-        conditional: {
-            source: 'url',
-            source: 'github'
-        },
-        fields: [
-            {
-                name: 'url',
-                type: 'text'
-            },
-            {
-                name: 'entry_point',
-                type: 'text',
-                optional: true
-            }
-        ]
-    },
-    {
-        conditional: {
-            source: 'inline'
-        },
-        fields: [
-            {
-                name: 'script',
-                type: 'text'
-            }
-        ]
-    }
+var OS_MAP = [
+    [
+        ['rhel', 'redhat', 'red hat'], 'redhat'
+    ],
+    [
+        ['ubuntu'], 'ubuntu'
+    ],
+    [
+        ['ibm'], 'ibm'
+    ],
+    [
+        ['canonical'], 'canonical'
+    ],
+    [
+        ['sles', 'suse'], 'suse'
+    ],
+    [
+        ['oracle'], 'oracle'
+    ],
+    [
+        ['karmic'], 'karmic'
+    ],
+    [
+        ['opensolaris'], 'opensolaris'
+    ],
+    [
+        ['gentoo'], 'gentoo'
+    ],
+    [
+        ['opensuse'], 'opensuse'
+    ],
+    [
+        ['fedora'], 'fedora'
+    ],
+    [
+        ['centos'], 'centos'
+    ],
+    [
+        ['fedora'], 'fedora'
+    ],
+    [
+        ['debian'], 'debian'
+    ],
+    [
+        ['amazon'], 'amazon'
+    ]
 ];
-*/
