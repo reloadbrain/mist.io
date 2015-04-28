@@ -19,7 +19,8 @@ define('app/controllers/base_array', ['ember'],
 
 
             model: null,
-            content: null,
+            loading: true,
+            sortCallback: null,
             passOnProperties: [],
 
 
@@ -37,21 +38,6 @@ define('app/controllers/base_array', ['ember'],
 
             //
             //
-            //  Initialization
-            //
-            //
-
-
-            load: function () {
-                this.setProperties({
-                    loading: true,
-                    content: new Array(),
-                });
-            }.on('init'),
-
-
-            //
-            //
             //  Public Methods
             //
             //
@@ -64,12 +50,13 @@ define('app/controllers/base_array', ['ember'],
                     content.setEach(property, this.get(property));
                 }, this);
                 this._updateContent(content);
+                this._sortContent();
                 this.set('loading', false);
             },
 
 
             getObject: function (id) {
-                return this.get('content').findBy('id', id);
+                return this.findBy('id', id);
             },
 
 
@@ -85,11 +72,35 @@ define('app/controllers/base_array', ['ember'],
             //
 
 
+            _passOnProperties: function (content) {
+                this.get('passOnProperties').forEach(function (property) {
+                    content.setEach(property, this.get(property));
+                }, this);
+            },
+
+
+            _sortContent: function () {
+                Ember.run(this, function () {
+                    if (!this.get('sortCallback'))
+                        return;
+                    var sortedList = this.get('sortCallback')(this);
+                    sortedList.forEach(function (sortedObject, sortedIndex) {
+                        var index = this.get('content').indexOfBy('id', sortedObject.id);
+                        //this.replaceContent(sortedIndex, 1, [sortedObject])
+                        //this.get('content').replace(index, sortedIndex);
+                        //this.arrayContentDidChange(index, 0, 0);
+                        //this.arrayContentDidChange(sortedIndex, 0, 0);
+                    }, this);
+                    //info(this..toStringByProperty('name'));
+                });
+            },
+
+
             _updateContent: function (content) {
 
                 Ember.run(this, function () {
                     // Remove deleted objects
-                    this.get('content').forEach(function (object) {
+                    this.forEach(function (object) {
                         if (!content.findBy('id', object.id))
                             this._deleteObject(object);
                     }, this);
@@ -110,10 +121,18 @@ define('app/controllers/base_array', ['ember'],
 
             _addObject: function (object) {
                 Ember.run(this, function () {
-                    this.addObject(this.get('model').create(object));
-                    this.trigger('onAdd', {
-                        object: object
-                    });
+                    if (!this.objectExists(object.id)) {
+                        try {
+                            var newObject =
+                                (this.get('model')).create(object);
+                        } catch (e) {
+                            var newObject = object;
+                        }
+                        this.pushObject(newObject)
+                        this.trigger('onAdd', {
+                            object: newObject
+                        });
+                    }
                 });
             },
 
@@ -149,7 +168,7 @@ define('app/controllers/base_array', ['ember'],
                 Ember.run.once(this, function () {
                     this.trigger('onSelectedChange');
                 });
-            }.observes('content.@each.selected')
+            }.observes('@each.selected')
         })
     }
 );

@@ -1,10 +1,10 @@
-define('app/views/machine_list', ['app/views/page'],
+define('app/views/machine_list', ['app/views/page', 'app/controllers/base_array'],
     /**
      * Machine List View
      *
      * @returns Class
      */
-    function (PageView) {
+    function (PageView, BaseArrayController) {
         return App.MachineListView = PageView.extend({
 
             /**
@@ -13,7 +13,13 @@ define('app/views/machine_list', ['app/views/page'],
              *
              */
 
-             machines:[],
+             machines: BaseArrayController.create({
+                 sortCallback: function (array) {
+                     return array.sortBy(Mist.machineSortListMode);
+                 },
+                 _updateObject: function () {}
+             }),
+
 
             /**
              *
@@ -86,14 +92,8 @@ define('app/views/machine_list', ['app/views/page'],
                 var machineList = [];
                 backends.forEach(function (backend) {
                     machineList.pushObjects(backend.machines.content);
-                    log(backend.machines.content.length);
                 });
-                this.set("machines",machineList);
-                this.sortMachines(Mist.machineSortListMode);
-            },
-
-            sortMachines: function (mode){
-                this.set("machines",this.machines.sortBy(mode));
+                this.get('machines').setContent(machineList);
             },
 
 
@@ -146,8 +146,8 @@ define('app/views/machine_list', ['app/views/page'],
                 sortByModeClicked: function (mode) {
 
                     $('#select-machines-popup').popup('close');
-                    Mist.set("machineSortListMode",mode);
-                    this.sortMachines(mode);
+                    Mist.set('machineSortListMode', mode);
+                    this.get('machines').setContent(this.get('machines'));
                 }
             }
         });
