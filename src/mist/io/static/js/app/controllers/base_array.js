@@ -79,14 +79,14 @@ define('app/controllers/base_array', ['ember'],
                     if (!this.get('sortCallback'))
                         return;
                     var sortedList = this.get('sortCallback')(this);
+                    var content = this.get('content');
                     sortedList.forEach(function (sortedObject, sortedIndex) {
-                        var index = this.get('content').indexOfBy('id', sortedObject.id);
-                        //this.replaceContent(sortedIndex, 1, [sortedObject])
-                        //this.get('content').replace(index, sortedIndex);
-                        //this.arrayContentDidChange(index, 0, 0);
-                        //this.arrayContentDidChange(sortedIndex, 0, 0);
+                        var index = content.indexOfBy('id', sortedObject.id);
+                        if (index == sortedIndex)
+                            return;
+                        this.removeAt(index, 1);
+                        this.insertAt(sortedIndex, sortedObject);
                     }, this);
-                    //info(this..toStringByProperty('name'));
                 });
             },
 

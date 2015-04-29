@@ -126,29 +126,26 @@ define('app/models/machine', ['ember'],
             }.property('Mist.openIncidents.@each.machine'),
 
             incidents: function () {
-                return incidents = Mist.openIncidents.filterBy('machineId', this.get('id'));
+                return Mist.openIncidents.filterBy('machineId', this.get('id'));
             }.property('Mist.openIncidents.@each.machine'),
 
             sortingWeight: function () {
-                this.set('weight', 100000 * this.states[this.state]);
+                var weight = 100000 * this.states[this.state];
                 if(this.get('hasMonitoring'))
-                    this.set('weight', 10000 * (1 + this.get('incidents').length/100) + this.get('weight'));
+                    weight += 10000 * (1 + this.get('incidents').length/100);
                 if(this.get('probed')){
                     if(this.get('loadavg1')>0){
-                        console.log(this.get('cores')/(this.get('loadavg1')),"cores/load");
-                        this.set('weight', 1000 * (1 + (this.get('cores')/this.get('loadavg1')/100)));
+                        weight += 1000 * (1 + (this.get('cores')/this.get('loadavg1')/100));
                     }
-                    this.set('weight', 100 * (1 + this.get('loss')/100) + 10 * (1 + this.get('latency')/10000) + this.get('weight'));
+                    weight += 100 * (1 + this.get('loss')/100) + 10 * (1 + this.get('latency')/10000) + this.get('weight');
                 }
-                this.set('weight', 1 / this.get('weight'));
                 //because standar sort returns the list from min to max and if we use reverse
                 //it also sorts the names in reverse.
                 //So the one with the smallest weight has the max priority
-                return this.get('weight');
+                return 1 / weight;
             }.property('state','incidents','cores','loadavg1','loss','hasMonitoring','probed','latency'),
 
             sortingName: function () {
-                console.log(this.get('sortingWeight') + '-' + this.get('name'), this.get('hasMonitoring'), this.get('probed'));
                 return this.get('sortingWeight') + '-' + this.get('name');
             }.property('name','sortingWeight'),
 

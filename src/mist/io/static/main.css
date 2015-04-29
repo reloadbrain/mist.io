@@ -513,6 +513,13 @@ ul.checkbox-list li label {
         margin-right: 50px !important;
     }
 }
+a.responsive-button.always,
+a.responsive-btn.always {
+    padding: 0px !important;
+    width: 2.5em;
+    height: 2.5em;
+    text-indent: -5000px;
+}
 
 /* User menu
 -----------------------------------------------------------------------------------------------------------*/
