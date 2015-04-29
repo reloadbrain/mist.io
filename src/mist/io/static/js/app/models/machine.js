@@ -137,7 +137,7 @@ define('app/models/machine', ['ember'],
                     if(this.get('loadavg1')>0){
                         weight += 1000 * (1 + (this.get('cores')/this.get('loadavg1')/100));
                     }
-                    weight += 100 * (1 + this.get('loss')/100) + 10 * (1 + this.get('latency')/10000) + this.get('weight');
+                    weight += 100 * (1 + this.get('loss')/100) + 10 * (1 + this.get('latency')/10000);
                 }
                 //because standar sort returns the list from min to max and if we use reverse
                 //it also sorts the names in reverse.
