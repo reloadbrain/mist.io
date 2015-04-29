@@ -19,7 +19,6 @@ define('app/controllers/base_array', ['ember'],
 
 
             model: null,
-            loading: true,
             sortCallback: null,
             passOnProperties: [],
 
@@ -44,11 +43,8 @@ define('app/controllers/base_array', ['ember'],
 
 
             setContent: function (content) {
-                if (!content)
-                    content = [];
-                this.get('passOnProperties').forEach(function (property) {
-                    content.setEach(property, this.get(property));
-                }, this);
+                content = !!content ? content : [];
+                this._passOnProperties(content);
                 this._updateContent(content);
                 this._sortContent();
                 this.set('loading', false);
@@ -78,7 +74,6 @@ define('app/controllers/base_array', ['ember'],
                 }, this);
             },
 
-
             _sortContent: function () {
                 Ember.run(this, function () {
                     if (!this.get('sortCallback'))
@@ -95,9 +90,7 @@ define('app/controllers/base_array', ['ember'],
                 });
             },
 
-
             _updateContent: function (content) {
-
                 Ember.run(this, function () {
                     // Remove deleted objects
                     this.forEach(function (object) {
@@ -114,7 +107,9 @@ define('app/controllers/base_array', ['ember'],
                         }
                     }, this);
 
-                    this.trigger('onChange');
+                    this.trigger('onChange', {
+                        objects: this
+                    });
                 });
             },
 
@@ -166,7 +161,9 @@ define('app/controllers/base_array', ['ember'],
 
             selectedObserver: function () {
                 Ember.run.once(this, function () {
-                    this.trigger('onSelectedChange');
+                    this.trigger('onSelectedChange', {
+                        objects: this.get('selectedObjects')
+                    });
                 });
             }.observes('@each.selected')
         })

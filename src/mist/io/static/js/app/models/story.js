@@ -31,9 +31,13 @@ define('app/models/story', ['app/models/base'],
 
             processProperties: {
                 startedAt: function (startedAt) {
+                    if (startedAt instanceof Date)
+                        return startedAt;
                     return new Date(parseInt(startedAt * 1000));
                 },
                 finishedAt: function (finishedAt) {
+                    if (finishedAt instanceof Date)
+                        return finishedAt;
                     return new Date(parseInt(finishedAt * 1000));
                 }
             },
@@ -57,7 +61,7 @@ define('app/models/story', ['app/models/base'],
 
 
             rule: function () {
-                return Mist.rulesController.getRule(this.get('ruleId'));
+                return Mist.rulesController.getObject(this.get('ruleId'));
             }.property('ruleId'),
 
 
