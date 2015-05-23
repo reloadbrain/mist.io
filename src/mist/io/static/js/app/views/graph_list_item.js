@@ -8,9 +8,6 @@ define('app/views/graph_list_item', ['app/views/templated', 'd3', 'c3'],
 
         'use strict';
 
-        var ANIMATION_FPS = 12;
-        var ANIMATION_DURATION = 9;
-
         return App.GraphListItemView = TemplatedView.extend({
 
 
@@ -56,53 +53,108 @@ define('app/views/graph_list_item', ['app/views/templated', 'd3', 'c3'],
             //
 
             draw: function () {
-                if (!this.get('chart')) {
+                var graph = this.graph,
+                    chart = this.get('chart');
+
+                if (!graph.datasources || !graph.datasources.length)
+                    return;
+
+                var source0 = graph.datasources[0],
+                    unit = source0.metric.unit,
+                    lastpoint = source0.datapoints[source0.datapoints.length-1];
+
+                // prepare x axis column
+                var x = ['x'].pushObjects(source0.datapoints.map(
+                    function(point) { return point.time }
+                ));
+
+                // prepare other columns
+                var cols = [x].pushObjects(this.graph.datasources.map(
+                    function (datasource) {
+                        var ret = datasource.datapoints.map(function (datapoint) {
+                            return datapoint.value;
+                        });
+                        ret.unshift(datasource.metric.id);
+                        return ret;
+                    }
+                ))
+
+                if (!this.get('chart')) { // generate new chart
                     this.set('chart', c3.generate({
-                        bindto: '#' + this.graph.id,
+                        bindto: '#' + graph.id,
                         data: {
-                            columns: this.graph.datasources.map(function (datasource) {
-                                var ret = datasource.datapoints.map(function (datapoint) {
-                                    return datapoint.value;
-                                });
-                                ret.unshift(datasource.metric.id);
-                                return ret;
-                            })
-                            //columns: [
-                            //        ['data1', 30, 200, 100, 400, 150, 250],
-                            //        ['data2', 50, 20, 10, 40, 15, 25]
-                            //    ],
+                            x: 'x',
+                            columns: cols,
+                            type: 'area-spline'
                         },
                         axis: {
+                            x: {
+                                type: 'timeseries',
+                                tick: {
+                                    format: '%H:%M',
+                                    count: 5
+                                },
+                                padding: {
+                                    left: 0,
+                                    right: 0
+                                }
+                            },
                             y: {
                                 label: {
-                                    text: 'Yolo',
-                                    position: 'outer-middle'
+                                    text: unit,
+                                    position: 'inner-top'
                                 },
-                            },
+                                tick: {
+                                    format: function(val) {
+                                        return graph.valueText(val)
+                                    }
+                                }
+                            }
+                        },
+                        point: {
+                            r: 0,
+                            focus: {
+                                expand: {
+                                    r: 3
+                                }
+                            }
+                        },
+                        line: {
+                            connectNull: false
+                        },
+                        tooltip: {
+                            format: {
+                                title: function(x) { return x.toTimeString(); },
+                                value: function (value, ratio, id, index) {
+                                    return graph.valueText(value) + unit;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top'
                         }
                     }));
-                } else {
-                    this.get('chart').flow({
-                        columns:  this.graph.datasources.map(function (datasource) {
-                            return [
-                                datasource.metric.id,
-                                datasource.datapoints[datasource.datapoints.length -1].value
-                            ];
-                        }),
+                } else { // stream new datapoints on existing chart
+                    // Only add values that are not already in the chart
+                    var lastx = chart.data.shown()[0].values.slice(-1)[0].x;
+                    for (var i=0; i < x.length; i++) {
+                        if (x[x.length-1-i]<=lastx)
+                            break
+                    }
+                    if (i > 0 ){
+                        var newcols = []
+                        cols.forEach(function(col) {
+                            newcols.push([col[0]].pushObjects(col.slice(0-i)))
+                        });
+                    }
+                    chart.flow({
+                        duration: 250,
+                        length: i,
+                        columns: newcols
                     });
                 }
             },
 
-            valueText: function(currentValue){
-                if(currentValue>=1073741824)                               // (1024*1024*1024)
-                    return (currentValue/1073741824).toFixed(2) +'G'; // (1024*1024*1024)
-                else if(currentValue>=1048576)                             // (1024*1024)
-                    return (currentValue/1048576).toFixed(2) +'M';    // (1024*1024)
-                else if(currentValue>=1024)
-                    return (currentValue/1024).toFixed(2) + 'K';
-                else
-                    return currentValue.toFixed(2);
-            },
 
             clearData: function () {
                 this.graph.datasources.forEach(function (datasource) {
@@ -133,9 +185,10 @@ define('app/views/graph_list_item', ['app/views/templated', 'd3', 'c3'],
 
 
             isVisibleObserver: function () {
-                if (this.isHidden)
+                if (this.isHidden){
+                    warn('hiding', $('#' + this.id).parent());
                     $('#' + this.id).parent().hide(400);
-                else if (this.isHidden !== undefined) {
+                } else if (this.isHidden !== undefined) {
                     $('#' + this.id).parent().show(400);
                     this.draw();
                 }
