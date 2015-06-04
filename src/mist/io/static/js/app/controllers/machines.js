@@ -53,7 +53,7 @@ define('app/controllers/machines', ['app/models/machine'],
              */
 
             newMachine: function(name, image, size, location, key, script, monitoring,
-                dockerEnv, dockerCommand, scriptParams, dockerPorts) {
+                dockerEnv, dockerCommand, scriptParams, dockerPorts, dockerVolumes) {
 
                 // Create a fake machine model for the user
                 // to see until we get the real machine from
@@ -80,7 +80,7 @@ define('app/controllers/machines', ['app/models/machine'],
                         networks.push(network.id);
                 });
 
-                // Construct docerEnv dict
+                // Construct dockerEnv dict
                 var environment = null;
                 if (dockerEnv.length) {
                     environment = {};
@@ -99,6 +99,14 @@ define('app/controllers/machines', ['app/models/machine'],
                         var key = vars[1] + '/tcp';
                         portBindings[key] = [{'HostPort': vars[0]}];
                         exposedPorts[key] = {};
+                    });
+                }
+
+                //Construct docker volume bindings
+                if (dockerVolumes.length) {
+                    var volumeBindings = [];
+                    dockerVolumes.split('\n').forEach(function(line) {
+                        volumeBindings.push(line);
                     });
                 }
 
@@ -127,7 +135,8 @@ define('app/controllers/machines', ['app/models/machine'],
                         'docker_env': environment,
                         'docker_command': dockerCommand,
                         'docker_exposed_ports': exposedPorts,
-                        'docker_port_bindings': portBindings
+                        'docker_port_bindings': portBindings,
+                        'docker_volume_bindings': volumeBindings
                 }).success(function (machine) {
                     machine.backend = that.backend;
                     // Nephoscale returns machine id on request success,

@@ -131,6 +131,7 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-monitoring').hide();
                 $('#create-machine-panel .docker').show();
                 $('#create-machine-panel #ports').show();
+                $('#create-machine-panel #volumes').show();
             },
 
 
@@ -139,6 +140,7 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-panel #location').hide();
                 $('#create-machine-panel #size').hide();
                 $('#create-machine-panel #ports').show();
+                $('#create-machine-panel #volumes').show();
             },
 
 
@@ -150,6 +152,7 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-monitoring').show();
                 $('#create-machine-panel .docker').hide();
                 $('#create-machine-panel #ports').hide();
+                $('#create-machine-panel #volumes').hide();
             },
 
 
@@ -202,6 +205,7 @@ define('app/views/machine_add', ['app/views/templated'],
                     $('#create-machine-panel .docker .ui-checkbox').addClass('ui-state-disabled');
                     $('#create-machine-network .ui-collapsible').addClass('ui-state-disabled');
                     $('#create-machine-panel #ports').addClass('ui-state-disabled');
+                    $('#create-machine-panel #volumes').addClass('ui-state-disabled');
 
                     if (backend.get('requiresNetworkOnCreation')) {
                         if (backend.networks.content.length > 0) {
@@ -250,6 +254,7 @@ define('app/views/machine_add', ['app/views/templated'],
                                 .removeClass('ui-state-disabled');
                        }
                        $('#create-machine-panel #ports').removeClass('ui-state-disabled');
+                       $('#create-machine-panel #volumes').removeClass('ui-state-disabled');
                    }
                 },
 

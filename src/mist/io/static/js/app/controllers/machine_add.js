@@ -25,6 +25,7 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerCommand: null,
             newMachineDockerEnvironment: null,
             newMachineDockerPorts: null,
+            newMachineDockerVolumes: null,
 
 
             /**
@@ -135,6 +136,7 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineDockerCommand,
                         this.newMachineScriptParams,
                         this.newMachineDockerPorts,
+                        this.newMachineDockerVolumes,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -167,7 +169,8 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineDockerEnvironment', '')
                     .set('newMachineDockerCommand', '')
                     .set('newMachineScriptParams', '')
-                    .set('newMachineDockerPorts', '');
+                    .set('newMachineDockerPorts', '')
+                    .set('newMachineDockerVolumes', [])
                 this.view.clear();
              },
 
