@@ -16,6 +16,7 @@ define('app/controllers/machine_add', ['ember'],
 
             newMachineKey: null,
             newMachineName: null,
+            newMachineQuantity: null,
             newMachineSize: null,
             newMachineImage: null,
             newMachineScript: null,
@@ -75,6 +76,7 @@ define('app/controllers/machine_add', ['ember'],
                 var machineSize = this.newMachineSize.name;
                 var machineImage = this.newMachineImage.name;
                 var machineName = this.newMachineName;
+                var machineQuantity = this.newMachineQuantity;
 
                 // Validate machine name
                 // TODO: This thing is ugly. Move regex and strings into a dict
@@ -137,6 +139,7 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineScriptParams,
                         this.newMachineDockerPorts,
                         this.newMachineDockerVolumes,
+                        this.newMachineQuantity,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -160,6 +163,7 @@ define('app/controllers/machine_add', ['ember'],
              _clear: function() {
                 this.set('callback', null)
                     .set('newMachineName', '')
+                    .set('newMachineQuantity', 1)
                     .set('newMachineScript', '')
                     .set('newMachineKey', {'id' : 'Select Key'})
                     .set('newMachineSize', {'name' : 'Select Size'})
@@ -179,6 +183,7 @@ define('app/controllers/machine_add', ['ember'],
 
                 var formReady = false;
                 if (this.newMachineName &&
+                    this.newMachineQuantity &&
                     this.newMachineSize.id &&
                     this.newMachineImage.id &&
                     this.newMachineProvider.id) {
@@ -219,6 +224,7 @@ define('app/controllers/machine_add', ['ember'],
                 Ember.run.once(this, '_updateFormReady');
             }.observes('newMachineKey',
                        'newMachineName',
+                       'newMachineQuantity',
                        'newMachineSize',
                        'newMachineImage',
                        'newMachineScript',

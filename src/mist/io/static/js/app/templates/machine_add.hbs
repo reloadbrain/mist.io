@@ -278,6 +278,15 @@
                    valueBinding="Mist.machineAddController.newMachineDockerVolumes"}}
         </div>
 
+        <!-- Select Quantity -->
+        <div id="quantity">
+            <label>Quantity:</label>
+            {{view Mist.TextField
+                   id="create-machine-quantity"
+                   data-theme="a"
+                   valueBinding="Mist.machineAddController.newMachineQuantity"}}
+        </div>
+
         <!-- Enable monitoring -->
         <div id="create-machine-monitoring" class="ui-state-disabled">
             <label>
