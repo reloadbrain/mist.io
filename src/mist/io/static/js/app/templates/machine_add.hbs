@@ -143,25 +143,6 @@
             </div>
         </div>
 
-        <!-- Docker Specific -->
-
-        <div class="docker">
-
-            <!-- Environment Vars -->
-            <label for="create-machine-env">Environment Variables:</label>
-            {{view Mist.TextArea
-                   id="create-machine-env"
-                   data-theme="a"
-                   valueBinding="Mist.machineAddController.newMachineDockerEnvironment"}}
-
-            <!-- Command -->
-            <label for="create-machine-command">Command:</label>
-            {{view Mist.TextArea
-                   id="create-machine-command"
-                   data-theme="a"
-                   valueBinding="Mist.machineAddController.newMachineDockerCommand"}}
-
-        </div>
 
         <!-- Select Key -->
 
@@ -188,6 +169,26 @@
         </div>
         </div>
 
+        <!-- Docker Specific -->
+
+        <div class="docker-env">
+
+            <!-- Environment Vars -->
+            <label for="create-machine-env">Environment Variables:</label>
+            {{view Mist.TextArea
+                   id="create-machine-env"
+                   data-theme="a"
+                   valueBinding="Mist.machineAddController.newMachineDockerEnvironment"}}
+        </div>
+        <div class="docker-command">
+            <!-- Command -->
+            <label id="create-machine-command-label" for="create-machine-command">Command:</label>
+            {{view Mist.TextArea
+                   id="create-machine-command"
+                   data-theme="a"
+                   valueBinding="Mist.machineAddController.newMachineDockerCommand"}}
+
+        </div>
         <!-- Select Networks -->
 
         <div id="create-machine-network">

@@ -5,7 +5,10 @@
     min-width: 320px;
     width: 45%;
 }
-#create-machine-panel .docker {
+#create-machine-panel .docker-env {
+	display:none;
+}
+#create-machine-panel .docker-command {
 	display:none;
 }
 #create-machine-panel label {

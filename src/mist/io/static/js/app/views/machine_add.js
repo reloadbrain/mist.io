@@ -129,7 +129,8 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-panel #size').hide();
                 $('#create-machine-panel #key').hide();
                 $('#create-machine-monitoring').hide();
-                $('#create-machine-panel .docker').show();
+                $('#create-machine-panel .docker-env').show();
+                $('#create-machine-panel .docker-command').show();
                 $('#create-machine-panel #ports').show();
                 $('#create-machine-panel #volumes').show();
             },
@@ -141,6 +142,7 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-panel #size').hide();
                 $('#create-machine-panel #ports').show();
                 $('#create-machine-panel #volumes').show();
+                $('#create-machine-panel .docker-env').show();
             },
 
 
@@ -150,7 +152,8 @@ define('app/views/machine_add', ['app/views/templated'],
                 $('#create-machine-panel #size').show();
                 $('#create-machine-panel #key').show();
                 $('#create-machine-monitoring').show();
-                $('#create-machine-panel .docker').hide();
+                $('#create-machine-panel .docker-env').hide();
+                $('#create-machine-panel .docker-command').hide();
                 $('#create-machine-panel #ports').hide();
                 $('#create-machine-panel #volumes').hide();
             },
