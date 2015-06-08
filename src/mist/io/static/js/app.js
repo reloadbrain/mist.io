@@ -9,6 +9,7 @@ DEBUG_LOGS = false;
 // Limit the amount of datapoints to
 // preserve memory (especially on mobile)
 MAX_DATAPOINTS = 60;
+DATASOURCES_PER_GRAPH = 8;
 
 // Define libraries
 require.config({
@@ -1700,6 +1701,18 @@ var PROVIDER_MAP = {
         },
     ],
 
+	vultr: [
+        {
+            name: 'title',
+            type: 'text',
+            defaultValue: 'Vultr',
+        },
+        {
+            name: 'api_key',
+            type: 'password',
+        },
+    ],
+	
     docker: [
         {
             name: 'title',
