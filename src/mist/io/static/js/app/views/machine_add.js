@@ -159,6 +159,16 @@ define('app/views/machine_add', ['app/views/templated'],
             },
 
 
+            showAzureMenu: function () {
+                $('#create-machine-panel .azure').show();
+            },
+
+
+            hideAzureMenu: function () {
+                $('#create-machine-panel .azure').hide();
+            },
+
+
              updateLaunchButton: function () {
                 if (Mist.machineAddController.formReady) {
                     $('#create-machine-ok').removeClass('ui-state-disabled');
@@ -226,6 +236,13 @@ define('app/views/machine_add', ['app/views/templated'],
                     } else {
                         view.hideDockerMenu();
                     }
+
+                    if (backend.get('isAzure')) {
+                        view.showAzureMenu();
+                    } else {
+                        view.hideAzureMenu();
+                    }
+
                 },
 
 

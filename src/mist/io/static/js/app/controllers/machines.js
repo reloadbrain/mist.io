@@ -53,7 +53,7 @@ define('app/controllers/machines', ['app/models/machine'],
              */
 
             newMachine: function(name, image, size, location, key, script, monitoring,
-                dockerEnv, dockerCommand, scriptParams, dockerPorts, dockerVolumes, quantity) {
+                dockerEnv, dockerCommand, scriptParams, dockerPorts, dockerVolumes, azurePorts, quantity) {
 
                 // Create a fake machine model for the user
                 // to see until we get the real machine from
@@ -141,7 +141,8 @@ define('app/controllers/machines', ['app/models/machine'],
                         'docker_port_bindings': portBindings,
                         'docker_volume_bindings': volumeBindings,
                         'async': async,
-                        'quantity': quantity
+                        'quantity': quantity,
+                        'azure_port_bindings': azurePorts
                 }).success(function (machine) {
                     machine.backend = that.backend;
                     // Nephoscale returns machine id on request success,

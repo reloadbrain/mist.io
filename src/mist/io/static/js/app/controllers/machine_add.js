@@ -27,6 +27,7 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerEnvironment: null,
             newMachineDockerPorts: null,
             newMachineDockerVolumes: null,
+            newMachineAzurePorts: null,
 
 
             /**
@@ -40,6 +41,7 @@ define('app/controllers/machine_add', ['ember'],
                 // panel introduces an unpleasant view.
                 // Scrolling to top fixes that
                 $('#create-machine-panel .docker').hide();
+                $('#create-machine-panel .azure').hide();
                 $('.ui-page-active').animate({scrollTop:0}, 'slow');
                 $('#create-machine-panel .ui-panel-inner').animate({scrollTop:0}, 'slow');
                 $('#create-machine-panel').panel('open');
@@ -140,6 +142,7 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineDockerPorts,
                         this.newMachineDockerVolumes,
                         this.newMachineQuantity,
+                        this.newMachineAzurePorts,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -175,6 +178,7 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineScriptParams', '')
                     .set('newMachineDockerPorts', '')
                     .set('newMachineDockerVolumes', [])
+                    .set('newMachineAzurePorts', '');
                 this.view.clear();
              },
 

@@ -288,6 +288,20 @@
                    valueBinding="Mist.machineAddController.newMachineQuantity"}}
         </div>
 
+
+        <div class="azure">
+
+            <!-- Expose Ports -->
+            <label>Ports:</label>
+            {{view Mist.TextArea
+                   id="create-machine-azure-ports"
+                   data-theme="a"
+                   placeholder="e.g. http tcp 80:80, smtp tcp 25:25, https tcp 443:443"
+                   valueBinding="Mist.machineAddController.newMachineAzurePorts"}}
+
+        </div>
+
+
         <!-- Enable monitoring -->
         <div id="create-machine-monitoring" class="ui-state-disabled">
             <label>
