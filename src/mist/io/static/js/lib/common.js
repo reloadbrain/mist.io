@@ -811,6 +811,28 @@ var PROVIDER_MAP = {
             helpText: 'The type of authentication your Docker engine uses',
             helpHref: 'http://docs.mist.io/article/20-adding-docker',
         },
+        {
+            name: 'machine_key',
+            type: 'ssh_key',
+            label: 'Docker Host SSH Key',
+            optional: true,
+        },
+        {
+            showIf: 'machine_key',
+            name: 'machine_user',
+            type: 'text',
+            label: 'User',
+            optional: true,
+            defaultValue: 'root',
+        },
+        {
+            showIf: 'machine_key',
+            name: 'machine_port',
+            type: 'text',
+            label: 'Port',
+            defaultValue: '22',
+            optional: true,
+        },
     ],
 
     ec2: [

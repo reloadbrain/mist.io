@@ -16,7 +16,6 @@ define('app/controllers/machine_add', ['ember'],
 
             newMachineKey: null,
             newMachineName: null,
-            newMachineQuantity: null,
             newMachineSize: null,
             newMachineImage: null,
             newMachineScript: null,
@@ -28,6 +27,8 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerPorts: null,
             newMachineDockerVolumes: null,
             newMachineAzurePorts: null,
+            newMachineQuantity: null,
+
 
 
             /**
@@ -128,6 +129,7 @@ define('app/controllers/machine_add', ['ember'],
                 }
 
                 var that = this;
+                console.log(this.newMachineQuantity);
                 this.newMachineProvider.machines.newMachine(
                         this.newMachineName,
                         this.newMachineImage,
@@ -141,8 +143,8 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineScriptParams,
                         this.newMachineDockerPorts,
                         this.newMachineDockerVolumes,
-                        this.newMachineQuantity,
                         this.newMachineAzurePorts,
+                        this.newMachineQuantity,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }

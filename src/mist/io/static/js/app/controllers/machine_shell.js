@@ -48,6 +48,14 @@ define('app/controllers/machine_shell', ['app/models/command', 'ember' , 'term']
 
             connect: function () {
                 var that = this;
+                var enforce_paramiko = false;
+
+                if (typeof(that.machine.extra.tags) !== 'undefined') {
+                    if (that.machine.extra.tags.type == 'docker_host') {
+                        enforce_paramiko = true;
+                        console.log(enforce_paramiko);
+                    }
+                }
 
                 if (this.connected) {
                     this.resize();
@@ -84,6 +92,7 @@ define('app/controllers/machine_shell', ['app/models/command', 'ember' , 'term']
                             host: that.host,
                             cols: that.cols,
                             rows: that.rows,
+                            enforce_paramiko: enforce_paramiko
                         });
 
                         if (!Terminal._textarea)

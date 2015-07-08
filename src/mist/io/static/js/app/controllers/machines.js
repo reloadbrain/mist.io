@@ -115,6 +115,7 @@ define('app/controllers/machines', ['app/models/machine'],
 
 
                 this.set('addingMachine', true);
+                console.log(quantity);
                 Mist.ajax.POST('backends/' + this.backend.id + '/machines', {
                         'name': name,
                         'key': key ? key.id : null,
