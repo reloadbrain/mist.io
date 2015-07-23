@@ -344,6 +344,10 @@ ul.checkbox-list li label {
         text-indent: 10px;
     }
 }
+.ui-footer.tri-action-footer,
+.ui-footer.dual-action-footer {
+    box-sizing: border-box;
+}
 .ui-footer.dual-action-footer td {
     width: 50%;
 }
@@ -353,6 +357,7 @@ ul.checkbox-list li label {
 
 .ui-footer .ui-grid-a a {
     margin:0;
+    box-sizing: border-box;
 }
 
 /* Small List Item

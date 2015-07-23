@@ -115,7 +115,7 @@ define('app/views/log_list', ['app/views/page'],
                 Ember.run(this, function () {
                     Mist.logsController._prependContent(
                         this.filter([log])
-                    )
+                    );
                 });
             },
 
@@ -416,7 +416,7 @@ define('app/views/log_list', ['app/views/page'],
                var that = this;
                clearTimeout(this.searchLock);
                this.set('searchLock', setTimeout(function () {
-                   Mist.logsController.clear();
+                   Mist.logsController.set('model', []);
                    that.set('noMoreLogs', false);
                    that.set('lastLogTimestamp', null);
                    that.search();

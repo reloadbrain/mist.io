@@ -6,6 +6,7 @@
 }
 #single-script-page .dual-action-footer {
     display: block;
+    box-sizing: border-box;
 }
 #single-script-page .log-list ul {
     margin-top: 1em;
