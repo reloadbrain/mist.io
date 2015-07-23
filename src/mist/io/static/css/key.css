@@ -29,3 +29,7 @@
 #single-key-page #dialog.large-popup {
     width: 100% !important;
 }
+
+#public-key {
+    font-family: monospace;
+}
