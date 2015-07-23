@@ -13,7 +13,7 @@ define('app/views/script_list_item', ['app/views/list_item'],
             updateCheckbox: function () {
                 var element = this.$('input.ember-checkbox');
                 Ember.run.next(this, function () {
-                    if (element.checkboxradio) {
+                    if (element && element.checkboxradio) {
                         element.checkboxradio()
                                .checkboxradio('refresh');
                     }
