@@ -11,9 +11,9 @@ define('app/views/script_list_item', ['app/views/list_item'],
         return App.ScriptListItemView = ListItemView.extend({
 
             updateCheckbox: function () {
-                var element = this.$('input.ember-checkbox');
+                var element = $('#' + this.elementId + ' input.ember-checkbox');
                 Ember.run.next(this, function () {
-                    if (element && element.checkboxradio) {
+                    if (element.checkboxradio) {
                         element.checkboxradio()
                                .checkboxradio('refresh');
                     }
