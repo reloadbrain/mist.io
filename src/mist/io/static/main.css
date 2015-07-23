@@ -525,6 +525,7 @@ ul.checkbox-list li label {
 
 #me-btn .gravatar-image {
     border-radius: 2em;
+    width: 36px;
 }
 
 #me-btn .user {
