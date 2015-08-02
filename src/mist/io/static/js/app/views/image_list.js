@@ -71,6 +71,7 @@ define('app/views/image_list', ['app/views/page'],
 
 
             updateRenderedImages: function () {
+                console.log('update');
                 this.set('renderedImages', this.baseImages.slice(0, 25));
             },
 
@@ -88,6 +89,7 @@ define('app/views/image_list', ['app/views/page'],
 
             updateDefaultImages: function () {
                 var newImages = [];
+                console.log(Mist.backendsController.content);
                 Mist.backendsController.content.forEach(function (backend) {
                     backend.images.content.forEach(function (image) {
                         if (image.star)
@@ -103,7 +105,7 @@ define('app/views/image_list', ['app/views/page'],
 
 
             renderMoreImages: function () {
-
+                console.log('more');
                 if (this.renderedImages.length == this.baseImages.length)
                     return;
 

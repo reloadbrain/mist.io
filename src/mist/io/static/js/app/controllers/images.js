@@ -53,6 +53,7 @@ define('app/controllers/images',
                     Mist.notificationController.notify(
                         'Failed to search images on ' + that.backend.title);
                 }).complete(function (success, images) {
+                    console.log(images);
                     var imagesToReturn = [];
                     if (success) {
                         images.forEach(function (image) {

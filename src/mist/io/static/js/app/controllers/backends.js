@@ -293,7 +293,7 @@ define('app/controllers/backends', ['app/models/backend', 'ember'],
 
             _updateContent: function (backends) {
                 Ember.run(this, function() {
-
+                    info(this.content);
                     // Remove deleted backends
                     this.content.forEach(function (backend) {
                         if (!backends.findBy('id', backend.id))
@@ -374,7 +374,7 @@ define('app/controllers/backends', ['app/models/backend', 'ember'],
                 });
             },
 
- 
+
             _updateMachineCount: function() {
                 Ember.run(this, function() {
                     var counter = 0;
