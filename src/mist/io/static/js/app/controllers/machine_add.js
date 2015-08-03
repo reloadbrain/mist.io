@@ -231,19 +231,11 @@ define('app/controllers/machine_add', ['ember'],
                 var re = /^[0-9]*$/;
                 if (this.newMachineProvider.provider == 'libvirt' &&
                     this.newMachineImage &&
-                    this.newMachineImage.id &&
+                    (this.newMachineImage.id || this.newMachineLibvirtImagePath) &&
                     this.newMachineName &&
                     this.newMachineLibvirtDiskPath != '' &&
                     re.test(this.get('newMachineLibvirtDiskSize'))) {
-                    if (this.view.libvirtAdvanced == 1) {
-                        if (this.newMachineLibvirtImagePath && this.newMachineLibvirtExistingDiskPath) {
-                            formReady = true;
-                        } else {
-                            formReady = false;
-                        }
-                    } else {
                         formReady = true;
-                    }
                 }
 
                 this.set('formReady', formReady);
@@ -261,6 +253,14 @@ define('app/controllers/machine_add', ['ember'],
                     Mist.notificationController.timeNotify('Please enter only integer as sizes', 7000);
                     return;
                 } 
+            },
+
+
+            _imagesError: function() {
+                if(this.newMachineImage.id && this.newMachineLibvirtImagePath) {
+                    Mist.notificationController.timeNotify('You have selected an image and added a custom image path too, so the custom one will be selected', 7000);
+                    return;
+                }
             },
 
 
@@ -282,7 +282,11 @@ define('app/controllers/machine_add', ['ember'],
 
             sizeObserver: function() {
                 Ember.run.once(this, '_sizeError');
-            }.observes('newMachineLibvirtDiskSize')
+            }.observes('newMachineLibvirtDiskSize'),
+
+            imagesObserver: function() {
+                Ember.run.once(this, '_imagesError');
+            }.observes('newMachineImage', 'newMachineLibvirtImagePath')
         });
     }
 );
