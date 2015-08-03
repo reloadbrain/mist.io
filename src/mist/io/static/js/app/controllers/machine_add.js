@@ -26,6 +26,10 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerEnvironment: null,
             newMachineDockerPorts: null,
             newMachineAzurePorts: null,
+            newMachineLibvirtCPU: 1,
+            newMachineLibvirtCPUOptions: [1,2,3,4,5,6,7,8,9,10],
+            newMachineLibvirtRAM: 1024,
+            newMachineLibvirtRAMOptions: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000],
 
 
             /**
@@ -40,6 +44,7 @@ define('app/controllers/machine_add', ['ember'],
                 // Scrolling to top fixes that
                 $('#create-machine-panel .docker').hide();
                 $('#create-machine-panel .azure').hide();
+                $('#create-machine-panel .libvirt').hide();
                 $('.ui-page-active').animate({scrollTop:0}, 'slow');
                 $('#create-machine-panel .ui-panel-inner').animate({scrollTop:0}, 'slow');
                 $('#create-machine-panel').panel('open');
@@ -138,6 +143,8 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineScriptParams,
                         this.newMachineDockerPorts,
                         this.newMachineAzurePorts,
+                        this.newMachineLibvirtCPU,
+                        this.newMachineLibvirtRAM,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -171,7 +178,9 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineDockerCommand', '')
                     .set('newMachineScriptParams', '')
                     .set('newMachineDockerPorts', '')
-                    .set('newMachineAzurePorts', '');
+                    .set('newMachineAzurePorts', '')
+                    .set('newMachineLibvirtCPU', 1)
+                    .set('newMachineLibvirtRAM', 1000);
                 this.view.clear();
              },
 
@@ -187,7 +196,7 @@ define('app/controllers/machine_add', ['ember'],
                 }
 
                 // SSH key and location are optional for docker
-                if (this.newMachineProvider.provider != 'docker') {
+                if ((this.newMachineProvider.provider != 'docker') && (this.newMachineProvider.provider != 'libvirt')) {
                     if (Mist.keysController.keyExists(this.newMachineKey.id) &&
                         this.newMachineLocation.id)
                             formReady = true;

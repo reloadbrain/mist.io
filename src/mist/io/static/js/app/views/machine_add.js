@@ -163,6 +163,26 @@ define('app/views/machine_add', ['app/views/templated'],
             },
 
 
+            showLibvirtMenu: function() {
+              $('#create-machine-panel .libvirt').show();
+              $('#create-machine-panel #image').hide();
+              $('#create-machine-panel #size').hide();
+              $('#create-machine-panel #location').hide();
+              $('#create-machine-panel #key').hide();
+              $('#create-machine-panel #script').hide();
+            },
+
+
+            hideLibvirtMenu: function() {
+              $('#create-machine-panel .libvirt').hide();
+              $('#create-machine-panel #image').show();
+              $('#create-machine-panel #size').show();
+              $('#create-machine-panel #location').show();
+              $('#create-machine-panel #key').show();
+              $('#create-machine-panel #script').show();
+            },
+
+
              updateLaunchButton: function () {
                 if (Mist.machineAddController.formReady) {
                     $('#create-machine-ok').removeClass('ui-state-disabled');
@@ -234,6 +254,12 @@ define('app/views/machine_add', ['app/views/templated'],
                         view.showAzureMenu();
                     } else {
                         view.hideAzureMenu();
+                    }
+
+                    if (backend.get('isLibvirt')) {
+                        view.showLibvirtMenu();
+                    } else {
+                        view.hideLibvirtMenu();
                     }
 
                 },
@@ -308,6 +334,18 @@ define('app/views/machine_add', ['app/views/templated'],
                 selectScript: function (script) {
                     Mist.machineAddController.set('newMachineScript', script);
                     $('#create-machine-script-select').collapsible('collapse');
+                },
+
+                selectRAM: function (ram) {
+                    console.log('selected ram ' + ram);
+                    Mist.machineAddController.set('newMachineLibvirtRAM', ram);
+                    $('#create-machine-libvirt-ram').collapsible('collapse');
+                },
+
+                selectCPU: function (cpu) {
+                    console.log('selected cpu ' + cpu);
+                    Mist.machineAddController.set('newMachineLibvirtCPU', cpu);
+                    $('#create-machine-libvirt-cpu').collapsible('collapse');
                 },
 
                 toggleNetworkSelection: function (network) {
