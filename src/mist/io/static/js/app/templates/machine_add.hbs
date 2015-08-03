@@ -62,11 +62,11 @@
 			<div id="create-machine-libvirt-ram"
 				data-role="collapsible"
 				data-iconpos="right"
-				data-collapsed-icon="arrow-d"
+				data-collapsed-icon="check"
 				data-expanded-icon="arrow-u"
 				data-theme="a"
 				class="mist-select">
-				<h4>{{Mist.machineAddController.newMachineLibvirtRAM}}</h4>
+				<h4>{{Mist.machineAddController.newMachineLibvirtRAM}} MB</h4>
 				<ul data-role="listview" data-theme="a">
 				{{#each Mist.machineAddController.newMachineLibvirtRAMOptions}}
 					<li data-icon="false">
@@ -81,7 +81,7 @@
 			<div id="create-machine-libvirt-cpu"
 				data-role="collapsible"
 				data-iconpos="right"
-				data-collapsed-icon="arrow-d"
+				data-collapsed-icon="check"
 				data-expanded-icon="arrow-u"
 				data-theme="a"
 				class="mist-select">
@@ -93,6 +93,29 @@
 					</li>
 				{{/each}}
 				</ul>
+			</div>
+
+			<label for="create-machine-libvirt-method">Create from:</label>
+			<div id="create-machine-libvirt-method">
+				<select class="toggle-field" data-theme="a" data-role="slider"
+				{{action "switchMethod" field on="change" target="view"}}>
+				    <option value="0">Image</option>
+				    <option value="1">Disk</option>
+				</select>
+			</div>
+
+			<label for="create-machine-disk-path">Disk Path:</label>
+			{{view Mist.TextField
+				   id="create-machine-disk-path"
+				   data-theme="a"
+				   valueBinding="Mist.machineAddController.newMachineLibvirtDiskPath"}}
+
+			<div id="libvirt-from-image">
+				<label for="create-machine-disk-size">Disk Size:</label>
+				{{view Mist.TextField
+					   id="create-machine-disk-size"
+					   data-theme="a"
+					   valueBinding="Mist.machineAddController.newMachineLibvirtDiskSize"}}
 			</div>
 		</div>
 

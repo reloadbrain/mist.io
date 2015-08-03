@@ -44,6 +44,11 @@
     width: 40%;
     float: right;
 }
+#create-machine-panel #create-machine-libvirt-method .ui-slider {
+    width: 100%;
+    margin-top: .1em;
+    margin-bottom: -0.4em;
+}
 #create-machine-panel #script label {
     float: left;
 }

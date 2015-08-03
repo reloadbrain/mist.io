@@ -26,10 +26,13 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerEnvironment: null,
             newMachineDockerPorts: null,
             newMachineAzurePorts: null,
+            newMachineLibvirtMethod: 0,
             newMachineLibvirtCPU: 1,
             newMachineLibvirtCPUOptions: [1,2,3,4,5,6,7,8,9,10],
-            newMachineLibvirtRAM: 1024,
+            newMachineLibvirtRAM: 1000,
             newMachineLibvirtRAMOptions: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000],
+            newMachineLibvirtDiskPath: '/var/lib/libvir',
+            newMachineLibvirtDiskSize: 4,
 
 
             /**
@@ -56,11 +59,12 @@ define('app/controllers/machine_add', ['ember'],
                         $('.ui-page-active').height(panelHeight);
                     }
                 });
-               $('#create-machine-location').addClass('ui-state-disabled');
-               $('#create-machine-image').addClass('ui-state-disabled');
-               $('#create-machine-size').addClass('ui-state-disabled');
-               $('#create-machine-key').addClass('ui-state-disabled');
-                $('#create-machine-panel .ui-collapsible').collapsible('option', 'collapsedIcon', 'arrow-d')
+                $('#create-machine-location').addClass('ui-state-disabled');
+                $('#create-machine-image').addClass('ui-state-disabled');
+                $('#create-machine-size').addClass('ui-state-disabled');
+                $('#create-machine-key').addClass('ui-state-disabled');
+                $('#create-machine-panel .ui-collapsible')
+                    .collapsible('option', 'collapsedIcon', 'arrow-d')
                     .collapsible('collapse');
 
                 this._clear();
@@ -71,6 +75,7 @@ define('app/controllers/machine_add', ['ember'],
 
             close: function() {
                 $('#create-machine-panel').panel('close');
+                this.view.hideLibvirtMenu();
                 this._clear();
             },
 
@@ -128,6 +133,10 @@ define('app/controllers/machine_add', ['ember'],
                         return;
                     }
                 }
+                if (this.newMachineProvider.provider == 'libvirt') {
+                    this._sizeError();
+                    return;
+                }
 
                 var that = this;
                 this.newMachineProvider.machines.newMachine(
@@ -145,6 +154,9 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineAzurePorts,
                         this.newMachineLibvirtCPU,
                         this.newMachineLibvirtRAM,
+                        this.newMachineLibvirtMethod,
+                        this.newMachineLibvirtDiskSize,
+                        this.newMachineLibvirtDiskPath,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -179,6 +191,9 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineScriptParams', '')
                     .set('newMachineDockerPorts', '')
                     .set('newMachineAzurePorts', '')
+                    .set('newMachineLibvirtDiskSize', 4)
+                    .set('newMachineLibvirtDiskPath', '/var/lib/libvir')
+                    .set('newMachineLibvirtMethod', 0)
                     .set('newMachineLibvirtCPU', 1)
                     .set('newMachineLibvirtRAM', 1000);
                 this.view.clear();
@@ -210,12 +225,35 @@ define('app/controllers/machine_add', ['ember'],
                             formReady=false;
                 }
 
+                if (this.newMachineProvider.provider == 'libvirt' &&
+                    this.newMachineName &&
+                    this.newMachineLibvirtDiskPath != '') {
+                    if (this.newMachineLibvirtMethod == 0) {
+                        if (this.newMachineLibvirtDiskSize > 0) {
+                            formReady = true;
+                        } else {
+                            formReady = false;
+                        }
+                    } else {
+                        formReady = true;
+                    }
+                }
+
                 this.set('formReady', formReady);
             },
 
 
             _giveCallback: function(success, machine) {
                 if (this.callback) this.callback(success, machine);
+            },
+
+
+            _sizeError: function() {
+                var re = /^[0-9]*$/;
+                if(! re.test(this.get('newMachineLibvirtDiskSize'))) {
+                    Mist.notificationController.timeNotify('Please enter only integer as sizes', 7000);
+                    return;
+                } 
             },
 
 
@@ -233,7 +271,11 @@ define('app/controllers/machine_add', ['ember'],
                        'newMachineImage',
                        'newMachineScript',
                        'newMachineLocation',
-                       'newMachineProvider')
+                       'newMachineProvider'),
+
+            sizeObserver: function() {
+                Ember.run.once(this, '_sizeError');
+            }.observes('newMachineLibvirtDiskSize')
         });
     }
 );

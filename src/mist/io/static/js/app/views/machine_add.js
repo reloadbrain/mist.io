@@ -189,7 +189,17 @@ define('app/views/machine_add', ['app/views/templated'],
                 } else {
                     $('#create-machine-ok').addClass('ui-state-disabled');
                 }
-             },
+            },
+
+            updateMethodOptions: function () {
+                if (Mist.machineAddController.newMachineLibvirtMethod == 0) {
+                    $('#libvirt-from-image').show();
+                    Mist.machineAddController.set('newMachineLibvirtDiskPath', '/var/lib/libvir');
+                } else {
+                    $('#libvirt-from-image').hide();
+                    Mist.machineAddController.set('newMachineLibvirtDiskPath', '');
+                }
+            },
 
 
             /**
@@ -337,15 +347,24 @@ define('app/views/machine_add', ['app/views/templated'],
                 },
 
                 selectRAM: function (ram) {
-                    console.log('selected ram ' + ram);
+                    if (this.fieldIsReady) {
+                        this.fieldIsReady('libvirt-ram');
+                    }
                     Mist.machineAddController.set('newMachineLibvirtRAM', ram);
                     $('#create-machine-libvirt-ram').collapsible('collapse');
                 },
 
                 selectCPU: function (cpu) {
-                    console.log('selected cpu ' + cpu);
+                    if (this.fieldIsReady) {
+                        this.fieldIsReady('libvirt-cpu');
+                    }
                     Mist.machineAddController.set('newMachineLibvirtCPU', cpu);
                     $('#create-machine-libvirt-cpu').collapsible('collapse');
+                },
+
+                switchMethod: function() {
+                    var method = $('#create-machine-libvirt-method').find('select').val();
+                    Mist.machineAddController.set('newMachineLibvirtMethod', method);
                 },
 
                 toggleNetworkSelection: function (network) {
@@ -405,9 +424,14 @@ define('app/views/machine_add', ['app/views/templated'],
                         'Mist.machineAddController.newMachineLocation'),
 
 
-             formReadyObserver: function () {
+            formReadyObserver: function () {
                 Ember.run.once(this, 'updateLaunchButton');
-             }.observes('Mist.machineAddController.formReady')
+            }.observes('Mist.machineAddController.formReady'),
+
+
+            libvirtMethodObserver: function () {
+                Ember.run.once(this, 'updateMethodOptions');
+            }.observes('Mist.machineAddController.newMachineLibvirtMethod')
         });
     }
 );
