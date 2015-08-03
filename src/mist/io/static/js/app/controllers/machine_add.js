@@ -27,9 +27,7 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerPorts: null,
             newMachineAzurePorts: null,
             newMachineLibvirtCPU: 1,
-            newMachineLibvirtCPUOptions: [1,2,3,4,5,6,7,8,9,10],
-            newMachineLibvirtRAM: 1000,
-            newMachineLibvirtRAMOptions: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000],
+            newMachineLibvirtRAM: 1024,
             newMachineLibvirtDiskPath: '/var/lib/libvirt/',
             newMachineLibvirtDiskSize: 4,
             newMachineLibvirtImagePath: null,
@@ -195,7 +193,7 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineLibvirtDiskSize', 4)
                     .set('newMachineLibvirtDiskPath', '/var/lib/libvirt/')
                     .set('newMachineLibvirtCPU', 1)
-                    .set('newMachineLibvirtRAM', 1000)
+                    .set('newMachineLibvirtRAM', 1024)
                     .set('newMachineLibvirtImagePath', '')
                     .set('newMachineLibvirtExistingDiskPath', '');
                 this.view.clear();
@@ -261,6 +259,7 @@ define('app/controllers/machine_add', ['ember'],
                     return;
                 }
             },
+
 
 
             /**

@@ -12,6 +12,8 @@ define('app/views/machine_add', ['app/views/templated'],
              */
 
             libvirtAdvanced: 0,
+            newMachineLibvirtCPUOptions: null,
+            newMachineLibvirtRAMOptions: null,
             price: function () {
 
                 var image = Mist.machineAddController.newMachineImage;
@@ -273,6 +275,8 @@ define('app/views/machine_add', ['app/views/templated'],
 
                     if (backend.get('isLibvirt')) {
                         view.showLibvirtMenu();
+                        this.set('newMachineLibvirtCPUOptions', this._range(10, 1));
+                        this.set('newMachineLibvirtRAMOptions', this._range(20000, 512, 512));
                     } else {
                         view.hideLibvirtMenu();
                     }
@@ -412,6 +416,19 @@ define('app/views/machine_add', ['app/views/templated'],
                     .trigger('create')
                     .find('label')
                     .removeClass('ui-corner-all');
+            },
+
+
+            _range: function(end, start, step) {
+                var start = start || 0,
+                step = step || 1, result = [], item = start;
+
+                while(item <= end) {        
+                    result.push(item);
+                    item += step;
+                }
+
+                return result;
             },
 
 

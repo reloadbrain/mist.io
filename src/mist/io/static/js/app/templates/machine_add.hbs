@@ -68,7 +68,7 @@
 				class="mist-select">
 				<h4>{{Mist.machineAddController.newMachineLibvirtRAM}} MB</h4>
 				<ul data-role="listview" data-theme="a">
-				{{#each Mist.machineAddController.newMachineLibvirtRAMOptions}}
+				{{#each view.newMachineLibvirtRAMOptions}}
 					<li data-icon="false">
 						<a {{action "selectRAM" this target="view"}}>{{this}} MB</a>
 					</li>
@@ -87,7 +87,7 @@
 				class="mist-select">
 				<h4>{{Mist.machineAddController.newMachineLibvirtCPU}}</h4>
 				<ul data-role="listview" data-theme="a">
-				{{#each Mist.machineAddController.newMachineLibvirtCPUOptions}}
+				{{#each view.newMachineLibvirtCPUOptions}}
 					<li data-icon="false">
 						<a {{action "selectCPU" this target="view"}}>{{this}}</a>
 					</li>
