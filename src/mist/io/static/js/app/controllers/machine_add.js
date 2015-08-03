@@ -76,7 +76,6 @@ define('app/controllers/machine_add', ['ember'],
 
             close: function() {
                 $('#create-machine-panel').panel('close');
-                this.view.hideLibvirtMenu();
                 this._clear();
             },
 

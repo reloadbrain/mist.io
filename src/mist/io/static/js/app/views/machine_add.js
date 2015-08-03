@@ -97,12 +97,14 @@ define('app/views/machine_add', ['app/views/templated'],
                  this.$('select').val('basic').slider('refresh');
                  this.$('.script-option').hide();
                  this.$('.basic').show();
+                 this.hideLibvirtMenu();
              },
 
 
              fieldIsReady: function (field) {
-                $('#create-machine-' + field).collapsible('option', 'collapsedIcon', 'check')
-                                             .collapsible('collapse');
+                $('#create-machine-' + field)
+                    .collapsible('option', 'collapsedIcon', 'check')
+                    .collapsible('collapse');
              },
 
 
@@ -165,13 +167,15 @@ define('app/views/machine_add', ['app/views/templated'],
 
 
             showLibvirtMenu: function() {
-              $('#create-machine-panel .libvirt').show();
-              $('#create-machine-panel #image').hide();
-              $('#create-machine-panel #size').hide();
-              $('#create-machine-panel #location').hide();
-              $('#create-machine-panel #key').hide();
-              $('#create-machine-panel #script').hide();
-              $('#create-machine-panel #create-machine-monitoring').hide();
+                $('#create-machine-panel .libvirt').show();
+                $('#create-machine-panel #create-machine-libvirt-ram, #create-machine-panel #create-machine-libvirt-cpu')
+                .collapsible('option', 'collapsedIcon', 'check');
+                $('#create-machine-panel #image').hide();
+                $('#create-machine-panel #size').hide();
+                $('#create-machine-panel #location').hide();
+                $('#create-machine-panel #key').hide();
+                $('#create-machine-panel #script').hide();
+                $('#create-machine-panel #create-machine-monitoring').hide();
             },
 
 
