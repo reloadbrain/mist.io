@@ -26,13 +26,14 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerEnvironment: null,
             newMachineDockerPorts: null,
             newMachineAzurePorts: null,
-            newMachineLibvirtMethod: 0,
             newMachineLibvirtCPU: 1,
             newMachineLibvirtCPUOptions: [1,2,3,4,5,6,7,8,9,10],
             newMachineLibvirtRAM: 1000,
             newMachineLibvirtRAMOptions: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000],
-            newMachineLibvirtDiskPath: '/var/lib/libvir',
+            newMachineLibvirtDiskPath: '/var/lib/libvirt/',
             newMachineLibvirtDiskSize: 4,
+            newMachineLibvirtImagePath: null,
+            newMachineLibvirtExistingDiskPath: null,
 
 
             /**
@@ -154,9 +155,10 @@ define('app/controllers/machine_add', ['ember'],
                         this.newMachineAzurePorts,
                         this.newMachineLibvirtCPU,
                         this.newMachineLibvirtRAM,
-                        this.newMachineLibvirtMethod,
                         this.newMachineLibvirtDiskSize,
                         this.newMachineLibvirtDiskPath,
+                        this.newMachineLibvirtImagePath,
+                        this.newMachineLibvirtExistingDiskPath,
                         function(success, machine) {
                             that._giveCallback(success, machine);
                         }
@@ -192,10 +194,11 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineDockerPorts', '')
                     .set('newMachineAzurePorts', '')
                     .set('newMachineLibvirtDiskSize', 4)
-                    .set('newMachineLibvirtDiskPath', '/var/lib/libvir')
-                    .set('newMachineLibvirtMethod', 0)
+                    .set('newMachineLibvirtDiskPath', '/var/lib/libvirt/')
                     .set('newMachineLibvirtCPU', 1)
-                    .set('newMachineLibvirtRAM', 1000);
+                    .set('newMachineLibvirtRAM', 1000)
+                    .set('newMachineLibvirtImagePath', '')
+                    .set('newMachineLibvirtExistingDiskPath', '');
                 this.view.clear();
              },
 
@@ -225,11 +228,15 @@ define('app/controllers/machine_add', ['ember'],
                             formReady=false;
                 }
 
+                var re = /^[0-9]*$/;
                 if (this.newMachineProvider.provider == 'libvirt' &&
+                    this.newMachineImage &&
+                    this.newMachineImage.id &&
                     this.newMachineName &&
-                    this.newMachineLibvirtDiskPath != '') {
-                    if (this.newMachineLibvirtMethod == 0) {
-                        if (this.newMachineLibvirtDiskSize > 0) {
+                    this.newMachineLibvirtDiskPath != '' &&
+                    re.test(this.get('newMachineLibvirtDiskSize'))) {
+                    if (this.view.libvirtAdvanced == 1) {
+                        if (this.newMachineLibvirtImagePath && this.newMachineLibvirtExistingDiskPath) {
                             formReady = true;
                         } else {
                             formReady = false;

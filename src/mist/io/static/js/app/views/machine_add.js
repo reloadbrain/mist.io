@@ -11,6 +11,7 @@ define('app/views/machine_add', ['app/views/templated'],
              *  Properties
              */
 
+            libvirtAdvanced: 0,
             price: function () {
 
                 var image = Mist.machineAddController.newMachineImage;
@@ -170,6 +171,7 @@ define('app/views/machine_add', ['app/views/templated'],
               $('#create-machine-panel #location').hide();
               $('#create-machine-panel #key').hide();
               $('#create-machine-panel #script').hide();
+              $('#create-machine-panel #create-machine-monitoring').hide();
             },
 
 
@@ -180,6 +182,7 @@ define('app/views/machine_add', ['app/views/templated'],
               $('#create-machine-panel #location').show();
               $('#create-machine-panel #key').show();
               $('#create-machine-panel #script').show();
+              $('#create-machine-panel #create-machine-monitoring').show();
             },
 
 
@@ -191,13 +194,11 @@ define('app/views/machine_add', ['app/views/templated'],
                 }
             },
 
-            updateMethodOptions: function () {
-                if (Mist.machineAddController.newMachineLibvirtMethod == 0) {
-                    $('#libvirt-from-image').show();
-                    Mist.machineAddController.set('newMachineLibvirtDiskPath', '/var/lib/libvir');
+            updateAdvancedOptions: function () {                
+                if (this.get('libvirtAdvanced') == 1) {
+                    $('#create-machine-libvirt-advanced-options').show();
                 } else {
-                    $('#libvirt-from-image').hide();
-                    Mist.machineAddController.set('newMachineLibvirtDiskPath', '');
+                    $('#create-machine-libvirt-advanced-options').hide();
                 }
             },
 
@@ -362,9 +363,9 @@ define('app/views/machine_add', ['app/views/templated'],
                     $('#create-machine-libvirt-cpu').collapsible('collapse');
                 },
 
-                switchMethod: function() {
-                    var method = $('#create-machine-libvirt-method').find('select').val();
-                    Mist.machineAddController.set('newMachineLibvirtMethod', method);
+                switchAdvanced: function() {
+                    var advanced = $('#create-machine-libvirt-advanced').find('select').val();
+                    this.set('libvirtAdvanced', advanced);
                 },
 
                 toggleNetworkSelection: function (network) {
@@ -429,9 +430,9 @@ define('app/views/machine_add', ['app/views/templated'],
             }.observes('Mist.machineAddController.formReady'),
 
 
-            libvirtMethodObserver: function () {
-                Ember.run.once(this, 'updateMethodOptions');
-            }.observes('Mist.machineAddController.newMachineLibvirtMethod')
+            libvirtAdvancedObserver: function () {
+                Ember.run.once(this, 'updateAdvancedOptions');
+            }.observes('libvirtAdvanced')
         });
     }
 );
