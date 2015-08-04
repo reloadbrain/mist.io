@@ -141,13 +141,13 @@
 				   data-theme="a"
 				   valueBinding="Mist.machineAddController.newMachineLibvirtDiskPath"}}
 
-			<label for="create-machine-disk-size">Disk Size:</label>
+			<label for="create-machine-disk-size">Disk Size (G):</label>
 			{{view Mist.TextField
 				   id="create-machine-disk-size"
 				   data-theme="a"
 				   valueBinding="Mist.machineAddController.newMachineLibvirtDiskSize"}}
 
-			<label for="create-machine-libvirt-advanced">Advanced:</label>
+			<label for="create-machine-libvirt-advanced">Advanced Settings:</label>
 			<div id="create-machine-libvirt-advanced">
 				<select class="toggle-field" data-theme="a" data-role="slider"
 				{{action "switchAdvanced" field on="change" target="view"}}>
