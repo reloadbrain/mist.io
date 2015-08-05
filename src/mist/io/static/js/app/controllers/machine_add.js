@@ -27,7 +27,7 @@ define('app/controllers/machine_add', ['ember'],
             newMachineDockerPorts: null,
             newMachineAzurePorts: null,
             newMachineLibvirtCPU: 1,
-            newMachineLibvirtRAM: 1024,
+            newMachineLibvirtRAM: 512,
             newMachineLibvirtDiskPath: '/var/lib/libvirt/',
             newMachineLibvirtDiskSize: 4,
             newMachineLibvirtImagePath: null,
@@ -193,7 +193,7 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineLibvirtDiskSize', 4)
                     .set('newMachineLibvirtDiskPath', '/var/lib/libvirt/')
                     .set('newMachineLibvirtCPU', 1)
-                    .set('newMachineLibvirtRAM', 1024)
+                    .set('newMachineLibvirtRAM', 512)
                     .set('newMachineLibvirtImagePath', '')
                     .set('newMachineLibvirtExistingDiskPath', '');
                 this.view.clear();
@@ -222,7 +222,7 @@ define('app/controllers/machine_add', ['ember'],
                 if (this.newMachineImage.id &&
                     this.newMachineImage.get('isMist')) {
                         if (!Mist.keysController.keyExists(this.newMachineKey.id))
-                            formReady=false;
+                            formReady = false;
                 }
 
                 var re = /^[0-9]*$/;

@@ -168,7 +168,8 @@ define('app/views/machine_add', ['app/views/templated'],
             },
 
 
-            showLibvirtMenu: function() {
+            showLibvirtMenu: function(backend) {
+                this._libvirtOptions(backend);
                 $('#create-machine-panel .libvirt').show();
                 $('#create-machine-panel #create-machine-libvirt-ram, #create-machine-panel #create-machine-libvirt-cpu')
                 .collapsible('option', 'collapsedIcon', 'check');
@@ -192,7 +193,7 @@ define('app/views/machine_add', ['app/views/templated'],
             },
 
 
-             updateLaunchButton: function () {
+            updateLaunchButton: function () {
                 if (Mist.machineAddController.formReady) {
                     $('#create-machine-ok').removeClass('ui-state-disabled');
                 } else {
@@ -274,11 +275,9 @@ define('app/views/machine_add', ['app/views/templated'],
                     }
 
                     if (backend.get('isLibvirt')) {
-                        view.showLibvirtMenu();
-                        this.set('newMachineLibvirtCPUOptions', this._range(10, 1));
-                        this.set('newMachineLibvirtRAMOptions', this._range(20000, 512, 512));
+                        this.showLibvirtMenu(backend);                        
                     } else {
-                        view.hideLibvirtMenu();
+                        this.hideLibvirtMenu();
                     }
 
                 },
@@ -416,6 +415,25 @@ define('app/views/machine_add', ['app/views/templated'],
                     .trigger('create')
                     .find('label')
                     .removeClass('ui-corner-all');
+            },
+
+
+            _libvirtOptions: function(backend) {
+                var sizes = backend.sizes.content;
+                if (sizes.length > 0) {
+                   var size = sizes[0], ram = size.ram, cpu = size.extra.cpu;
+
+                   if (ram < 512) {
+                        this.set('newMachineLibvirtRAMOptions', [512]);
+                   } else {                                
+                        this.set('newMachineLibvirtRAMOptions', this._range(ram, 512, 512));
+                   }
+
+                   this.set('newMachineLibvirtCPUOptions', this._range(cpu, 1));
+                } else { 
+                    this.set('newMachineLibvirtCPUOptions', [1]);
+                    this.set('newMachineLibvirtRAMOptions', [512]);
+                }
             },
 
 
