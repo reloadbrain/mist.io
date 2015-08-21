@@ -79,7 +79,6 @@ define('app/controllers/machine_add', ['ember'],
 
 
             add: function() {
-
                 var providerName = this.newMachineProvider.title;
                 var machineSize = this.newMachineSize.name;
                 var machineImage = this.newMachineImage.name;
@@ -133,7 +132,6 @@ define('app/controllers/machine_add', ['ember'],
                 }
                 if (this.newMachineProvider.provider == 'libvirt') {
                     this._sizeError();
-                    return;
                 }
 
                 var that = this;
@@ -201,7 +199,6 @@ define('app/controllers/machine_add', ['ember'],
 
 
             _updateFormReady: function() {
-
                 var formReady = false;
                 if (this.newMachineName &&
                     this.newMachineSize.id &&
@@ -234,7 +231,6 @@ define('app/controllers/machine_add', ['ember'],
                     re.test(this.get('newMachineLibvirtDiskSize'))) {
                         formReady = true;
                 }
-
                 this.set('formReady', formReady);
             },
 
