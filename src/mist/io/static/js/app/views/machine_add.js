@@ -421,7 +421,7 @@ define('app/views/machine_add', ['app/views/templated'],
             _libvirtOptions: function(backend) {
                 var sizes = backend.sizes.content;
                 if (sizes.length > 0) {
-                   var size = sizes[0], ram = size.ram, cpu = size.extra.cpu;
+                   var size = sizes[0], ram = size.ram, cpu = size.disk;
 
                    if (ram < 512) {
                         this.set('newMachineLibvirtRAMOptions', [512]);

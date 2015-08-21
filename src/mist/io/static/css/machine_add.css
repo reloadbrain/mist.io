@@ -15,6 +15,9 @@
     max-height: 120px;
     overflow-y: scroll;
 }
+#create-machine-panel .ui-collapsible-content .ui-listview {
+    margin-top: 0;
+}
 #create-machine-panel .ok-cancel div:first-child .ui-btn {
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
