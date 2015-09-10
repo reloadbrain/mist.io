@@ -28,7 +28,7 @@ define('app/controllers/machine_add', ['ember'],
             newMachineAzurePorts: null,
             newMachineLibvirtCPU: 1,
             newMachineLibvirtRAM: 512,
-            newMachineLibvirtDiskPath: '/var/lib/libvirt/',
+            newMachineLibvirtDiskPath: '/var/lib/libvirt/images',
             newMachineLibvirtDiskSize: 4,
             newMachineLibvirtImagePath: null,
             newMachineLibvirtExistingDiskPath: null,
@@ -189,7 +189,7 @@ define('app/controllers/machine_add', ['ember'],
                     .set('newMachineDockerPorts', '')
                     .set('newMachineAzurePorts', '')
                     .set('newMachineLibvirtDiskSize', 4)
-                    .set('newMachineLibvirtDiskPath', '/var/lib/libvirt/')
+                    .set('newMachineLibvirtDiskPath', '/var/lib/libvirt/images')
                     .set('newMachineLibvirtCPU', 1)
                     .set('newMachineLibvirtRAM', 512)
                     .set('newMachineLibvirtImagePath', '')
@@ -245,7 +245,7 @@ define('app/controllers/machine_add', ['ember'],
                 if(! re.test(this.get('newMachineLibvirtDiskSize'))) {
                     Mist.notificationController.timeNotify('Please enter only integer as sizes', 7000);
                     return;
-                } 
+                }
             },
 
 
