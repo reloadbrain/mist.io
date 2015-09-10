@@ -119,6 +119,7 @@ define('app/controllers/machines', ['app/models/machine'],
                         'size_name': size.name,
                         'image_name': image.name,
                         'location_name': location.name,
+                        'provider' : that.backend.provider,
                         'monitoring' : monitoring,
                         // Openstack
                         'networks': networks,
