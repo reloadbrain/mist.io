@@ -40,17 +40,24 @@ define('app/views/controlled', [],
                             overlay = id ? $('#' + id+'-overlay') : false;
                             if (overlay) {
                                 overlay.removeClass('in').addClass('ui-screen-hidden');
-                                overlay.height($())
                             }
                         },
                         expand: function(event, ui) {
                             var id = $(this).attr('id'),
                             overlay = id ? $('#' + id+'-overlay') : false;
+
+                            $(this).children().next().hide();
+                            $(this).children().next().slideDown(250);
+
+                            if ($(this).parents('#no-collection').length) {
+                                if (overlay && overlay.hasClass('ui-screen-hidden')) {
+                                    $('.ui-page').animate({scrollTop : $(this).offset().top}, 'slow');
+                                }
+                            }
+
                             if (overlay) {
                                 overlay.removeClass('ui-screen-hidden').addClass('in');
                             }
-                            $(this).children().next().hide();
-                            $(this).children().next().slideDown(250);
                         }
                     });
                 });
