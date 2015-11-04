@@ -64,10 +64,10 @@
    %% Select an authentication database to use. RabbitMQ comes bundled
    %% with a built-in auth-database, based on mnesia.
    %%
-   %% {auth_backends, [rabbit_auth_backend_internal]},
+   %% {auth_clouds, [rabbit_auth_cloud_internal]},
 
    %% Configurations supporting the rabbitmq_auth_mechanism_ssl and
-   %% rabbitmq_auth_backend_ldap plugins.
+   %% rabbitmq_auth_cloud_ldap plugins.
    %%
    %% NB: These options require that the relevant plugin is enabled.
    %% See http://www.rabbitmq.com/plugins.html for further details.
@@ -80,17 +80,17 @@
    %%
    %% {auth_mechanisms, ['EXTERNAL']},
 
-   %% The rabbitmq_auth_backend_ldap plugin allows the broker to
+   %% The rabbitmq_auth_cloud_ldap plugin allows the broker to
    %% perform authentication and authorisation by deferring to an
    %% external LDAP server.
    %%
-   %% For more information about configuring the LDAP backend, see
+   %% For more information about configuring the LDAP cloud, see
    %% http://www.rabbitmq.com/ldap.html.
    %%
-   %% Enable the LDAP auth backend by adding to or replacing the
-   %% auth_backends entry:
+   %% Enable the LDAP auth cloud by adding to or replacing the
+   %% auth_clouds entry:
    %%
-   %% {auth_backends, [rabbit_auth_backend_ldap]},
+   %% {auth_clouds, [rabbit_auth_cloud_ldap]},
 
    %% This pertains to both the rabbitmq_auth_mechanism_ssl plugin and
    %% STOMP ssl_cert_login configurations. See the rabbitmq_stomp
@@ -466,7 +466,7 @@
  %%
  %% ----------------------------------------------------------------------------
 
- {rabbitmq_auth_backend_ldap,
+ {rabbitmq_auth_cloud_ldap,
   [%%
    %% Connecting to the LDAP server(s)
    %% ================================

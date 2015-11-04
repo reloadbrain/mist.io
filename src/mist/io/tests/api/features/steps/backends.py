@@ -1,15 +1,15 @@
 from behave import *
 
 
-@given(u'"{text}" backend added through api')
-def given_backend(context, text):
-    backends = context.client.list_backends()
+@given(u'"{text}" cloud added through api')
+def given_cloud(context, text):
+    clouds = context.client.list_clouds()
 
-    for backend in backends:
-        if text in backend['title']:
+    for cloud in clouds:
+        if text in cloud['title']:
             return
 
 
-@when(u'I list backends')
-def list_backends(context):
-    context.backends = context.client.list_backends()
+@when(u'I list clouds')
+def list_clouds(context):
+    context.clouds = context.client.list_clouds()
