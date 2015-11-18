@@ -25,6 +25,8 @@ define('app/views/machine_monitoring',
             metrics: [],
             machine: null,
             gettingCommand: null,
+            command: null,
+            revealCommand: null,
 
 
             //
@@ -277,6 +279,8 @@ define('app/views/machine_monitoring',
                     rules: new Array(),
                     graphs: new Array(),
                     metrics: new Array(),
+                    command: null,
+                    revealCommand: null
                 });
             },
 
@@ -310,7 +314,9 @@ define('app/views/machine_monitoring',
                 Mist.monitoringController.getMonitoringCommand(
                     this.machine, function (success, data) {
                         if (success) {
-                            if (that.machine.get('isWindows'))
+                            var command;
+                            if (that.machine.get('isWindows')) {
+                                command = data.windows_command;
                                 showCommand({
                                     body: [
                                         {
@@ -318,11 +324,13 @@ define('app/views/machine_monitoring',
                                                 ' to install the monitoring agent:'
                                         },
                                         {
-                                            command: data.windows_command
+                                            command: command
                                         }
                                     ]
                                 });
-                            else if (that.machine.get('isCoreos'))
+                            }
+                            else if (that.machine.get('isCoreos')) {
+                                command = data.coreos_command;
                                 showCommand({
                                     body: [
                                         {
@@ -330,11 +338,13 @@ define('app/views/machine_monitoring',
                                                 ' to install the monitoring agent:'
                                         },
                                         {
-                                            command: data.coreos_command
+                                            command: command
                                         }
                                     ]
                                 });
-                            else
+                            }
+                            else {
+                                command = data.unix_command;
                                 showCommand({
                                     body: [
                                         {
@@ -346,10 +356,13 @@ define('app/views/machine_monitoring',
                                                 ' to install the monitoring agent:'
                                         },
                                         {
-                                            command: data.unix_command
+                                            command: command
                                         }
                                     ]
                                 });
+                            }
+
+                            that._presentCommand(command);
                         }
                         that.set('gettingCommand', false)
                 });
@@ -366,6 +379,13 @@ define('app/views/machine_monitoring',
                         }
                     });
                 }
+            },
+
+            _presentCommand: function(command) {
+                this.setProperties({
+                    command: command,
+                    revealCommand: true
+                });
             },
 
             _showEnableMonitoringConfirmation: function () {

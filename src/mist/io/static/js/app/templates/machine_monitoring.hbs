@@ -1,5 +1,9 @@
 <div id="machine-monitoring">
 
+    {{#if view.revealCommand}}
+        <pre class="command-container">{{view.command}}</pre>
+    {{/if}}
+
     {{#if machine.hasMonitoring}}
 
         {{#if view.pendingFirstStats}}
