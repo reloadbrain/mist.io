@@ -127,7 +127,7 @@ define('app/models/backend', ['app/controllers/machines', 'app/controllers/image
                         Ember.run.once(this, 'loadingLocationsObserver');
                     });
                     this.networks.addObserver('loading', this, function () {
-                        Ember.run.once(this, 'loadingNetowrksObserver');
+                        Ember.run.once(this, 'loadingNetworksObserver');
                     });
                 });
             }.on('init'),
