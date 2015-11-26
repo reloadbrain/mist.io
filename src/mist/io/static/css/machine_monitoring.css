@@ -154,6 +154,12 @@
 #machine-monitoring #enable-monitoring-label{
     text-align: center;
 }
+#machine-monitoring #monitoring-command-label{
+    margin: 20px auto;
+}
+#machine-monitoring .command-container {
+    margin: 0;
+}
 #machine-monitoring {
     text-align: center;
 }

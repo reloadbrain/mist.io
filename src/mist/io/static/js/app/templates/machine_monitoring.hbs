@@ -1,9 +1,5 @@
 <div id="machine-monitoring">
 
-    {{#if view.revealCommand}}
-        <pre class="command-container">{{view.command}}</pre>
-    {{/if}}
-
     {{#if machine.hasMonitoring}}
 
         {{#if view.pendingFirstStats}}
@@ -91,6 +87,11 @@
                    {{action "enableMonitoringClicked" target=view}}>
                        Enable Monitoring
                </a>
+
+               {{#if view.revealCommand}}
+                    <label id="monitoring-command-label">Monitoring Command</label>
+                   <pre class="command-container">{{view.command}}</pre>
+               {{/if}}
            {{/if}} {{/if}}
        </div>
     {{/if}}
