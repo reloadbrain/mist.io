@@ -59,6 +59,9 @@
 #single-image-page .info-table tr td:nth-child(1) {
     padding-left: 70px;
 }
+#single-image-page .info-table tr:nth-child(2n) {
+    background-color: #f7f5ed;
+}
 /* Conditional for < 500px */
 @media only screen and  (max-width: 500px) {
     #single-image-page .info-table tr td:nth-child(1) {
