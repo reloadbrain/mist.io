@@ -11,7 +11,7 @@ define('app/views/network_list_item', ['app/views/list_item'],
 		return App.NetworkListItemComponent = ListItemComponent.extend({
 			layoutName: 'network_list_item',
 			network: null,
-			classNameBindings: ['isDisabled'],
+			classNameBindings: ['isDisabled', 'networkSelectTooltip'],
 
 			/**
 			 *  Computed Properties
@@ -20,6 +20,13 @@ define('app/views/network_list_item', ['app/views/list_item'],
 			isDisabled: function() {
                 return !this.network.get('cloud.isOpenStack');
             }.property('network.cloud.isOpenStack'),
+
+			networkSelectTooltip: function() {
+                if (!this.network.get('cloud.isOpenStack'))
+                	return "Selection is disabled"
+                else 
+                	return "Select network";
+            }.property('network.cloud.isOpenStack'),            
 
 			/**
 			 *
