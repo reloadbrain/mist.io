@@ -75,9 +75,6 @@
     background-color: #faf9f4;
     border: none;
 }
-#single-image-page .info-table tr:hover {
-    background-color: #f2f2f2;
-}
 #single-image-page .single-view-icon-wrapper > span {
     margin-top: 20px;
 }
