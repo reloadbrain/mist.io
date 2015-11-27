@@ -260,7 +260,8 @@
 }
 
 .no-monitoring .monitoring-state:after {
-    content:'\0048';
+    /*content:'\0048';*/
+    content:'m';
     color: #A5A4A1;
 }
 
