@@ -16,7 +16,7 @@ define('app/views/image_list_item', ['app/views/list_item'],
 
             image: null,
             layoutName: 'image_list_item',
-            classNameBindings: ['starClass'],
+            classNameBindings: ['starClass', 'starTooltip'],
 
 
             //
@@ -25,6 +25,10 @@ define('app/views/image_list_item', ['app/views/list_item'],
 
             starClass: function () {
                 return this.image.star ? 'staron' : 'staroff';
+            }.property('image.star'),
+
+            starTooltip: function () {
+                return this.image.star ? 'Enabled' : 'Disabled';
             }.property('image.star'),
 
 
