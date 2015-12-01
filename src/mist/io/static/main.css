@@ -50,14 +50,11 @@
 #banner-logo {
     display: inline-block;
     width: 120px;
-    height: 54px;
-    background: transparent url(images/logo.png) no-repeat left center;
+    height: 59px;
 }
-@media (min-device-pixel-ratio: 2), (-webkit-min-resolution: 192dpi), (min-resolution: 192dpi) {
-    #banner-logo {
-        background: url(images/logo@2x.png) no-repeat left center;
-        background-size: 120px;
-    }
+#banner-logo img {
+    width: 100%;
+    height: 100%;
 }
 
 .user-menu {
