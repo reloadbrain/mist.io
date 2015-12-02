@@ -157,6 +157,26 @@ define('app/views/graph_list_item', ['d3', 'c3'],
                             }
                         }
                     } else { // generate new chart
+                        if (graph.index == 5) {
+                            chartType = 'spline';
+                            var newColsX = [], newColsY = [], keys = [];
+
+                            for (var i = 0, len = cols[1].length; i < len; i++) {
+                                if (cols[1][i]) {
+                                    newColsY.push(cols[1][i]);
+                                    keys.push(i);
+                                }
+                            }
+
+                            for (var i = 0, len = keys.length; i < len; i++) {
+                                if (newColsY[i]) {
+                                    newColsX.push(cols[0][keys[i]]);
+                                }
+                            }
+
+                            cols = [newColsX, newColsY];
+                        }
+                        
                         charts.push(c3.generate({
                             bindto: '#' + batch.id,
                             padding: {
