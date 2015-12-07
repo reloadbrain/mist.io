@@ -327,7 +327,7 @@ def update_single_line(terminal, lines, index):
     assert index >= 0 and index < len(lines), "Wrong single line index %s" % index
     all_lines = terminal.find_elements_by_tag_name('div')
     all_lines_text = safe_get_element_text(all_lines[index])
-    lines[index] = safe_get_element_text(all_lines_text).rstrip().lstrip()
+    lines[index] = all_lines_text.rstrip().lstrip()
 
 
 @then(u'I test the ssh connection')
