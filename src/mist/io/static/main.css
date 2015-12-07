@@ -1383,12 +1383,14 @@ ul.checkbox-list .ui-grid-b {
 ------------------------------------------------------------------------------*/
 .info-table {
     width: 100%;
+    table-layout: fixed;
 }
 .info-table td {
     margin: 0;
     width: 50%;
     font-size: 14px;
     padding: 10px 12px;
+    word-wrap: break-word;
 }
 .info-table tr td:nth-child(2) {
     font-weight: normal;
