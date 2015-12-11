@@ -1,0 +1,81 @@
+<div id="template-run"
+    class="large-popup"
+    data-role="popup"
+    data-position="right"
+    data-display="overlay"
+    data-overlay-theme="b"
+    data-transition="slideup">
+
+    <div id="run-template"
+         class="large-popup
+            ui-popup
+            ui-body-a
+            ui-overlay-shadow
+            ui-corner-all"
+         data-role="popup"
+         data-enhanced="true">
+
+        <div class="ui-header ui-bar-b ui-caps">
+            <h1 class="ui-title">Run template</h1>
+
+            <a href="javascript:void(0)" class="close" data-rel="back">&#10005;</a>
+        </div>
+
+        <div data-role="content" data-theme="a">
+
+            <div class="form-field {{if Mist.templateRunController.templateToRun.machine.name 'filled' 'empty'}} required">
+                <label>Machine</label>
+                <div id="template-run-machine"
+                    data-role="collapsible"
+                    data-iconpos="right"
+                    data-collapsed-icon="carat-d"
+                    data-expanded-icon="carat-u"
+                    data-theme="d"
+                    class="mist-select">
+                    <h4>
+                        {{#with Mist.templateRunController.templateToRun as |template|}}
+                            {{#if template.machine}}
+                                {{template.machine.name}}
+                            {{else}}
+                                Select
+                            {{/if}}
+                        {{/with}}
+                    </h4>
+                    <ul data-role="listview" data-theme="a">
+                        {{#each Mist.cloudsController.model as |cloud|}}
+                        {{#if cloud.enabled}}
+                            {{#each cloud.machines.model as |machine|}}
+                            {{#if machine.hasKeys}}
+                                <li data-icon="false">
+                                    <a {{action "machineClicked" machine target=view}}>
+                                        {{machine.name}}
+                                    </a>
+                                </li>
+                            {{/if}}
+                            {{/each}}
+                        {{/if}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="template-params">Parameters (optional)</label>
+                {{view Mist.TextArea
+                    data-theme="a"
+                    id="template-params"
+                    value=Mist.templateRunController.templateToRun.parameters}}
+            </div>
+
+            {{#if Mist.templatesController.runningTemplate}}
+                <div class="ajax-loader"></div>
+            {{/if}}
+
+            <div class="ok-cancel" data-role="controlgroup" data-type="horizontal">
+                <a id="new-template-ok" data-theme="d"
+                    class="{{if view.isReady '' 'ui-state-disabled'}} ui-btn ok-only ui-btn-d ui-caps"
+                    {{action "runClicked" target=view}}>Run</a>
+            </div>
+        </div>
+    </div>
+</div>

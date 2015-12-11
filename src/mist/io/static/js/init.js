@@ -36,6 +36,10 @@ var loadApp = function (
     ScriptEditController,
     ScriptRunController,
     ScriptsController,
+    TemplateAddController,
+    TemplateEditController,
+    TemplateRunController,
+    TemplatesController,
     ProjectsController,
     HomeView) {
 
@@ -84,6 +88,10 @@ var loadApp = function (
         this.route('script', {
             path : '/scripts/:script_id'
         });
+        this.route('templates');
+        this.route('template', {
+            path : '/templates/:template_id'
+        });
         this.route('logs');
         this.route('missing', { path: "/*path" });
     });
@@ -123,6 +131,10 @@ var loadApp = function (
     App.set('scriptAddController', ScriptAddController.create());
     App.set('scriptRunController', ScriptRunController.create());
     App.set('scriptEditController', ScriptEditController.create());
+    App.set('templatesController', TemplatesController.create());
+    App.set('templateAddController', TemplateAddController.create());
+    App.set('templateRunController', TemplateRunController.create());
+    App.set('templateEditController', TemplateEditController.create());
     App.set('projectsController', ProjectsController.create());
     App.set('machineRunScriptController', MachineRunScriptController.create());
 
@@ -329,9 +341,12 @@ var setupMainChannel = function(socket, callback) {
     if (Mist.isCore) {
         //  TODO: This is a temporary ajax-request to get the scripts.
         //  It should be converted into a "list_scripts" socket handler
-        //  as soon as the cloud supports it
+        //  as soon as the backend supports it
         Mist.ajax.GET('/scripts').success(function (scripts) {
             Mist.scriptsController.setModel(scripts);
+        });
+        Mist.ajax.GET('/templates').success(function (templates) {
+            Mist.templatesController.setModel(templates);
         });
     }
 

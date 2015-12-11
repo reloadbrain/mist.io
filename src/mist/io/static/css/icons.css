@@ -56,6 +56,10 @@
 .icon-script:after{content:'\0045';}
 .icon-script:hover{background-color: #D48900 !important;}
 
+.icon-template{color: #D48900 !important;}
+.icon-template:after{content:'\0045';}
+.icon-template:hover{background-color: #D48900 !important;}
+
 .icon-error:after{content:'\0046';}
 .icon-check:after{content:'\0047';}
 .icon-question:after{content:'\0048';}

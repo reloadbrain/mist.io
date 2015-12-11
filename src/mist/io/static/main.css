@@ -38,7 +38,9 @@
 @import url("css/script.css");
 @import url("css/script_list.css");
 @import url("css/script_add.css");
-
+@import url("css/template.css");
+@import url("css/template_list.css");
+@import url("css/template_add.css");
 
 .ui-content, .header-grid {
     margin: 0px auto;
@@ -610,6 +612,7 @@ textarea {
     }
     #machine-list-page .ui-filterable .ui-input-search,
     #script-list-page .ui-filterable .ui-input-search,
+    #template-list-page .ui-filterable .ui-input-search,
     #network-list-page .ui-filterable .ui-input-search,
     #key-list-page .ui-filterable .ui-input-search {
         margin-right: 85px !important;
@@ -619,6 +622,7 @@ textarea {
 @media only screen and  (max-width: 550px) {
     #machine-list-page .ui-filterable .ui-input-search,
     #script-list-page .ui-filterable .ui-input-search,
+    #template-list-page .ui-filterable .ui-input-search,
     #network-list-page .ui-filterable .ui-input-search,
     #key-list-page .ui-filterable .ui-input-search {
         margin-left: 0 !important;
@@ -643,6 +647,7 @@ textarea {
 #machine-list-page .ui-filterable,
 #key-list-page .ui-filterable,
 #script-list-page .ui-filterable,
+#template-list-page .ui-filterable,
 #network-list-page .ui-filterable {
     position: relative;
     top: -59px;
@@ -659,6 +664,7 @@ textarea {
     #machine-list-page .ui-filterable,
     #key-list-page .ui-filterable,
     #script-list-page .ui-filterable,
+    #template-list-page .ui-filterable,
     #network-list-page .ui-filterable  {
         margin-left: 50px !important;
         margin-right: 50px !important;
@@ -668,6 +674,7 @@ textarea {
 #machine-list-page .ui-filterable .ui-input-search,
 #key-list-page .ui-filterable .ui-input-search,
 #script-list-page .ui-filterable .ui-input-search,
+#template-list-page .ui-filterable .ui-input-search,
 #network-list-page .ui-filterable .ui-input-search {
     margin-left: 55px;
 }
@@ -675,9 +682,15 @@ textarea {
     margin-left: 55px;
     margin-right: 10px;
 }
+#template-list-page .ui-filterable .ui-input-search {
+    margin-left: 55px;
+    margin-right: 10px;
+}
+
 #machine-list-page .ui-filterable .ui-input-search,
 #key-list-page .ui-filterable .ui-input-search,
 #image-list-page .ui-filterable .ui-input-search,
+#template-list-page .ui-filterable .ui-input-search,
 #script-list-page .ui-filterable .ui-input-search,
 #network-list-page .ui-filterable .ui-input-search {
     background-color: #fff;
@@ -693,6 +706,7 @@ textarea {
 #key-list-page .ui-filterable input,
 #network-list-page .ui-filterable input,
 #image-list-page .ui-filterable input,
+#template-list-page .ui-filterable input,
 #script-list-page .ui-filterable input {
     min-height: 35px;
     position: relative;
@@ -702,6 +716,7 @@ textarea {
 #machine-list-page .machines-header,
 #image-list-page .images-header,
 #script-list-page .scripts-header,
+#template-list-page .templates-header,
 #key-list-page .keys-header,
 #network-list-page .networks-header {
     background-color: #d4d4d4;
@@ -717,6 +732,7 @@ textarea {
 #machine-list-page .machines-header:after,
 #key-list-page .keys-header:after,
 #script-list-page .scripts-header:after,
+#template-list-page .templates-header:after,
 #network-list-page .networks-header:after {
     content: '';
     clear: both;
@@ -1432,6 +1448,7 @@ ul.checkbox-list .ui-grid-b {
 }
 
 #no-collection-inner .icon-script:after,
+#no-collection-inner .icon-template:after,
 #no-collection-inner .icon-keys:after {
     margin-bottom: 30px;
     font-size: 105px;

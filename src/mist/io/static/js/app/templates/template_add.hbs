@@ -1,0 +1,150 @@
+<!-- Add template button -->
+<div id="add-template" class="ui-link ui-btn ui-btn-add ui-btn-d ui-shadow floating-collapsible"
+     data-role="collapsible"
+     data-collapsed="true">
+
+   <h4><span class="title">Add template</span></h4>
+
+    <div id="template-add" class="ui-content">
+
+        <div class="form-field {{if Mist.templateAddController.newScript.name 'filled' 'empty'}} required">
+            <label for="template-name">Name</label>
+            {{view Mist.TextField
+                data-theme="a"
+                id="template-name"
+                value=Mist.templateAddController.newScript.name}}
+        </div>
+
+        <!--
+            Description
+        -->
+        <div id="template-add-description" class="form-field">
+          <label>Description (optional)</label>
+          {{view Mist.TextArea
+              data-theme="a"
+              value=Mist.templateAddController.newScript.description}}
+        </div>
+
+        <!--
+            Select template type
+        -->
+        <div id="template-add-type" class="form-field {{if Mist.templateAddController.newScript.type.label 'filled' 'empty'}} required">
+            <label>Type</label>
+            <div class="mist-select"
+                 data-role="collapsible"
+                 data-collapsed-icon="carat-d"
+                 data-expanded-icon="carat-u"
+                 data-iconpos="right">
+                    <h4>
+                        {{#if Mist.templateAddController.newScript.type}}
+                            {{Mist.templateAddController.newScript.type.label}}
+                        {{else}}
+                            Select type
+                        {{/if}}
+                    </h4>
+                    <ul data-role="listview">
+                        {{#each view.templateTypes as |templateType|}}
+                            <li data-icon="false" data-theme="a">
+                                <a {{action "selectType" templateType target=view}}>{{templateType.label}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+            </div>
+        </div>
+
+        <!--
+            Select template source
+        -->
+
+        <div id="template-add-source" class="form-field {{if Mist.templateAddController.newScript.source.label 'filled' 'empty'}} required">
+            <label>Source</label>
+            <div  class="mist-select"
+                data-role="collapsible"
+                data-iconpos="right"
+                data-collapsed-icon="carat-d"
+                data-expanded-icon="carat-u">
+                    <h4>
+                        {{#if Mist.templateAddController.newScript.source}}
+                            {{Mist.templateAddController.newScript.source.label}}
+                        {{else}}
+                            Select source
+                        {{/if}}
+                    </h4>
+                    <ul data-role="listview">
+                        {{#each view.templateSources as |templateSource|}}
+                            <li data-icon="false" data-theme="a">
+                                <a {{action "selectSource" templateSource target=view}}>{{templateSource.label}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+            </div>
+        </div>
+
+        {{#if view.isGitHub}}
+        <div class="github source">
+            <div class="form-field">
+                <label for="github-template-url">Github Repo</label>
+                {{#view Mist.TextField
+                    data-theme="a"
+                    id="github-template-url"
+                    value=Mist.templateAddController.newScript.url}}
+                {{/view}}
+            </div>
+
+            <div class="form-field">
+                <label for="github-template-entry-point">Entry point (optional)</label>
+                {{view Mist.TextField
+                    data-theme="a"
+                    id="github-template-entry-point"
+                    value=Mist.templateAddController.newScript.entryPoint}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if view.isURL}}
+        <div class="url source">
+            <div class="form-field">
+                <label for="url-template-url">Url</label>
+                {{view Mist.TextField
+                    data-theme="a"
+                    id="url-template-url"
+                    value=Mist.templateAddController.newScript.url}}
+            </div>
+
+            <div class="form-field">
+                <label for="url-template-entry-point">Entry point (optional)</label>
+                {{view Mist.TextField
+                    data-theme="a"
+                    id="url-template-entry-point"
+                    value=Mist.templateAddController.newScript.entryPoint}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if view.isInline}}
+        <div class="inline source">
+            <div class="form-field">
+                <label for="url-template-template">Script</label>
+                {{view Mist.TextArea
+                    data-theme="a"
+                    id="url-template-template"
+                    value=Mist.templateAddController.newScript.template}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if Mist.templatesController.addingScript}}
+            <div class="ajax-loader"></div>
+        {{/if}}
+
+        <div class="ok-cancel" data-role="controlgroup" data-type="horizontal">
+            <a id="new-template-ok"
+                class="{{if view.isReady '' 'ui-state-disabled'}} ui-btn ui-btn-d ui-shadow ui-caps ok-only"
+                {{action "addClicked" target=view}}>Add</a>
+        </div>
+    </div>
+</div>
+
+
+<div id="add-template-overlay" class="ui-popup-screen ui-overlay-b ui-screen-hidden"
+     {{action "clickOverlay" target=view}}></div>

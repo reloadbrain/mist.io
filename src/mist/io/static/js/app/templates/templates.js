@@ -62,6 +62,14 @@ define('app/templates/templates', ['ember'], function() {
         'text!app/templates/script_log_list.hbs',
         'text!app/templates/script_run.hbs',
         'text!app/templates/scripts.hbs',
+        'text!app/templates/template.hbs',
+        'text!app/templates/template_add.hbs',
+        'text!app/templates/template_edit.hbs',
+        'text!app/templates/template_list.hbs',
+        'text!app/templates/template_list_item.hbs',
+        'text!app/templates/template_log_list.hbs',
+        'text!app/templates/template_run.hbs',
+        'text!app/templates/templates.hbs',
         'text!app/templates/subnet_list_item.hbs',
         'text!app/templates/user_menu.hbs',
         'text!app/templates/image.hbs',
@@ -127,10 +135,19 @@ define('app/templates/templates', ['ember'], function() {
         Ember.TEMPLATES['script_log_list'] = Ember.Handlebars.compile(arguments[57]);
         Ember.TEMPLATES['script_run'] = Ember.Handlebars.compile(arguments[58]);
         Ember.TEMPLATES['scripts'] = Ember.Handlebars.compile(arguments[59]);
-        Ember.TEMPLATES['subnet_list_item'] = Ember.Handlebars.compile(arguments[60]);
-        Ember.TEMPLATES['user_menu'] = Ember.Handlebars.compile(arguments[61]);
-        Ember.TEMPLATES['image'] = Ember.Handlebars.compile(arguments[62]);
-        Ember.TEMPLATES['machine_run_script'] = Ember.Handlebars.compile(arguments[63]);
+        Ember.TEMPLATES['template'] = Ember.Handlebars.compile(arguments[60]);
+        Ember.TEMPLATES['template_add'] = Ember.Handlebars.compile(arguments[61]);
+        Ember.TEMPLATES['template_edit'] = Ember.Handlebars.compile(arguments[62]);
+        Ember.TEMPLATES['template_list'] = Ember.Handlebars.compile(arguments[63]);
+        Ember.TEMPLATES['template_list_item'] = Ember.Handlebars.compile(arguments[64]);
+        Ember.TEMPLATES['template_log_list'] = Ember.Handlebars.compile(arguments[65]);
+        Ember.TEMPLATES['template_run'] = Ember.Handlebars.compile(arguments[66]);
+        Ember.TEMPLATES['templates'] = Ember.Handlebars.compile(arguments[67]);
+
+        Ember.TEMPLATES['subnet_list_item'] = Ember.Handlebars.compile(arguments[68]);
+        Ember.TEMPLATES['user_menu'] = Ember.Handlebars.compile(arguments[69]);
+        Ember.TEMPLATES['image'] = Ember.Handlebars.compile(arguments[70]);
+        Ember.TEMPLATES['machine_run_script'] = Ember.Handlebars.compile(arguments[71]);
         callback();
         info('loaded raw templates');
       });

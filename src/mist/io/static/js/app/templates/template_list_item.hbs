@@ -1,0 +1,11 @@
+<label>{{view Mist.Checkbox checked=template.selected}}</label>
+
+{{#link-to "template" template}}
+    <div class="ui-grid-b">
+        <div class="ui-block-a template-name">{{template.name}}</div>
+        <div class="ui-block-b template-tags">
+          <span class="tag">{{template.type}}</span>
+        </div>
+        <div class="ui-block-c"></div>
+    </div>
+{{/link-to}}

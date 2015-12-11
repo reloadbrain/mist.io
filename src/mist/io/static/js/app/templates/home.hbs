@@ -102,6 +102,18 @@
                             {{/link-to}}
                         </li>
                         {{/if}}
+                        {{#if Mist.isCore}}
+                        <!-- Templates link -->
+                        <li class="ui-li-has-count">
+                            {{#link-to 'templates' class="ui-btn ui-btn-icon-left icon-script ui-alt-icon"}}
+                                <span class="ui-li-count ui-body-inherit">
+                                    {{Mist.templatesController.model.length}}
+                                </span>
+                                Templates
+                            {{/link-to}}
+                        </li>
+                        {{/if}}
+
                     </ul>
                 </div>
             </div>

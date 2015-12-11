@@ -181,6 +181,10 @@ var loadFiles = function (callback) {
         'app/controllers/script_edit',
         'app/controllers/script_run',
         'app/controllers/scripts',
+        'app/controllers/template_add',
+        'app/controllers/template_edit',
+        'app/controllers/template_run',
+        'app/controllers/templates',
 
         'app/routes/image',
         'app/routes/images',
@@ -194,6 +198,8 @@ var loadFiles = function (callback) {
         'app/routes/networks',
         'app/routes/script',
         'app/routes/scripts',
+        'app/routes/template',
+        'app/routes/templates',
 
         'app/views/home',
         'app/views/cloud_add',
@@ -250,6 +256,13 @@ var loadFiles = function (callback) {
         'app/views/script_run',
         'app/views/script_list_item',
         'app/views/script_log_list',
+        'app/views/template',
+        'app/views/template_add',
+        'app/views/template_edit',
+        'app/views/template_list',
+        'app/views/template_run',
+        'app/views/template_list_item',
+        'app/views/template_log_list',
         'app/views/subnet_list_item',
         'app/views/user_menu',
 
