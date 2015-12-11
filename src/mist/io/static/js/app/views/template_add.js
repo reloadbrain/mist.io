@@ -127,6 +127,7 @@ define('app/views/template_add', ['app/views/controlled'],
 
             selectType: function (type) {
                 this.closeTypeSelect();
+                console.log(type)
                 Mist.templateAddController.get('newTemplate').set('type', type);
                 this.setTemplate();
             },
@@ -134,6 +135,7 @@ define('app/views/template_add', ['app/views/controlled'],
             setTemplate: function () {
                 var newTemplate = Mist.templateAddController.get('newTemplate');
                 var type = newTemplate.get('type');
+                console.log(type)
                 if (type.value == 'cloudify')
                     newTemplate.set('template', DEFAULT_CLOUDIFY_BLUEPRINT);
             },

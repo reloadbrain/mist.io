@@ -7,12 +7,12 @@
 
     <div id="template-add" class="ui-content">
 
-        <div class="form-field {{if Mist.templateAddController.newScript.name 'filled' 'empty'}} required">
+        <div class="form-field {{if Mist.templateAddController.newTemplate.name 'filled' 'empty'}} required">
             <label for="template-name">Name</label>
             {{view Mist.TextField
                 data-theme="a"
                 id="template-name"
-                value=Mist.templateAddController.newScript.name}}
+                value=Mist.templateAddController.newTemplate.name}}
         </div>
 
         <!--
@@ -22,13 +22,13 @@
           <label>Description (optional)</label>
           {{view Mist.TextArea
               data-theme="a"
-              value=Mist.templateAddController.newScript.description}}
+              value=Mist.templateAddController.newTemplate.description}}
         </div>
 
         <!--
             Select template type
         -->
-        <div id="template-add-type" class="form-field {{if Mist.templateAddController.newScript.type.label 'filled' 'empty'}} required">
+        <div id="template-add-type" class="form-field {{if Mist.templateAddController.newTemplate.type.label 'filled' 'empty'}} required">
             <label>Type</label>
             <div class="mist-select"
                  data-role="collapsible"
@@ -36,8 +36,8 @@
                  data-expanded-icon="carat-u"
                  data-iconpos="right">
                     <h4>
-                        {{#if Mist.templateAddController.newScript.type}}
-                            {{Mist.templateAddController.newScript.type.label}}
+                        {{#if Mist.templateAddController.newTemplate.type}}
+                            {{Mist.templateAddController.newTemplate.type.label}}
                         {{else}}
                             Select type
                         {{/if}}
@@ -56,7 +56,7 @@
             Select template source
         -->
 
-        <div id="template-add-source" class="form-field {{if Mist.templateAddController.newScript.source.label 'filled' 'empty'}} required">
+        <div id="template-add-source" class="form-field {{if Mist.templateAddController.newTemplate.source.label 'filled' 'empty'}} required">
             <label>Source</label>
             <div  class="mist-select"
                 data-role="collapsible"
@@ -64,8 +64,8 @@
                 data-collapsed-icon="carat-d"
                 data-expanded-icon="carat-u">
                     <h4>
-                        {{#if Mist.templateAddController.newScript.source}}
-                            {{Mist.templateAddController.newScript.source.label}}
+                        {{#if Mist.templateAddController.newTemplate.source}}
+                            {{Mist.templateAddController.newTemplate.source.label}}
                         {{else}}
                             Select source
                         {{/if}}
@@ -87,7 +87,7 @@
                 {{#view Mist.TextField
                     data-theme="a"
                     id="github-template-url"
-                    value=Mist.templateAddController.newScript.url}}
+                    value=Mist.templateAddController.newTemplate.url}}
                 {{/view}}
             </div>
 
@@ -96,7 +96,7 @@
                 {{view Mist.TextField
                     data-theme="a"
                     id="github-template-entry-point"
-                    value=Mist.templateAddController.newScript.entryPoint}}
+                    value=Mist.templateAddController.newTemplate.entryPoint}}
             </div>
         </div>
         {{/if}}
@@ -108,7 +108,7 @@
                 {{view Mist.TextField
                     data-theme="a"
                     id="url-template-url"
-                    value=Mist.templateAddController.newScript.url}}
+                    value=Mist.templateAddController.newTemplate.url}}
             </div>
 
             <div class="form-field">
@@ -116,7 +116,7 @@
                 {{view Mist.TextField
                     data-theme="a"
                     id="url-template-entry-point"
-                    value=Mist.templateAddController.newScript.entryPoint}}
+                    value=Mist.templateAddController.newTemplate.entryPoint}}
             </div>
         </div>
         {{/if}}
@@ -124,16 +124,16 @@
         {{#if view.isInline}}
         <div class="inline source">
             <div class="form-field">
-                <label for="url-template-template">Script</label>
+                <label for="url-template-template">Template</label>
                 {{view Mist.TextArea
                     data-theme="a"
                     id="url-template-template"
-                    value=Mist.templateAddController.newScript.template}}
+                    value=Mist.templateAddController.newTemplate.template}}
             </div>
         </div>
         {{/if}}
 
-        {{#if Mist.templatesController.addingScript}}
+        {{#if Mist.templatesController.addingTemplate}}
             <div class="ajax-loader"></div>
         {{/if}}
 

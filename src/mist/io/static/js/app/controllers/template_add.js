@@ -52,10 +52,11 @@ define('app/controllers/template_add', ['ember'],
 
 
             clear: function () {
+                console.log(this.view.templateTypes)
                 this.get('newTemplate').setProperties({
                     name: '',
                     url: '',
-                    type: this.view.templateTypes[1],
+                    type: this.view.templateTypes[0],
                     entryPoint: '',
                     text: '',
                     source: '',

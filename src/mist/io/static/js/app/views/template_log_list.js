@@ -1,6 +1,6 @@
 define('app/views/template_log_list', ['app/views/log_list'],
     //
-    //  Script Log List View
+    //  Template Log List View
     //
     //  @returns Class
     //
@@ -8,7 +8,7 @@ define('app/views/template_log_list', ['app/views/log_list'],
 
         'use strict';
 
-        return App.ScriptLogListComponent = LogListComponent.extend({
+        return App.TemplateLogListComponent = LogListComponent.extend({
 
             layoutName: 'template_log_list',
 

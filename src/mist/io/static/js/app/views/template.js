@@ -1,6 +1,6 @@
 define('app/views/template', ['app/views/page'],
     //
-    //  Script View
+    //  Template View
     //
     //  @returns Class
     //
@@ -8,7 +8,7 @@ define('app/views/template', ['app/views/page'],
 
         'use strict';
 
-        return App.ScriptView = PageView.extend({
+        return App.TemplateView = PageView.extend({
 
             templateName: 'template',
 
@@ -65,7 +65,7 @@ define('app/views/template', ['app/views/page'],
 
 
             updateModel: function () {
-                var template = Mist.templatesController.getRequestedScript();
+                var template = Mist.templatesController.getRequestedTemplate();
                 if (template)
                     this.get('controller').set('model', template);
             },
@@ -102,7 +102,7 @@ define('app/views/template', ['app/views/page'],
                         ],
                         callback: function (didConfirm) {
                             if (!didConfirm) return;
-                            Mist.templatesController.deleteScript({
+                            Mist.templatesController.deleteTemplate({
                                 template: template,
                                 callback: function (success) {
                                     if (!success) return;
