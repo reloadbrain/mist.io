@@ -121,9 +121,7 @@ define('app/controllers/templates', ['app/controllers/base_array', 'app/models/t
                 var that = this;
                 that.set('runningTemplate', true);
                 Mist.ajax.POST('/templates/' + args.template.template.id, {
-                    'machine_id': args.template.machine.id,
-                    'cloud_id': args.template.machine.cloud.id,
-                    'params': args.template.parameters
+                    'inputs': args.template.parameters
                 }).error(function (message) {
                     Mist.notificationController.notify(message);
                 }).complete(function (success) {

@@ -19,7 +19,6 @@ define('app/controllers/template_run', ['ember'],
             open: function (template) {
                 this.clear();
                 this.get('templateToRun').set('template', template);
-                
                 this.view.open();
             },
 
