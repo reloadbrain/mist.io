@@ -7,7 +7,6 @@ define('app/controllers/templates', ['app/controllers/base_array', 'app/models/t
     function (BaseArrayController, TemplateModel) {
 
         'use strict';
-
         return BaseArrayController.extend({
 
             baseModel: TemplateModel,

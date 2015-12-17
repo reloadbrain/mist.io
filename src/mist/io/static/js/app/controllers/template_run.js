@@ -12,8 +12,7 @@ define('app/controllers/template_run', ['ember'],
 
             templateToRun: Ember.Object.create({
                 template: {},
-                machine: '',
-                parameters: ''
+                inputs: ''
             }),
 
             open: function (template) {
@@ -30,8 +29,7 @@ define('app/controllers/template_run', ['ember'],
             clear: function () {
                 this.get('templateToRun').setProperties({
                     template: {},
-                    machine: '',
-                    parameters: '',
+                    templates: '',
                 });
             },
 

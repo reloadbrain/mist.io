@@ -32,7 +32,10 @@ define('app/controllers/base_array', ['ember'],
             //  Public Methods
             //
 
-            setModel: function (model) {
+            setModel: function (model, reset) {
+                if (reset){
+                    this.set("model", []);
+                }
                 model = !!model ? model : [];
                 this._passOnProperties(model);
                 this._updateModel(model);
@@ -54,6 +57,7 @@ define('app/controllers/base_array', ['ember'],
 
             _passOnProperties: function (model) {
                 this.get('passOnProperties').forEach(function (property) {
+
                     model.setEach(property, this.get(property));
                 }, this);
             },

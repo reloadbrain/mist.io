@@ -343,10 +343,10 @@ var setupMainChannel = function(socket, callback) {
         //  It should be converted into a "list_scripts" socket handler
         //  as soon as the backend supports it
         Mist.ajax.GET('/scripts').success(function (scripts) {
-            Mist.scriptsController.setModel(scripts);
+            Mist.scriptsController.setModel(scripts,true);
         });
         Mist.ajax.GET('/templates').success(function (templates) {
-            Mist.templatesController.setModel(templates);
+            Mist.templatesController.setModel(templates,true);
         });
     }
 

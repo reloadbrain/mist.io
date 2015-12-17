@@ -186,6 +186,7 @@ var loadFiles = function (callback) {
         'app/controllers/template_run',
         'app/controllers/templates',
 
+
         'app/routes/image',
         'app/routes/images',
         'app/routes/index',
