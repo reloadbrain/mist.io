@@ -74,6 +74,7 @@ define('app/templates/templates', ['ember'], function() {
         'text!app/templates/user_menu.hbs',
         'text!app/templates/image.hbs',
         'text!app/templates/machine_run_script.hbs',
+        'text!app/templates/machine_image_create.hbs',
       ], function () {
         Ember.TEMPLATES['application'] = Ember.Handlebars.compile(arguments[0]);
         Ember.TEMPLATES['cloud_add'] = Ember.Handlebars.compile(arguments[1]);
@@ -148,6 +149,7 @@ define('app/templates/templates', ['ember'], function() {
         Ember.TEMPLATES['user_menu'] = Ember.Handlebars.compile(arguments[69]);
         Ember.TEMPLATES['image'] = Ember.Handlebars.compile(arguments[70]);
         Ember.TEMPLATES['machine_run_script'] = Ember.Handlebars.compile(arguments[71]);
+        Ember.TEMPLATES['machine_image_create'] = Ember.Handlebars.compile(arguments[72]);
         callback();
         info('loaded raw templates');
       });
