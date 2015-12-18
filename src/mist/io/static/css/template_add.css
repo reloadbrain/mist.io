@@ -8,7 +8,7 @@
 }
 
 #add-template.ui-collapsible-collapsed {
-    width: 200px;
+    width: 240px;
     position: relative;
 }
 
@@ -35,7 +35,7 @@
     border-color: #b5b5b5 !important;
     color: #444 !important;
     font-size: 14px;
-    padding-left: .75em !important;
+    padding-left: 60px !important;
 }
 #template-add .ui-collapsible-heading > a:after {
     background-image: none;
@@ -81,4 +81,7 @@
     padding-top: 5.5px !important;
     padding-bottom: 5.5px !important;
     font-size: 14px;
+}
+#add-template h4.ui-collapsible-heading > a.ui-icon-minus {
+    padding: 20px 91px 20px 60px !important;
 }
