@@ -35,7 +35,7 @@
     border-color: #b5b5b5 !important;
     color: #444 !important;
     font-size: 14px;
-    padding-left: 60px !important;
+    /*padding-left: 60px !important;*/
 }
 #template-add .ui-collapsible-heading > a:after {
     background-image: none;
