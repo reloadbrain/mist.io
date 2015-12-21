@@ -245,8 +245,7 @@
                 <a id="single-machine-tags-btn"
                     class="{{if model.id '' 'ui-state-disabled'}}
                         {{if model.can_tag '' 'ui-state-disabled'}}
-                        ui-btn ui-btn-icon-right ui-caps icon-tag"
-                    {{action "tagsClicked" target=view}}>Tags</a>
+                        ui-btn ui-btn-icon-right ui-caps icon-tag md-trigger" data-modal="modal-1">Tags</a>
             </div>
             <div class="ui-block-b">
                 {{#if model.isWindows}}
