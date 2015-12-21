@@ -163,9 +163,7 @@ define('app/controllers/machine_add', ['ember', 'yamljs'],
                     .set('newMachineImage', {
                         'name': 'Select Image'
                     })
-                    .set('newMachineLocation', {
-                        'name': 'Select Location'
-                    })
+                    .set('newMachineLocation')
                     .set('newMachineProvider', {
                         'title': 'Select Provider'
                     })
@@ -254,9 +252,7 @@ define('app/controllers/machine_add', ['ember', 'yamljs'],
                     .set('newMachineImage', {
                         'name': 'Select Image'
                     })
-                    .set('newMachineLocation', {
-                        'name': 'Select Location'
-                    })
+                    .set('newMachineLocation')
                     .set('newMachineAssociateFloatingIp', true)
                     .set('newMachineDockerEnvironment', '')
                     .set('newMachineDockerCommand', '')

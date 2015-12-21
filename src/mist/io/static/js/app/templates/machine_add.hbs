@@ -171,15 +171,19 @@
         <!-- Select Location -->
         {{#if view.hasLocation}}
         <div id="location">
-            <div id="create-machine-location" class="{{if Mist.machineAddController.newMachineLocation.id 'filled' 'empty'}} required">
+            <div id="create-machine-location" class="{{if Mist.machineAddController.newMachineLocation.name 'filled' 'empty'}} required">
                 <label>Location</label>
                 <div data-role="collapsible"
                      data-iconpos="right"
                      data-collapsed-icon="carat-d"
                      data-expanded-icon="carat-u"
-
                      class="mist-select">
-                    <h4>{{Mist.machineAddController.newMachineLocation.name}}</h4>
+                    <h4>{{#if Mist.machineAddController.newMachineLocation.name}}
+                        {{Mist.machineAddController.newMachineLocation.name}}
+                    {{else}}
+                        Select Location
+                    {{/if}}</h4>
+
                     {{#if view.hasAzure}}
                         <ul data-role="listview">
                             {{#each view.azureLocations as |location|}}

@@ -36,7 +36,6 @@ define('app/views/machine_add', ['app/views/controlled'],
             }.property('Mist.machineAddController.newMachineProvider'),
 
             azureLocations: Ember.computed('hasAzure', 'Mist.machineAddController.newMachineImage', function() {
-                console.log(Mist.machineAddController.newMachineImage);
                 if (this.get('hasAzure') && Mist.machineAddController.newMachineImage.id) {
                     var locations = Mist.machineAddController.newMachineImage.extra.location.split(';'), result = [];
 
@@ -321,7 +320,7 @@ define('app/views/machine_add', ['app/views/controlled'],
                     cloud.networks.model.forEach(function (network, index) {
                         network.set('selected', false);
                     });
-                    Mist.machineAddController.set('newMachineLocation', {'name' : 'Select Location'})
+                    Mist.machineAddController.set('newMachineLocation', null)
                                              .set('newMachineImage', {'name' : 'Select Image'})
                                              .set('newMachineSize', {'name' : 'Select Size'})
                                              .set('newMachineProvider', cloud);
@@ -337,7 +336,7 @@ define('app/views/machine_add', ['app/views/controlled'],
                         this.fieldIsReady('image');
                     }
 
-                    Mist.machineAddController.set('newMachineLocation', {'name' : 'Select Location'})
+                    Mist.machineAddController.set('newMachineLocation', null)
                                              .set('newMachineSize', {'name' : 'Select Size'})
                                              .set('newMachineImage', image);
 
@@ -348,7 +347,7 @@ define('app/views/machine_add', ['app/views/controlled'],
                 selectSize: function (size) {
                     this.fieldIsReady('size');
 
-                    Mist.machineAddController.set('newMachineLocation', {'name' : 'Select Location'})
+                    Mist.machineAddController.set('newMachineLocation', null)
                                              .set('newMachineSize', size);
                 },
 
