@@ -180,13 +180,23 @@
 
                      class="mist-select">
                     <h4>{{Mist.machineAddController.newMachineLocation.name}}</h4>
-                    <ul data-role="listview">
-                        {{#each Mist.machineAddController.newMachineProvider.locations.model as |location|}}
-                        <li data-icon="false">
-                            <a {{action "selectLocation" location target=view}}>{{location.name}}</a>
-                        </li>
-                        {{/each}}
-                    </ul>
+                    {{#if view.hasAzure}}
+                        <ul data-role="listview">
+                            {{#each view.azureLocations as |location|}}
+                            <li data-icon="false">
+                                <a {{action "selectLocation" location target=view}}>{{location.name}}</a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    {{else}}
+                        <ul data-role="listview">
+                            {{#each Mist.machineAddController.newMachineProvider.locations.model as |location|}}
+                            <li data-icon="false">
+                                <a {{action "selectLocation" location target=view}}>{{location.name}}</a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
                 </div>
             </div>
         </div>

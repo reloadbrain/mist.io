@@ -35,6 +35,20 @@ define('app/views/machine_add', ['app/views/controlled'],
                 return provider ? (provider.provider && provider.provider == 'azure' ? true : false) : false;
             }.property('Mist.machineAddController.newMachineProvider'),
 
+            azureLocations: Ember.computed('hasAzure', 'Mist.machineAddController.newMachineImage', function() {
+                console.log(Mist.machineAddController.newMachineImage);
+                if (this.get('hasAzure') && Mist.machineAddController.newMachineImage.id) {
+                    var locations = Mist.machineAddController.newMachineImage.extra.location.split(';'), result = [];
+
+                    locations.forEach(function(location) {
+                        result.push({name: location});
+                    }, this);
+
+                    return result;
+                }
+                return null;
+            }),
+
             hasPacket: function() {
                 var provider = Mist.machineAddController.newMachineProvider;
                 return provider ? (provider.provider && provider.provider == 'packet' ? true : false) : false;
