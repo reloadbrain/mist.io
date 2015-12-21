@@ -24,6 +24,7 @@ var loadApp = function (
     MachineShellController,
     MachineTagsController,
     MachineRunScriptController,
+    MachineImageCreateController,
     MetricAddController,
     MetricAddCustomController,
     MetricsController,
@@ -125,6 +126,7 @@ var loadApp = function (
     App.set('scriptEditController', ScriptEditController.create());
     App.set('projectsController', ProjectsController.create());
     App.set('machineRunScriptController', MachineRunScriptController.create());
+    App.set('machineImageCreateController', MachineImageCreateController.create());
 
 
     // Ember custom widgets
@@ -299,7 +301,9 @@ var setupLogChannel = function (socket, callback) {
     }).on('open_sessions', function(openSessions) {
         info('received open_sessions: ', openSessions);
     }).emit('ready');
-    Mist.set('openIncidents', []);
+    if (! Mist.isCore) {
+        Mist.set('openIncidents', []);
+    }    
     Mist.set('closedIncidents', [])
 
     if (callback)

@@ -22,11 +22,11 @@ require.config({
         ember: '../dist/ember/ember.prod',
         elv: '../dist/ember-legacy-views',
         templates: '../dist/templates',
-        socket: '../dist/sockjs/sockjs.min',
         md5: '../dist/md5/build/md5.min',
         d3: '../dist/d3/d3.min',
         c3: '../dist/c3/c3.min',
         term: '../dist/term.js/src/term',
+        yamljs: '../dist/yamljs/dist/yaml.min',
         init: 'init',
         common: 'common',
         multiplex: 'multiplex'
@@ -77,15 +77,6 @@ var LOADER_STEPS = {
             });
         }
     },
-    'load socket': {
-        before: [],
-        exec: function () {
-            require(['socket'], function () {
-                SockJS.websocket.roundTrips = 5;
-                appLoader.complete('load socket');
-            });
-        }
-    },
     'load multiplex': {
         before: [],
         exec: function () {
@@ -119,7 +110,7 @@ var LOADER_STEPS = {
         }
     },
     'init connections': {
-        before: ['load socket', 'load ember', 'init app'],
+        before: ['load ember', 'init app'],
         exec: function () {
             Mist.set('ajax', Ajax(CSRF_TOKEN));
             Mist.set('main', new Socket({
@@ -137,7 +128,8 @@ var LOADER_STEPS = {
     'fetch first data': {
         before: ['init connections'],
         exec: function () {
-            appLoader.complete('fetch first data');
+            // step will completed by the list_clouds event handler
+            // appLoader.complete('fetch first data');
         }
     }
 };
@@ -169,6 +161,7 @@ var loadFiles = function (callback) {
         'app/controllers/machine_shell',
         'app/controllers/machine_tags',
         'app/controllers/machine_run_script',
+        'app/controllers/machine_image_create',
         'app/controllers/metric_add',
         'app/controllers/metric_add_custom',
         'app/controllers/metrics',
@@ -231,6 +224,7 @@ var loadFiles = function (callback) {
         'app/views/machine_tags',
         'app/views/machine_tags_list_item',
         'app/views/machine_run_script',
+        'app/views/machine_image_create',
         'app/views/messagebox',
         'app/views/metric_add',
         'app/views/metric_add_custom',
