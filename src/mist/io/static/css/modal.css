@@ -6,7 +6,7 @@
     max-width: 630px;
     min-width: 320px;
     height: auto;
-    z-index: 2000;
+    z-index: 3001;
     visibility: hidden;
     backface-visibility: hidden;
     transform: translateX(-50%) translateY(-50%);
@@ -21,9 +21,9 @@
     visibility: hidden;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 3000;
     opacity: 0;
-    background: rgba(143, 27, 15, 0.8);
+    background: rgba(0,0,0,0.4);
     transition: all 0.3s;
 }
 .md-show ~ .md-overlay {
@@ -34,43 +34,48 @@
 /* Content styles */
 
 .md-content {
-    color: #fff;
-    background: #e74c3c;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.md-body {
+    color: #000;
+    background: #faf9f4;
     position: relative;
-    border-radius: 3px;
+    border-radius: 0;
     margin: 0 auto;
+    padding: 12px 16px;
 }
-.md-content h3 {
+.md-title {
+    border-radius: 0;
+    background-color: #d4d4d4;
+}
+.md-title h1 {
+    color: #000;
     margin: 0;
-    padding: 0.4em;
-    text-align: center;
-    font-size: 2.4em;
+    padding: 15px;
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 18px;
     font-weight: 300;
-    opacity: 0.8;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 3px 3px 0 0;
 }
-.md-content > div {
-    padding: 15px 40px 30px;
+.md-body > div {
     margin: 0;
     font-weight: 300;
-    font-size: 1.15em;
+    font-size: 16px;
 }
-.md-content > div p {
+.md-body > div p {
     margin: 0;
     padding: 10px 0;
 }
-.md-content > div ul {
+.md-body > div ul {
     margin: 0;
     padding: 0 0 30px 20px;
 }
-.md-content > div ul li {
+.md-body > div ul li {
     padding: 5px 0;
 }
-.md-content button {
+.md-body .ui-btn {
     display: block;
     margin: 0 auto;
-    font-size: 0.8em;
 }
 
 /* Individual modal styles with animations/transitions */
@@ -87,4 +92,12 @@
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
+}
+
+.md-show.md-effect-1 .md-content {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
 }
