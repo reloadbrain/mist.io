@@ -9,7 +9,10 @@
     z-index: 3001;
     visibility: hidden;
     backface-visibility: hidden;
+    -webkit-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
+    max-height: 90%;
+    overflow: auto;
 }
 .md-modal.tiny-popup {
     width: 150px !important;
