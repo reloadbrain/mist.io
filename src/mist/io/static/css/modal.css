@@ -2,9 +2,8 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 100%;
+    width: 90% !important;
     max-width: 630px;
-    min-width: 320px;
     height: auto;
     z-index: 3001;
     visibility: hidden;
@@ -15,22 +14,28 @@
     overflow: auto;
 }
 .md-modal.tiny-popup {
-    width: 150px !important;
+    width: 90% !important;
+    max-width: 150px !important;
 }
 .md-modal.very-small-popup {
-    width: 200px !important;
+    width: 90% !important;
+    max-width: 200px !important;
 }
 .md-modal.small-popup {
-    width: 240px !important;
+    width: 90% !important;
+    max-width: 240px !important;
 }
 .md-modal.mid-popup {
-    width: 255px !important;
+    width: 90% !important;
+    max-width: 255px !important;
 }
 .md-modal.large-popup {
-    width: 290px !important;
+    width: 90% !important;
+    max-width: 290px !important;
 }
 .md-modal.huge-popup {
-    width: 100% !important;
+    width: 90% !important;
+    max-width: 100% !important;
 }
 .md-show {
     visibility: visible;
