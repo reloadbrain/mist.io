@@ -2,7 +2,7 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 50%;
+    width: 100%;
     max-width: 630px;
     min-width: 320px;
     height: auto;
@@ -10,6 +10,24 @@
     visibility: hidden;
     backface-visibility: hidden;
     transform: translateX(-50%) translateY(-50%);
+}
+.md-modal.tiny-popup {
+    width: 150px !important;
+}
+.md-modal.very-small-popup {
+    width: 200px !important;
+}
+.md-modal.small-popup {
+    width: 240px !important;
+}
+.md-modal.mid-popup {
+    width: 255px !important;
+}
+.md-modal.large-popup {
+    width: 290px !important;
+}
+.md-modal.huge-popup {
+    width: 100% !important;
 }
 .md-show {
     visibility: visible;
@@ -47,6 +65,17 @@
 .md-title {
     border-radius: 0;
     background-color: #d4d4d4;
+    position: relative;
+}
+.md-title .close {
+    position: absolute;
+    right: 16px;
+    top: 11px;
+    color: rgba(0,0,0,0.2);
+    font-size: 22px;
+    text-decoration: none;
+    outline: none;
+    font-size-adjust: 0.7;
 }
 .md-title h1 {
     color: #000;
@@ -65,13 +94,6 @@
 .md-body > div p {
     margin: 0;
     padding: 10px 0;
-}
-.md-body > div ul {
-    margin: 0;
-    padding: 0 0 30px 20px;
-}
-.md-body > div ul li {
-    padding: 5px 0;
 }
 .md-body .ui-btn {
     display: block;

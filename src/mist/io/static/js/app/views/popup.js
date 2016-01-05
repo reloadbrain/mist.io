@@ -45,15 +45,16 @@ define('app/views/popup', ['app/views/controlled', 'ember'],
                     }
 
                     $('body').enhanceWithin();
-                    if (position)
-                        $(popupId).popup('option', 'positionTo', position);
-                    $(popupId).popup('open');
-
+                    // if (position)
+                    //     $(popupId).popup('option', 'positionTo', position);
+                    // $(popupId).popup('open');
+                    $(popupId).mdPopup('open');
                 });
             },
 
             close: function () {
-                $(this.popupId).popup('close');
+                // $(this.popupId).popup('close');
+                $(this.popupId).mdPopup('close');
             }
         });
     }

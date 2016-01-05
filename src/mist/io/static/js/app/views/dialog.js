@@ -51,10 +51,11 @@ define('app/views/dialog', ['app/views/popup'],
 
             open: function () {
                 Ember.run.later(this, function () {
-                    $(this.popupId)
-                        .popup()
-                        .popup('reposition', {positionTo: 'window'})
-                        .popup('open');
+                    $(this.popupId).mdPopup('open');
+                    // $(this.popupId)
+                    //     .popup()
+                    //     .popup('reposition', {positionTo: 'window'})
+                    //     .popup('open');
                 }, 300);
             },
 
@@ -75,6 +76,11 @@ define('app/views/dialog', ['app/views/popup'],
 
                 confirm: function () {
                     Mist.dialogController.confirm();
+                },
+
+
+                close: function() {
+                    Mist.dialogController.close();
                 },
 
 
