@@ -38,13 +38,13 @@ define('app/controllers/notification', ['ember'],
             },
 
             showMessagebox: function() {
-                $('#message-box-popup').popup('open').popup('reposition', {positionTo: 'window'});
-                Ember.run.next(function() {
-                    $('#message-box-popup').popup('reposition', {positionTo: 'window'});
-                    Ember.run.later(function() {
-                        $('#message-box-popup')
-                    }, 300);
-                });
+                $('#message-box-popup').mdPopup('open');
+                // Ember.run.next(function() {
+                //     $('#message-box-popup').popup('reposition', {positionTo: 'window'});
+                //     Ember.run.later(function() {
+                //         $('#message-box-popup')
+                //     }, 300);
+                // });
             },
 
 

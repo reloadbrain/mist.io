@@ -1,52 +1,18 @@
-<!-- Popup Overlay -->
+<div class="md-modal large-popup md-effect-1" id="message-box-popup">
+    <div class="md-content">
+        <div class="md-title">
+            <h1>{{Mist.notificationController.messageBox.options.title}}</h1>
 
-<div id="message-box-screen"
-    class="ui-popup-screen ui-overlay-b ui-screen-hidden">
-</div>
-
-<!-- Popup Wrapper -->
-
-<div id="message-box-popup"
-    class="flip
-        ui-popup-container
-        ui-popup-hidden
-        ui-popup-truncate">
-
-    <!-- Popup -->
-
-    <div id="message-box"
-        class="large-popup
-            ui-popup
-            ui-body-inherit
-            ui-overlay-shadow
-            ui-corner-all"
-        data-role="popup"
-        data-transition="flip"
-        data-dismissible="false">
-
-
-        <!-- Header -->
-
-        <div class="ui-header ui-bar-b" role="banner">
-            <h1 class="ui-title">
-                {{Mist.notificationController.messageBox.options.title}}
-            </h1>
+            <a href="javascript:void(0)" class="close" {{action "backClicked" target=view}}>&#10005;</a>
         </div>
-
-        <!-- Body -->
-
-        <div class="ui-content ui-body-a" role="main">
-
-
+        <div class="md-body">
             <!--
                 Paragraphs
             -->
 
-
             {{#each Mist.notificationController.messageBox.options.paragraphs as |p|}}
                 <p>{{p}}</p>
             {{/each}}
-
 
             <!--
                 Command
@@ -58,7 +24,6 @@
                 </p>
             {{/if}}
 
-
             <!--
                 Postscript
             -->
@@ -69,14 +34,14 @@
                 </p>
             {{/if}}
 
-
             <!--
                 OK Button
             -->
-
 
             <a class="ui-btn ui-btn-a ui-corner-all"
                 {{action "okClicked" target=view}}>OK</a>
         </div>
     </div>
 </div>
+
+<div class="md-overlay"></div>
