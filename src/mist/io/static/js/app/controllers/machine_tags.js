@@ -32,13 +32,13 @@ define('app/controllers/machine_tags', ['ember'],
                 });
                 this.newTags.removeArrayObserver(this.machine.tags);
                 Ember.run.next(function () {
-                    $('#machine-tags-popup').popup('open');
+                    $('#machine-tags-popup').mdPopup('open');
                 });
             },
 
 
             close: function () {
-                $('#machine-tags-popup').popup('close');
+                $('#machine-tags-popup').mdPopup('close');
                 this._clear();
             },
 

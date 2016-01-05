@@ -13,7 +13,7 @@ define('app/views/dialog', ['app/views/popup'],
 
             layoutName: 'dialog',
             controllerName: 'dialogController',
-            popupId: "#dialog",
+            popupId: "#dialog-popup",
 
             //
             //

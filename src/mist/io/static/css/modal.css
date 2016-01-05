@@ -54,6 +54,10 @@
 .md-content {
     box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
+#dialog-popup .md-content {
+    text-align: center;
+    word-wrap: break-word;
+}
 .md-body {
     color: #000;
     background: #faf9f4;
@@ -77,6 +81,9 @@
     outline: none;
     font-size-adjust: 0.7;
 }
+.md-title .close:hover {
+    color: rgba(0,0,0,0.5);
+}
 .md-title h1 {
     color: #000;
     margin: 0;
@@ -87,13 +94,12 @@
     font-weight: 300;
 }
 .md-body > div {
-    margin: 0;
     font-weight: 300;
     font-size: 16px;
 }
-.md-body > div p {
-    margin: 0;
-    padding: 10px 0;
+.md-body p {
+    margin: 0 0 12px;
+    padding: 0;
 }
 .md-body .ui-btn {
     display: block;
