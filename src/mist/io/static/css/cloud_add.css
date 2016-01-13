@@ -294,7 +294,7 @@ h4.pendingSelect > a {
 #private_key {
     text-transform: capitalize;
 }
-
+/* a parent div class ui-input-text is missing. adding styles to inputs */
 #cloud-add input#machine_port, 
 #cloud-add input#machine_user {
     width: 100%;
@@ -312,4 +312,8 @@ h4.pendingSelect > a {
     margin: 0;
     background-color: #fff;
     border-color: #b5b5b5;
+}
+/* a redudant div class ui-checkbox is rendered for some reason. hide temporarily */
+#cloud-add .bare_metal .ui-checkbox .ui-checkbox {
+    display: none;
 }
