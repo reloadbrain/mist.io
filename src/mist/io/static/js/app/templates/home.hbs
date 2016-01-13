@@ -25,8 +25,8 @@
                     <span class="icon-cloud-check"></span>
                     <h1>Welcome to mist.io</h1>
                     <h2>Get started by adding your clouds.</h2>
-                    {{view "cloudAdd"}}
-                    <a {{action "tourClicked" target=view}} class="ui-btn ui-caps ui-shadow" id="take-tour">Take the Tour</a>
+                    {{view "cloudAdd"}} 
+                    <p>or <a {{action "tourClicked" target=view}} href="#popupVideo" data-rel="popup" data-position-to="window" class="ui-link" id="take-tour">Take the Tour</a>.</p>
                     <p>
                         Mist.io supports public &amp; private computing clouds, as well as<br>Docker, CoreOS, KVM & bare metal hosts.
                     </p>

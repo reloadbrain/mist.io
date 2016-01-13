@@ -1478,11 +1478,21 @@ ul.checkbox-list .ui-grid-b {
 }
 
 #no-collection-inner a#take-tour {
-    display: inline-block;
+    /*display: inline-block;
     border: 1px solid #999;
-    color: #444;
+    color: #444;*/
 }
 
+#no-collection-inner a.ui-link {
+    color: #0099cc;
+    cursor: pointer;
+    letter-spacing: 0;
+    text-decoration: none;
+}
+
+#no-collection-inner iframe {
+    border: none;
+}
 /*.tour-video-popup .tour-video-popup-inner {
     position: relative;
     width: 100%;
