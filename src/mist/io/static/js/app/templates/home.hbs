@@ -26,6 +26,7 @@
                     <h1>Welcome to mist.io</h1>
                     <h2>Get started by adding your clouds.</h2>
                     {{view "cloudAdd"}}
+                    <a {{action "tourClicked" target=view}} class="ui-btn ui-caps ui-shadow" id="take-tour">Take the Tour</a>
                     <p>
                         Mist.io supports public &amp; private computing clouds, as well as<br>Docker, CoreOS, KVM & bare metal hosts.
                     </p>
@@ -208,6 +209,12 @@
                 </a>
                 {{/if}}
             </p>
+        </div>
+    </div>
+
+    <div data-role="popup" id="tour-video-popup" data-overlay-theme="b" data-theme="a" data-tolerance="15,15" class="ui-content">
+        <div class="tour-video-popup-inner">
+            <iframe src="//www.youtube.com/embed/yCOY82UdFrw" frameborder="0" width="560" height="315" allowfullscreen></iframe>
         </div>
     </div>
 

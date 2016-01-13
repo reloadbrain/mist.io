@@ -63,6 +63,11 @@ define('app/views/home', ['app/views/page', 'app/models/graph'],
                     else
                         Mist.__container__.lookup('router:main').transitionTo('machine',
                             incident.get('machine'));
+                },
+
+                tourClicked: function() {
+                    console.log('tour');
+                    $('#tour-video-popup').popup('open');
                 }
             },
 
