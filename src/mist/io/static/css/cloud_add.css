@@ -294,3 +294,22 @@ h4.pendingSelect > a {
 #private_key {
     text-transform: capitalize;
 }
+
+#cloud-add input#machine_port, 
+#cloud-add input#machine_user {
+    width: 100%;
+    line-height: 21px !important;
+    padding-top: 5.5px !important;
+    padding-bottom: 5.5px !important;
+    padding-left: .75em;
+    padding-right: 1.75em;
+    background: #fff;
+    min-height: 2.2em;
+    border-radius: 0;
+    color: #444;
+    text-shadow: none;
+    font-size: 14px;
+    margin: 0;
+    background-color: #fff;
+    border-color: #b5b5b5;
+}
