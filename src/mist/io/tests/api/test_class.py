@@ -1,3 +1,44 @@
+import requests
+import json
+
+from mist.io.tests.api.io import MistIoApi
+from unittest import FunctionTestCase, TestCase, skip, TextTestRunner, \
+    TestSuite, makeSuite
+
+try:
+    from mist.io.tests.settings import CREDENTIALS, LOCAL, DEBUG, BASE_DIR, \
+        MIST_URL, NAME, EMAIL, PASSWORD1, PASSWORD2, MAIL_PATH, \
+        DUMMY_USER_DB_CHECK, BROWSER_FLAVOR, \
+        GOOGLE_TEST_EMAIL, GOOGLE_TEST_PASSWORD, \
+        GITHUB_TEST_EMAIL, GITHUB_TEST_PASSWORD
+except ImportError:
+    pass
+
+class MistIoApiCloudActionsTests(TestCase):
+
+    @classmethod
+    def setupClass(cls):
+        fp = open('api_tests_temp.json','w')
+        json.dump({}, fp)
+        fp.close()
+
+    def setUp(self):
+        fp = open('api_tests_temp','r')
+        self.context = json.load(fp)
+        fp.close()
+        self.io= MistIoApi(MIST_URL)
+
+
+    def tearDown(self):
+        fp = open('api_tests_temp.json', 'w')
+        json.dump(self.context, fp)
+
+    def test_001_
+
+
+
+
+
 # import os
 # import unittest
 # import random
