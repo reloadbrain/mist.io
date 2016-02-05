@@ -9,9 +9,9 @@ class MistIoApi(object):
     def __init__(self, uri):
         self.uri = uri
 
-    def list_backends(self, cookie=None, csrf_token=None, api_token=None):
+    def list_clouds(self, cookie=None, csrf_token=None, api_token=None):
 
-        req = MistRequests(uri=self.uri + '/backends', cookie=cookie,
+        req = MistRequests(uri=self.uri + '/clouds', cookie=cookie,
                            csrf_token=csrf_token, api_token=api_token)
 
         req.post = req.unavailable_api_call
@@ -50,7 +50,7 @@ class MistIoApi(object):
 
         return req
 
-    def add_backend(self, title, provider, apikey, apisecret, apiurl=None,
+    def add_cloud(self, title, provider, apikey, apisecret, apiurl=None,
                     tenant_name=None, cookie=None, csrf_token=None,
                     api_token=None):
 
@@ -63,7 +63,7 @@ class MistIoApi(object):
             'tenant_name': tenant_name
         }
 
-        req = MistRequests(uri=self.uri + '/backends', data=json.dumps(payload),
+        req = MistRequests(uri=self.uri + '/clouds', data=json.dumps(payload),
                            cookie=cookie, csrf_token=csrf_token,
                            api_token=api_token)
 
@@ -82,10 +82,10 @@ class MistIoApi(object):
 
         return req
 
-    def delete_backend(self, backend_id, cookie=None, csrf_token=None,
+    def delete_cloud(self, cloud_id, cookie=None, csrf_token=None,
                        api_token=None):
 
-        req = MistRequests(uri=self.uri+'/backends/'+backend_id, cookie=cookie,
+        req = MistRequests(uri=self.uri+'/clouds/'+cloud_id, cookie=cookie,
                            csrf_token=csrf_token, api_token=api_token)
 
         req.get = req.unavailable_api_call
@@ -99,10 +99,43 @@ class MistIoApi(object):
 
         return req
 
-    def list_images(self, backend_id, search_term=None, cookie=None,
+    def rename_cloud(self, cloud_id, new_name, cookie=None, csrf_token=None,
+                       api_token=None):
+
+        req = MistRequests(uri=self.uri + "/clouds/" + cloud_id,
+                           data={'new_name': new_name}, cookie=cookie,
+                           csrf_token=csrf_token, api_token=api_token)
+
+        req.get = req.unavailable_api_call
+        req.post = req.unavailable_api_call
+        req.delete = req.unavailable_api_call
+
+        # assert response.ok, u'\nGot %d Response Status: %s \n%s' % (response.status_code, response.reason, response.text)
+
+        return req
+
+    def cloud_action(self, cloud_id, title, provider, params, cookie=None, csrf_token=None, api_token=None):
+
+        payload = {
+            'title': title,
+            'provider': provider,
+            'params': params,
+        }
+
+        req = MistRequests(uri=self.uri+'/clouds'+cloud_id, data=json.dumps(payload),
+                           cookie=cookie, csrf_token=csrf_token,
+                           api_token=api_token)
+
+        req.get = req.unavailble_api_call
+        req.put = req.unavailable_api_call
+        req.delete = req.unavailable_api_call
+
+        return req
+
+    def list_images(self, cloud_id, search_term=None, cookie=None,
                     csrf_token=None, api_token=None):
 
-        uri = self.uri + "/backends/" + backend_id + "/images",
+        uri = self.uri + "/clouds/" + cloud_id + "/images",
         if not search_term:
             req = MistRequests(uri=uri, cookie=cookie, csrf_token=csrf_token,
                                api_token=api_token)
@@ -125,10 +158,10 @@ class MistIoApi(object):
 
         return req
 
-    def list_sizes(self, backend_id, cookie=None, csrf_token=None,
+    def list_sizes(self, cloud_id, cookie=None, csrf_token=None,
                    api_token=None):
 
-        req = MistRequests(uri=self.uri + "/backends/" + backend_id + "/sizes",
+        req = MistRequests(uri=self.uri + "/clouds/" + cloud_id + "/sizes",
                            cookie=cookie, csrf_token=csrf_token,
                            api_token=api_token)
 
@@ -146,10 +179,10 @@ class MistIoApi(object):
 
         return req
 
-    def list_locations(self, backend_id, cookie=None, csrf_token=None,
+    def list_locations(self, cloud_id, cookie=None, csrf_token=None,
                        api_token=None):
 
-        req = MistRequests(uri=self.uri + "/backends/" + backend_id + "/locations",
+        req = MistRequests(uri=self.uri + "/clouds/" + cloud_id + "/locations",
                            cookie=cookie, csrf_token=csrf_token,
                            api_token=api_token)
 
@@ -163,21 +196,6 @@ class MistIoApi(object):
         #     return params
         # except Exception as e:
         #     assert False, u'Exception: %s' % e
-
-        return req
-
-    def rename_backend(self, backend_id, new_name, cookie=None, csrf_token=None,
-                       api_token=None):
-
-        req = MistRequests(uri=self.uri + "/backends/" + backend_id,
-                           data={'new_name': new_name}, cookie=cookie,
-                           csrf_token=csrf_token, api_token=api_token)
-
-        req.get = req.unavailable_api_call
-        req.post = req.unavailable_api_call
-        req.delete = req.unavailable_api_call
-
-        # assert response.ok, u'\nGot %d Response Status: %s \n%s' % (response.status_code, response.reason, response.text)
 
         return req
 
