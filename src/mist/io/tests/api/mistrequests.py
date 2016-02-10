@@ -3,17 +3,19 @@ import requests
 
 class MistRequests(object):
     """
-    Simple class to make requests with or withour cookies etc.
+    Simple class to make requests with or without cookies etc.
     This way we can have the same request methods both in io and core
     """
 
     def __init__(self, uri, data=None, cookie=None, timeout=None,
-                 csrf_token=None, api_token=None):
+                 csrf_token=None, Api_Version=None, api_token=None):
         self.headers = {}
         if cookie:
             self.headers.update({'Cookie': cookie})
         if csrf_token:
             self.headers.update({'Csrf-Token': csrf_token})
+        if Api_Version:
+            self.headers.update({'Api-Version': Api_Version})
         if api_token:
             self.headers.update({'Authorization': api_token})
         self.timeout = timeout
