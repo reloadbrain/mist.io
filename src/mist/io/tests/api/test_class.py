@@ -169,12 +169,6 @@ class MistIoApiCloudActionsTests(TestCase):
                          requests.codes.ok,
                          msg=response.content)
 
-
-
-
-
-
-
     # def test_001_get_cloud_action(self):
     #     print "\n============================================================"
     #     print "\n>>>  POSTing '/clouds/{cloud}' to get a cloud with empty creds:"
