@@ -1,40 +1,223 @@
-import requests
+import sys
 import json
+import requests
+
 
 from mist.io.tests.api.io import MistIoApi
 from unittest import FunctionTestCase, TestCase, skip, TextTestRunner, \
     TestSuite, makeSuite
 
 try:
-    from mist.io.tests.settings import CREDENTIALS, LOCAL, DEBUG, BASE_DIR, \
-        MIST_URL, NAME, EMAIL, PASSWORD1, PASSWORD2, MAIL_PATH, \
-        DUMMY_USER_DB_CHECK, BROWSER_FLAVOR, \
-        GOOGLE_TEST_EMAIL, GOOGLE_TEST_PASSWORD, \
-        GITHUB_TEST_EMAIL, GITHUB_TEST_PASSWORD
+    from mist.io.tests.settings import CREDENTIALS, MIST_URL
 except ImportError:
     pass
 
+ec2_ak = CREDENTIALS['EC2']['api_key']
+ec2_as = CREDENTIALS['EC2']['api_secret']
+ec2_r = 'ec2_ap_northeast'  # CREDENTIALS['EC2']['region']
+
+ec2_ak_2 = CREDENTIALS['EC2']['api_key']
+ec2_as_2 = CREDENTIALS['EC2']['api_secret']
+
+
 class MistIoApiCloudActionsTests(TestCase):
+    """Test Api calls for add_cloud and cloud_actions.
+    Cloud_actions are for edit cloud credentials, rename and toggle.
+    Finally, test delete_cloud.
+
+    """
 
     @classmethod
-    def setupClass(cls):
+    def setUpClass(cls):
         fp = open('api_tests_temp.json','w')
         json.dump({}, fp)
         fp.close()
 
     def setUp(self):
-        fp = open('api_tests_temp','r')
+        fp = open('api_tests_temp.json','r')
         self.context = json.load(fp)
         fp.close()
-        self.io= MistIoApi(MIST_URL)
-
+        self.io = MistIoApi(MIST_URL)
 
     def tearDown(self):
         fp = open('api_tests_temp.json', 'w')
         json.dump(self.context, fp)
+        fp.close()
 
-    def test_001_
+    def test_001_check_add_cloud(self):
+        print "\n============================================================"
+        print "\n>>>  POSTing /clouds to try add a new cloud without credentials"
+        response = self.io.add_cloud(title='', provider='',apisecret='', apikey='',region='',
+                                     apiurl=None, tenant_name=None, csrf_token=None).post()
 
+        self.assertEqual(response.status_code,
+                         requests.codes.bad_request,
+                         msg=response.content)
+
+        print "Success!!!"
+
+        print "\n============================================================"
+        print "\n>>>  POSTing /clouds to try add a new cloud without apikey"
+        response = self.io.add_cloud(title='EC2 Tokyo', provider='ec2',
+                                     apisecret=ec2_as, apikey='',region=ec2_r,
+                                     csrf_token= 'CSRF_TOKEN', Api_Version=2).post()
+
+        self.assertEqual(response.status_code,
+                         requests.codes.bad_request,
+                         msg=response.content)
+
+        print "Success!!!"
+
+        print "\n============================================================"
+        print "\n>>>  POSTing /clouds to try add a new cloud without apisecret"
+        response = self.io.add_cloud(title='EC2 Tokyo', provider='ec2',
+                                     apisecret='', apikey=ec2_ak,region=ec2_r,
+                                     csrf_token= 'CSRF_TOKEN', Api_Version=2).post()
+
+        self.assertEqual(response.status_code,
+                         requests.codes.bad_request,
+                         msg=response.content)
+
+        print "Success!!!"
+
+        print "\n============================================================"
+        print "\n>>>  POSTing /clouds to get a new cloud with correct credentials"
+        response = self.io.add_cloud(title='EC2 Tokyo', provider='ec2', apikey=ec2_ak,
+                                     apisecret=ec2_as, region=ec2_r,
+                                     csrf_token= 'CSRF_TOKEN', Api_Version=2).post()
+        self.assertEqual(response.status_code,
+                         requests.codes.ok,
+                         msg=response.content)
+
+        self.context['id'] = response.json().get('id', None)
+        self.context['enabled'] = response.json().get('enabled', None)
+
+        self.assertIsNotNone(self.context['id'],
+                             "Did not get an id "
+                             "back in the response")
+        self.assertIsNotNone(self.context['enabled'],
+                             "Did not get enabled"
+                             "back in the response")
+
+        print "Got an id: %s" % self.context['id']
+        print "Success!!!"
+        print"==============================================================="
+
+    def test_002_check_cloud_action_edit_credentials(self):
+        print "\n============================================================"
+        print "\n>>>  POSTing '/clouds' to edit a cloud with correct credentials:"
+
+        response = self.io.cloud_action(cloud_id=self.context['id'], title='editing', provider='ec2',
+                                        apikey=ec2_ak_2, apisecret=ec2_as_2, region=ec2_r,
+                                        action_type='edit_cloud', dry=True,
+                                        csrf_token='CSRF_TOKEN').post()
+
+        self.assertEqual(response.status_code,
+                         requests.codes.ok,
+                         msg=response.content)
+
+        self.context['id'] = response.json().get('id', None)
+        self.context['title'] = response.json().get('title', None)
+
+        self.assertIsNotNone(self.context['id'],
+                             "Did not get an id "
+                             "back in the response")
+        self.assertIsNotNone(self.context['title'],
+                             "Did not get new title"
+                             "back in the response")
+
+        print "Got an id: %s" % self.context['id']
+        print "Got a new title: %s" % self.context['title']
+        print "Success!!!"
+        print "\n============================================================"
+
+    def test_003_check_cloud_action_rename(self):
+        print "\n============================================================"
+        print "\n>>>  POSTing '/clouds' to rename a cloud with correct credentials:"
+
+        response = self.io.cloud_action(cloud_id=self.context['id'], title='rename',
+                                        action_type='rename_cloud',
+                                        csrf_token='CSRF_TOKEN').post()
+        print(response.status_code)
+        self.assertEqual(response.status_code,
+                         requests.codes.ok,
+                         msg=response.content)
+
+        print "Success!!!"
+        print "\n============================================================"
+
+    def test_004_check_cloud_action_toggle(self):
+        print "\n============================================================"
+        print "\n>>>  POSTing '/clouds' to toggle a cloud with correct credentials:"
+
+        response = self.io.cloud_action(cloud_id=self.context['id'], action_type='toggle_cloud',
+                                        new_state='0', csrf_token='CSRF_TOKEN').post()
+
+        self.assertEqual(response.status_code,
+                         requests.codes.ok,
+                         msg=response.content)
+
+        print "Success!!!"
+        print "\n============================================================"
+
+    def test_005_delete_cloud(self):
+        print "\n============================================================"
+        print "\n>>>  DELETEing /clouds to delete a cloud with correct cloud_id"
+        response = self.io.delete_cloud(cloud_id=self.context['id'], csrf_token= 'CSRF_TOKEN').delete()
+
+        self.assertEqual(response.status_code,
+                         requests.codes.ok,
+                         msg=response.content)
+
+
+
+
+
+
+
+    # def test_001_get_cloud_action(self):
+    #     print "\n============================================================"
+    #     print "\n>>>  POSTing '/clouds/{cloud}' to get a cloud with empty creds:"
+    #     response = self.io.cloud_action(cloud_id='', title='', provider='',params='').post()
+    #
+    #     self.assertEqual(response.status_code,
+    #                      requests.codes.bad_request,
+    #                      msg=response.content)
+    #     print "Success!!!"
+    #     print "\n============================================================"
+    #     print "\n>>>  POSTing '/clouds/{cloud}' to edit a cloud with valid credentials:"
+    #     response = self.io.cloud_action(cloud_id='', title='', provider='',params='').post()
+
+
+# test_functions = [
+#     # test_mist_openid_store
+# ]
+
+test_classes = [
+    MistIoApiCloudActionsTests
+]
+
+
+def mist_io_tests():
+    test_suite = TestSuite()
+    # mapped_test_functions = map(FunctionTestCase, test_functions)
+    # test_suite.addTests(mapped_test_functions)
+    mapped_test_classes = map(makeSuite, test_classes)
+    test_suite.addTests(mapped_test_classes)
+    return test_suite
+
+if __name__ == '__main__':
+    # MockContext = collections.namedtuple('MockContext', ['mist_config'])
+    # context = MockContext({'EMAIL': EMAIL, 'PASSWORD1': PASSWORD1})
+    # given_user(context)
+    suite = mist_io_tests()
+    runner = TextTestRunner(failfast=True)
+    result = runner.run(suite)
+    #            given_user(context)
+    if result.wasSuccessful():
+        sys.exit(0)
+    else:
+        sys.exit(1)
 
 
 
