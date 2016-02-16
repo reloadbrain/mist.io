@@ -4,19 +4,25 @@ define('app/views/script_add', ['app/views/controlled'],
     //
     //  @returns Class
     //
-    function (ControlledComponent) {
+    function(ControlledComponent) {
 
         'use strict';
 
         var DEFAULT_URL = 'http://';
         var DEFAULT_GITHUB_URL = 'https://github.com/owner/repo';
         var DEFAULT_SCRIPT = '#!/bin/bash\necho "hello world"';
-        var DEFAULT_ANSIBLE_SCRIPT = '- name: Dummy ansible playbook\n' +
-            '   hosts: localhost\n' +
-            '   tasks:\n' +
-            '    - name: Dummy task\n' +
-            '      debug:\n' +
-            '        msg: "Hello World"\n';
+        var DEFAULT_ANSIBLE_SCRIPT = [
+            '- name: Dummy ansible playbook\n',
+            '\thosts: localhost\n',
+            '\ttasks:\n',
+            '\t- name: Dummy task\n',
+            '\t\tdebug:\n',
+            '\t\t\tmsg: "Hello World"\n',
+            '\thosts: localhost\n',
+            '\ttasks:\n',
+            '\t- name: Dummy task\n',
+            '\t\tdebug: msg="Hello World"\n'
+        ].join('');
 
         return App.ScriptAddComponent = ControlledComponent.extend({
 
@@ -51,7 +57,7 @@ define('app/views/script_add', ['app/views/controlled'],
             //  Computed Properties
             //
 
-            isReady: function () {
+            isReady: function() {
                 var script = Mist.scriptAddController.get('newScript');
                 var name = script.get('name');
                 var type = script.get('type');
@@ -69,52 +75,52 @@ define('app/views/script_add', ['app/views/controlled'],
                 'Mist.scriptAddController.newScript.script'
             ),
 
-            isInline: function(){
+            isInline: function() {
                 return Mist.scriptAddController.newScript.source.value == 'inline';
             }.property('Mist.scriptAddController.newScript.source'),
 
-            isURL: function(){
+            isURL: function() {
                 return Mist.scriptAddController.newScript.source.value == 'url';
             }.property('Mist.scriptAddController.newScript.source'),
 
-            isGitHub: function(){
+            isGitHub: function() {
                 return Mist.scriptAddController.newScript.source.value == 'github';
             }.property('Mist.scriptAddController.newScript.source'),
 
-            load: function () {
-               Ember.run.next(function(){
-                   $( "#add-script" ).collapsible({
-                       expand: function(event, ui) {
-                           Mist.scriptAddController.open();
+            load: function() {
+                Ember.run.next(function() {
+                    $("#add-script").collapsible({
+                        expand: function(event, ui) {
+                            Mist.scriptAddController.open();
 
-                           var id = $(this).attr('id'),
-                           overlay = id ? $('#' + id+'-overlay') : false;
-                           if (overlay) {
-                               overlay.removeClass('ui-screen-hidden').addClass('in');
-                           }
-                           $(this).children().next().hide();
-                           $(this).children().next().slideDown(250);
-                       }
-                   });
-               });
+                            var id = $(this).attr('id'),
+                                overlay = id ? $('#' + id + '-overlay') : false;
+                            if (overlay) {
+                                overlay.removeClass('ui-screen-hidden').addClass('in');
+                            }
+                            $(this).children().next().hide();
+                            $(this).children().next().slideDown(250);
+                        }
+                    });
+                });
             }.on('didInsertElement'),
 
 
-            unload: function () {
-               Ember.run.next(function(){
-                   $( "#add-script" ).collapsible({
-                       collapse: function(event, ui) {
-                           Mist.scriptAddController.close();
+            unload: function() {
+                Ember.run.next(function() {
+                    $("#add-script").collapsible({
+                        collapse: function(event, ui) {
+                            Mist.scriptAddController.close();
 
-                           $(this).children().next().slideUp(250);
-                           var id = $(this).attr('id'),
-                           overlay = id ? $('#' + id+'-overlay') : false;
-                           if (overlay) {
-                               overlay.removeClass('in').addClass('ui-screen-hidden');
-                           }
-                       }
-                   });
-               });
+                            $(this).children().next().slideUp(250);
+                            var id = $(this).attr('id'),
+                                overlay = id ? $('#' + id + '-overlay') : false;
+                            if (overlay) {
+                                overlay.removeClass('in').addClass('ui-screen-hidden');
+                            }
+                        }
+                    });
+                });
             }.on('willDestroyElement'),
 
 
@@ -122,18 +128,18 @@ define('app/views/script_add', ['app/views/controlled'],
             //  Methods
             //
 
-            clear: function () {
+            clear: function() {
                 this.closeTypeSelect();
                 this.closeSourceSelect();
             },
 
-            selectType: function (type) {
+            selectType: function(type) {
                 this.closeTypeSelect();
                 Mist.scriptAddController.get('newScript').set('type', type);
                 this.setScript();
             },
 
-            setScript: function () {
+            setScript: function() {
                 var newScript = Mist.scriptAddController.get('newScript');
                 var type = newScript.get('type');
                 if (type.value == 'ansible')
@@ -142,7 +148,7 @@ define('app/views/script_add', ['app/views/controlled'],
                     newScript.set('script', DEFAULT_SCRIPT);
             },
 
-            selectSource: function (source) {
+            selectSource: function(source) {
                 this.closeSourceSelect();
                 this.showSourceBundle(source);
                 var newScript = Mist.scriptAddController.get('newScript');
@@ -154,21 +160,21 @@ define('app/views/script_add', ['app/views/controlled'],
                 if (source.value == 'inline')
                     this.setScript();
 
-                Ember.run.next(function(){
+                Ember.run.next(function() {
                     $('body').enhanceWithin();
                 });
             },
 
-            closeTypeSelect: function () {
+            closeTypeSelect: function() {
                 this.$('#script-add-type .mist-select').collapsible('collapse');
             },
 
-            closeSourceSelect: function () {
+            closeSourceSelect: function() {
                 this.$('#script-add-source .mist-select').collapsible('collapse');
             },
 
-            showSourceBundle: function (source) {
-                this.$('.'+source.value).slideDown();
+            showSourceBundle: function(source) {
+                this.$('.' + source.value).slideDown();
                 this.$('#script-add-description').slideDown();
             },
 
@@ -182,19 +188,19 @@ define('app/views/script_add', ['app/views/controlled'],
                     $('#add-script').collapsible('collapse');
                 },
 
-                selectType: function (type) {
+                selectType: function(type) {
                     this.selectType(type);
                 },
 
-                selectSource: function (source) {
+                selectSource: function(source) {
                     this.selectSource(source);
                 },
 
-                backClicked: function () {
+                backClicked: function() {
                     Mist.scriptAddController.close();
                 },
 
-                addClicked: function () {
+                addClicked: function() {
                     Mist.scriptAddController.add();
                 }
             },
