@@ -44,7 +44,6 @@ define('app/controllers/machines', ['app/models/machine'],
             //  Methods
             //
 
-
             newMachine: function(provider, name, image, size, location, key, cloud_init, script, project, monitoring, associateFloatingIp,
                 dockerEnv, dockerCommand, scriptParams, dockerPorts, azurePorts, libvirtDiskSize, libvirtDiskPath, libvirtImagePath) {
                 // Create a fake machine model for the user
@@ -129,16 +128,75 @@ define('app/controllers/machines', ['app/models/machine'],
                         //Libvirt
                         'libvirt_disk_size': libvirtDiskSize,
                         'libvirt_disk_path': libvirtDiskPath,
-                        'libvirt_image_path': libvirtImagePath
-                }).success(function (machine) {
-                    machine.cloud = that.cloud;
-                    // Nephoscale returns machine id on request success,
-                    // but the machine is not listed on the next list_machines.
-                    // This makes the machine dissappear from the UI.
-                    if (that.cloud.provider != 'nephoscale')
-                        that._createMachine(machine, key, dummyMachine);
-                    else
-                        dummyMachine.set('pendingCreation', false);
+                        'libvirt_image_path': libvirtImagePath,
+                        'async': true
+                }).success(function (job) {
+                    var job_id = job.job_id;
+                    var machine_created = false;
+                    var waiting_time = 0;
+                    machine = {}
+                    asyncInterval = setInterval(function(){
+                        Mist.ajax.GET('jobs/' + job_id).success(function(job){
+                            console.log(job)
+                            console.log(waiting_time)
+
+
+
+
+
+                            if (job["summary"]["probe"]["success"] || job["summary"]["create"]["success"]){
+                                var machine = that.model.findBy('name', name);
+                                if (machine.state == "running"){
+
+                                    clearInterval(asyncInterval);
+
+                                }
+
+                                var logs = job.logs;
+                                for (i in job.logs){
+                                    if ( job.logs[i]["action"] == "machine_creation_finished" ){
+                                        if( job.logs[i]["error"] ){
+                                            that.model.removeObject(that.model.findBy('name', name));
+                                            Mist.notificationController.timeNotify('Failed to create machine:'+job.logs[i]["error"], 5000);
+                                        }
+                                    }
+                                    machine["action"] = job.logs[i]["action"]
+                                    machine["error"] = job.logs[i]["pub_ips"] || machine["public_ips"]
+                                    machine["private_ips"] = job.logs[i]["priv_ips"] || machine["private_ips"]
+                                    machine["df"] = job.logs[i]["df"] || machine["df"]
+                                    machine["loadavg"] = job.logs[i]["loadavg"] || machine["loadavg"]
+                                }
+                                // if (machine["df"]){
+                                //     machine["probed"] = true
+                                // }
+                                // Nephoscale returns machine id on request success,
+                                // but the machine is not listed on the next list_machines.
+                                // This makes the machine dissappear from the UI.
+                                // dummyMachine["pendingCreation"] = false
+                                // that._createMachine(dummyMachine, key, dummyMachine);
+                                // if (job.logs.length >= 5){
+                                //     machine["cloud"] = that.cloud;
+                                //     machine["job_id"] = job_id
+                                //     console.log(machine)
+                                //     if (that.cloud.provider != 'nephoscale'){
+                                //     }else{
+                                //     }
+                                // }
+                            }else if (job["summary"]["create"]["error"] || job["summary"]["probe"]["error"]){
+                                that.model.removeObject(that.model.findBy('name', name));
+                                Mist.notificationController.timeNotify('Failed to create machine', 5000);
+                                clearInterval(asyncInterval)
+                            }else if (waiting_time > 600){
+                                that.model.removeObject(that.model.findBy('name', name));
+                                Mist.notificationController.timeNotify('Timeout: Failed to create machine', 5000);
+                                clearInterval(asyncInterval)
+                            }
+                            waiting_time+=5;
+                        })
+
+
+                    },5000);
+
                 }).error(function (message) {
                     that.model.removeObject(that.model.findBy('name', name));
                     Mist.notificationController.timeNotify('Failed to create machine: ' + message, 5000);
@@ -312,9 +370,14 @@ define('app/controllers/machines', ['app/models/machine'],
 
                     dummyMachines.forEach(function(machine) {
                         var realMachine = machines.findBy('name', machine.name);
-                        if (realMachine)
+                        if (realMachine){
                             for (var attr in realMachine)
                                 machine.set(attr, realMachine[attr]);
+                            if (machine.state != "pending"){
+                                machine.set("waitState", false)
+                                machine.set("pendingCreation", false)
+                            }
+                        }
                     });
 
                     // Remove deleted machines
