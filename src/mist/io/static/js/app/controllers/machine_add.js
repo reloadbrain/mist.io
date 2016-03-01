@@ -208,13 +208,15 @@ define('app/controllers/machine_add', ['ember', 'yamljs'],
 
                 var cloudInit = this.get('newMachineCloudInit').trim();
                 if (cloudInit) {
-                    try {
-                        if (!(cloudInit.substring(0, 12) == "#!/bin/bash\n" || (YAML.parse(cloudInit) && cloudInit.substring(0, 13) == '#cloud-config'))) {
-                            formReady = false;
-                            Mist.notificationController.timeNotify('Please start your cloud init script with #!/bin/bash or use a valid yaml configuration file (should start with #cloud-config)', 4000);
-                        }
-                    } catch (err) {
+                    if (this.newMachineProvider.provider != 'softlayer') {
+                        try {
+                            if (!(cloudInit.substring(0, 12) == "#!/bin/bash\n" || (YAML.parse(cloudInit) && cloudInit.substring(0, 13) == '#cloud-config'))) {
+                                formReady = false;
+                                Mist.notificationController.timeNotify('Please start your cloud init script with #!/bin/bash or use a valid yaml configuration file (should start with #cloud-config)', 4000);
+                            }
+                        } catch (err) {
 
+                        }
                     }
                 }
 
