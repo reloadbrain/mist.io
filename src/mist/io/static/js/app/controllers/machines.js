@@ -137,21 +137,11 @@ define('app/controllers/machines', ['app/models/machine'],
                     machine = {}
                     asyncInterval = setInterval(function(){
                         Mist.ajax.GET('jobs/' + job_id).success(function(job){
-                            console.log(job)
-                            console.log(waiting_time)
-
-
-
-
-
                             if (job["summary"]["probe"]["success"] || job["summary"]["create"]["success"]){
                                 var machine = that.model.findBy('name', name);
                                 if (machine.state == "running"){
-
                                     clearInterval(asyncInterval);
-
                                 }
-
                                 var logs = job.logs;
                                 for (i in job.logs){
                                     if ( job.logs[i]["action"] == "machine_creation_finished" ){
@@ -160,28 +150,6 @@ define('app/controllers/machines', ['app/models/machine'],
                                             Mist.notificationController.timeNotify('Failed to create machine:'+job.logs[i]["error"], 5000);
                                         }
                                     }
-                                    machine["action"] = job.logs[i]["action"]
-                                    machine["error"] = job.logs[i]["pub_ips"] || machine["public_ips"]
-                                    machine["private_ips"] = job.logs[i]["priv_ips"] || machine["private_ips"]
-                                    machine["df"] = job.logs[i]["df"] || machine["df"]
-                                    machine["loadavg"] = job.logs[i]["loadavg"] || machine["loadavg"]
-                                }
-                                // if (machine["df"]){
-                                //     machine["probed"] = true
-                                // }
-                                // Nephoscale returns machine id on request success,
-                                // but the machine is not listed on the next list_machines.
-                                // This makes the machine dissappear from the UI.
-                                // dummyMachine["pendingCreation"] = false
-                                // that._createMachine(dummyMachine, key, dummyMachine);
-                                // if (job.logs.length >= 5){
-                                //     machine["cloud"] = that.cloud;
-                                //     machine["job_id"] = job_id
-                                //     console.log(machine)
-                                //     if (that.cloud.provider != 'nephoscale'){
-                                //     }else{
-                                //     }
-                                // }
                             }else if (job["summary"]["create"]["error"] || job["summary"]["probe"]["error"]){
                                 that.model.removeObject(that.model.findBy('name', name));
                                 Mist.notificationController.timeNotify('Failed to create machine', 5000);
