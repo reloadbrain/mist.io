@@ -153,11 +153,11 @@ define('app/controllers/machines', ['app/models/machine'],
                             }else if (job["summary"]["create"]["error"] || job["summary"]["probe"]["error"]){
                                 that.model.removeObject(that.model.findBy('name', name));
                                 Mist.notificationController.timeNotify('Failed to create machine', 5000);
-                                clearInterval(asyncInterval)
+                                clearInterval(asyncInterval);
                             }else if (waiting_time > 600){
                                 that.model.removeObject(that.model.findBy('name', name));
                                 Mist.notificationController.timeNotify('Timeout: Failed to create machine', 5000);
-                                clearInterval(asyncInterval)
+                                clearInterval(asyncInterval);
                             }
                             waiting_time+=5;
                         })
@@ -342,8 +342,8 @@ define('app/controllers/machines', ['app/models/machine'],
                             for (var attr in realMachine)
                                 machine.set(attr, realMachine[attr]);
                             if (machine.state != "pending"){
-                                machine.set("waitState", false)
-                                machine.set("pendingCreation", false)
+                                machine.set("waitState", false);
+                                machine.set("pendingCreation", false);
                             }
                         }
                     });
