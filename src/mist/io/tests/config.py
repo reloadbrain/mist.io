@@ -99,6 +99,9 @@ MIST_URL = test_settings.get("MIST_URL", "http://localhost:8000")
 
 NAME = test_settings.get("NAME", "Atheofovos Gkikas")
 
+# EMAIL ADDRESS TO RECEIVE DEMO REQUESTS
+DEMO_EMAIL = test_settings.get("DEMO_EMAIL", "demo@mist.io")
+
 # DEFAULT CREDENTIALS FOR ACCESSING MIST.CORE
 EMAIL = test_settings.get("EMAIL", "")
 PASSWORD1 = test_settings.get("PASSWORD1", "")
