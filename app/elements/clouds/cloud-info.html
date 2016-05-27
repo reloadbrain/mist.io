@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="dialog-element/dialog-element.html">
 
 <dom-module id="cloud-info">
     <template>
@@ -26,11 +27,16 @@
                     <paper-input id="cloudId" label="ID" value="[[cloud.id]]"></paper-input>
                     <paper-button raised on-tap="_copyId">Copy Id</paper-button>
                 </p>
+                <p>
+                    <paper-button raised on-tap="_delete">Delete Cloud</paper-button>
+                </p>
             </paper-dialog-scrollable>
         </paper-dialog>
 
+        <dialog-element></dialog-element>
         <iron-ajax id="cloudEditAjaxRequest" url="/api/v1/clouds/[[cloud.id]]" method="PUT" on-response="_handleCloudEditAjaxResponse" on-error="_handleCloudEditAjaxError"></iron-ajax>
         <iron-ajax id="cloudStateAjaxRequest" url="/api/v1/clouds/[[cloud.id]]" method="POST" on-response="_handleCloudStateAjaxResponse" on-error="_handleCloudStateAjaxError"></iron-ajax>
+        <iron-ajax id="cloudDeleteAjaxRequest" url="/api/v1/clouds/[[cloud.id]]" method="DELETE" on-response="_handleCloudDeleteAjaxResponse" on-error="_handleCloudDeleteAjaxError"></iron-ajax>
     </template>
 
     <script>
@@ -60,7 +66,8 @@
                     }
                 },
                 listeners: {
-                    'iron-overlay-closed': '_modalClosed'
+                    'iron-overlay-closed': '_modalClosed',
+                    'confirmation': '_deleteCloudEventResponse'
                 },
                 _computeNewCloud: function(cloud) {
                     return {
@@ -121,7 +128,33 @@
                 _copyId: function() {
                     this.querySelector('#cloudId input').select();
                     document.execCommand('copy');
-                }
+                },
+                _delete: function() {
+                    this._showDialog({
+                        title: 'Delete Cloud?',
+                        body: "Deleting a cloud can not be undone. You are about to delete cloud '" + this.cloud.title + "'.",
+                        danger: true,
+                        reason: "cloud.delete"
+                    });
+                },
+                _showDialog: function(info) {
+                    var dialog = this.querySelector('dialog-element');
+                    for (var i in info) {
+                        dialog[i] = info[i];
+                    }
+                    dialog._openDialog();
+                },
+                _deleteCloudEventResponse: function(e) {
+                    var reason = e.detail.reason,
+                        response = e.detail.response;
+
+                    if (response.confirmed && reason == "cloud.delete") {
+                        this.$.cloudDeleteAjaxRequest.body = {};
+                        this.$.cloudDeleteAjaxRequest.headers["Content-Type"] = 'application/json';
+                        this.$.cloudDeleteAjaxRequest.headers["Csrf-Token"] = CSRF_TOKEN;
+                        this.$.cloudDeleteAjaxRequest.generateRequest();
+                    }
+                },
             });
         })();
     </script>
