@@ -3,6 +3,8 @@
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../app-form/app-form.html">
+<link rel="import" href="../app-form/app-form-copy.html">
+<link rel="import" href="../app-form/app-test.html">
 <dom-module id="stack-create">
     <template>
         <style is="custom-style" include="forms"></style>
@@ -71,8 +73,8 @@
                 <span class="icon"><iron-icon icon="[[section.icon]]"></iron-icon></span>
                 <div class="title flex">
                     <h2>
-                                Create Stack
-                            </h2>
+                        Create Stack
+                    </h2>
                     <div class="subtitle">
                         from [[template.name]]
                         <a href$="/templates/[[template.id]]">
@@ -82,68 +84,8 @@
                     </div>
                 </div>
             </paper-material>
-            <!--  <paper-material>
-                        <div class="grid-row">
-                        <h2 class="xs12 title"><content></content></h2>
-                        <template is="dom-repeat" items="{{fields}}" as="field">
-                                <template is="dom-if" if="[[_computeFieldType(field, 'text', field.show)]]">
-                                    <paper-input class="xs12 m6" id="[[field.name]]" placeholder="[[field.placeholder]]" label="[[field.label]]" value="{{field.value}}" auto-validate required="[[field.required]]" error-message="[[field.errorMessage]]" disabled="[[field.disabled]]"></paper-input>
-                                    <div class="field-helptext xs12 m6">[[field.helptext]]</div>
-                                </template>
-                                <template is="dom-if" if="[[_computeFieldType(field, 'textarea', field.show)]]">
-                                    <paper-textarea class="xs12 m6" id="[[field.name]]" label="[[field.label]]" rows="2" max-rows="15" value="{{field.value}}" placeholder="[[field.placeholder]]" auto-validate required="[[field.required]]" error-message="[[field.errorMessage]]" disabled="[[field.disabled]]"></paper-textarea>
-                                    <div class="field-helptext xs12 m6">[[field.helptext]]</div>
-                                </template>
-                                 <template is="dom-if" if="[[_computeFieldType(field, 'radio', field.show)]]">
-                                    <paper-radio-group selected="{{field.value}}" class="xs12 m6" disabled="[[field.disabled]]">
-                                        <template is="dom-repeat" items="[[field.options]]" as="option">
-                                            <paper-radio-button name="[[option.val]]">[[option.id]] [[option.title]] [[option.name]]</paper-radio-button>
-                                        </template>
-                                    </paper-radio-group>
-                                    <div class="field-helptext xs12 m6">[[field.helptext]]</div>
-                                </template>
-                                <template is="dom-if" if="[[_computeFieldType(field, 'dropdown', field.show)]]" disabled="[[field.disabled]]">
-                                    <paper-dropdown-menu class="dropdown-block xs12 m6" label="[[field.label]]" horizontal-align="left">
-                                        <paper-menu id="[[field.name]]" attr-for-selected="value" selected="{{field.value}}" class="dropdown-content">
-                                            <template is="dom-repeat" items="[[field.options]]" as="option">
-                                                <paper-item value="[[option.val]]">[[option.title]]</paper-item>
-                                            </template>
-                                        </paper-menu>
-                                    </paper-dropdown-menu>
-                                    <div class="field-helptext xs12 m6">[[field.helptext]]</div>
-                                </template>
-                                <template is="dom-if" if="[[_computeFieldType(field, 'toggle', field.show)]]">
-                                    <div class="xs12 m6">
-                                        <div class="spacer" hidden$="[[field.disabled]]"></div>
-                                        <paper-toggle-button checked="{{field.value}}" disabled="[[field.disabled]]">[[field.label]]</paper-toggle-button>
-                                        <div class="spacer" hidden$="[[field.disabled]]"></div>
-                                    </div>
-                                    <div class="field-helptext xs12 m6">[[field.helptext]]</div>
-                                </template>
-                                <template is="dom-if" if="[[field.isLead]]">
-                                    <hr class="xs12"/>
-                                </template>
-
-                        </template>
-
-                        <paper-progress id="satckprogress" value="0" hidden$="[[hideprogress]]"></paper-progress>
-                        <hr class="xs12" />
-
-                         <div class="clearfix bottom-actions xs12">
-                            <paper-button id="submit" class="submit-btn pull-left" disabled$="[[!formReady]]" raised on-tap="_submitForm" onclick="startProgress();">
-                                Create stack
-                            </paper-button>
-                            <paper-button class="submit-btn pull-right" raised on-tap="_resetForm">Reset</paper-button>
-                        </div>
-                    </div>
-                    </paper-material>
-
-
-                    <iron-ajax id="formAjax" url="/api/v1/stacks" contentType="application/json" method="POST" on-request="_handleRequest" on-response="_handleResponse"></iron-ajax>
-
- -->
-
-            <app-form model=[[model]] fields="[[fields]]" templateid="[[template.id]]" workflow="install" url="/api/v1/stacks" on-request="_handleRequest" on-response="_handleResponse" on-error="_handleError" btncontent="create stack"></app-form>
+           
+            <app-form withyaml="true" model=[[model]] fields="[[fields]]" templateid="[[template.id]]" workflow="install" url="/api/v1/stacks" on-request="_handleRequest" on-response="_handleResponse" on-error="_handleError" btncontent="create stack"></app-form>
 
         </div>
 
@@ -237,7 +179,6 @@
                             name: "Template is missing"
                         }
                     }
-                    // console.log("template: ",template);
                 },
                 _uri: function(model) {
                     return window.location.protocol + "//" + window.location.hostname + "/";
@@ -274,7 +215,8 @@
                         placeholder: "",
                         errorMessage: "Please enter a name for the stack",
                         show: true,
-                        required: true
+                        required: true,
+                        unyaml: true
                     }, {
                         name: "description",
                         label: "Stack Description",
@@ -285,47 +227,12 @@
                         helptext: "Choose a usefull description for your stack",
                         errorMessage: "Please enter stacks's description",
                         show: true,
-                        required: false
-                    }, {
-                        name: "yaml_or_form",
-                        label: "YAML or form",
-                        type: "radio",
-                        value: "yaml",
-                        defaultValue: "yaml",
-                        helptext: "Choose the way you want to insert inputs",
-                        errorMessage: "Choose an input format",
-                        show: true,
-                        required: true,
-                        options: [{
-                            title: "YAML",
-                            val: "yaml"
-                        }, {
-                            title: "Form",
-                            val: "form"
-                        }]
-                    }, {
-                        name: "stackinputs",
-                        label: "Stack Inputs YAML",
-                        type: "textarea",
-                        value: yaml_inputs,
-                        defaultValue: yaml_inputs,
-                        placeholder: "",
-                        helptext: "Enter the stack inputs in yaml format",
-                        errorMessage: "Please enter stacks's inputs",
-                        show: true,
-                        required: true,
-                        showIf: {
-                            fieldName: "yaml_or_form",
-                            fieldValues: ["yaml"]
-                        }
+                        required: false,
+                        unyaml: true
                     }];
 
                     if (template && template.inputs) {
                         template.inputs.forEach(function(inp) {
-                            inp['showIf'] = {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
                             inp['value'] = yaml_array[inp.name];
                             inp['defaultValue'] = yaml_array[inp.name];
 
@@ -346,7 +253,7 @@
                                 inp.show = false;
                                 inp.type = 'dropdown';
                                 inp.query = ["clouds","$.cloud_id", "imagesArray"],
-                                inp.andshowIf = {
+                                inp.showIf = {
                                     fieldName: "cloud_id",
                                     fieldExists: true
                                 }
@@ -367,7 +274,8 @@
                         helptext: "Enable this option to deploy your stack now",
                         errorMessage: "",
                         show: true,
-                        required: false
+                        required: false,
+                        unyaml: true
                     });
 
                     this.set('fields', ret);
