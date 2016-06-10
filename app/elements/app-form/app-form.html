@@ -289,8 +289,16 @@
                             f.value = newvalue;
 
                             var el = document.querySelector('#'+f.name);
-                            if(el)
-                                el.value = newvalue;
+                            if(el){
+                                if (el.type == 'dropdown'){
+                                    //dropdown fields need other treatment
+                                    
+                                    el.value = newvalue;
+                                }
+                                else {
+                                    el.value = newvalue;
+                                }
+                            }
                         }
                     }, this);
                 },
