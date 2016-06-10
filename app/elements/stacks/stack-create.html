@@ -193,7 +193,7 @@
                 _computeFields: function(template) {
                     var yaml_inputs = '', yaml_array = [];
                     if (this.template.inputs) {
-                        for (var i = 0; i < this.template.inputs.length; i++) {
+                        for (var i = 0; i < this.template.inputs.length; i++) {                            
                             if (['mist_uri', 'api_token'].indexOf(this.template.inputs[i].name) == -1) {
                                 yaml_inputs += this.template.inputs[i].name + ': ';
                                 yaml_inputs += this.template.inputs[i].default+'\n';
@@ -207,6 +207,21 @@
 
                     if (template && template.inputs) {
                         template.inputs.forEach(function(inp) {
+                            // to be modified when backend brings proper names
+                            // if is size image or location define as dependency the prefix of size image or location
+                            // mist_cloud_ADSF_image_id has as dep mist_cloud_ADSF etc
+                            if (['size_id', 'image_id', 'location_id'].indexOf(inp.name) != -1) {
+                                inp.show = false;
+                                inp.showIf = {
+                                    fieldName: "mist_cloud_id",
+                                    fieldExists: true
+                                };
+                            }
+                            // to be removed when backend brings proper names
+                            if (['key','cloud_id','size_id', 'image_id', 'location_id'].indexOf(inp.name) != -1) {
+                                inp.name = 'mist_'+inp.name;
+                            }
+                            //
                             inp['value'] = yaml_array[inp.name];
                             inp['defaultValue'] = yaml_array[inp.name];
 

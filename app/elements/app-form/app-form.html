@@ -74,15 +74,15 @@
             <div class="grid-row" hidden$="[[yaml]]">
             <!-- <div class="grid-row"> -->
                 <template is="dom-repeat" items="{{fields}}" as="field">
-                    <template is="dom-if" if="[[_computeFieldType(field, 'text', field.show)]]">
+                    <template is="dom-if" if="[[_computeFieldType(field, 'text', field.show, index, model.clouds)]]">
                         <paper-input class="xs12 m6" id="[[field.name]]" placeholder="[[field.placeholder]]" label="[[field.label]]" value="{{field.value}}" auto-validate required="[[field.required]]" error-message="[[field.errorMessage]]" disabled="[[field.disabled]]"></paper-input>
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
-                    <template is="dom-if" if="[[_computeFieldType(field, 'textarea', field.show)]]">
+                    <template is="dom-if" if="[[_computeFieldType(field, 'textarea', field.show, index, model.clouds)]]">
                         <paper-textarea class="xs12 m6" id="[[field.name]]" label="[[field.label]]" rows="2" max-rows="15" value="{{field.value}}" placeholder="[[field.placeholder]]" auto-validate required="[[field.required]]" error-message="[[field.errorMessage]]" disabled="[[field.disabled]]"></paper-textarea>
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
-                    <template is="dom-if" if="[[_computeFieldType(field, 'radio', field.show)]]">
+                    <template is="dom-if" if="[[_computeFieldType(field, 'radio', field.show, index, model.clouds)]]">
                         <paper-radio-group selected="{{field.value}}" class="xs12 m6" disabled="[[field.disabled]]">
                             <template is="dom-repeat" items="[[field.options]]" as="option">
                                 <paper-radio-button name="[[option.val]]">[[option.title]]</paper-radio-button>
@@ -90,7 +90,7 @@
                         </paper-radio-group>
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
-                    <template is="dom-if" if="[[_computeFieldType(field, 'dropdown', field.show)]]">
+                    <template is="dom-if" if="[[_computeFieldType(field, 'dropdown', field.show, index, model.clouds)]]">
                         <paper-dropdown-menu class="dropdown-block xs12 m6" label="[[field.label]]" horizontal-align="left" disabled="[[field.disabled]]">
                             <paper-menu id="[[field.name]]" attr-for-selected="value" selected="{{field.value}}" class="dropdown-content">
                                 <template is="dom-repeat" items="[[field.options]]" as="option">
@@ -100,7 +100,7 @@
                         </paper-dropdown-menu>
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
-                    <template is="dom-if" if="[[_computeFieldType(field, 'toggle', field.show)]]">
+                    <template is="dom-if" if="[[_computeFieldType(field, 'toggle', field.show, index, model.clouds)]]">
                         <div class="xs12 m6">
                             <paper-toggle-button checked="{{field.value}}" disabled="[[field.disabled]]">[[field.name]]</paper-toggle-button>
                         </div>
@@ -259,7 +259,7 @@
                     // spot
                 },
                 observers: [
-                    '_fieldsChanged(fields.*, sendingData)',
+                    '_fieldsChanged(fields.*, sendingData, model.clouds.*)',
                     '_yamlChanged(yamlText.*)',
                 ],                
                 _yaml: function(y){
@@ -309,8 +309,28 @@
                 _computeShowProgress: function(sendingData) {
                     return sendingData;
                 },
-                _computeFieldType: function(field, value, show) {
-                    var inputModel = this.model;
+                _makeDdOptions: function(title, array, id, type){
+                    var ddoptions = [];
+                    var m;
+                    if (id && type){
+                        m = this.model[array][id][type];
+                    }
+                    else {
+                        m = this.model[array];
+                    }
+                    for (var p in m) {
+                        var dditem = {};
+                        var t = title
+                        dditem.title = m[p][t];
+                        dditem.val = m[p].id;
+                        ddoptions.push(dditem);
+                    }
+                    console.log('ddoptions',ddoptions);
+                    return ddoptions;
+                },
+                _computeFieldType: function(field, value, show, index, model) {
+                    var m = this.model;
+                    var ind = index;
 
                     if (!field.helptext && field.description) {
                         field.helptext = field.description
@@ -318,53 +338,53 @@
                     if (!field.label && field.name) {
                         field.label = field.name
                     }
+
                     if (!(field.showIf && !field.show)) {
-                        if (field.type == "dropdown" && field.query) {
+                        if (field.name.indexOf('mist_') != -1 && field.name != 'mist_uri') {
+                            this.set("fields." + ind + ".type", 'dropdown');
 
-                            for (var prop in field.query) {
-                                var p = field.query[prop];
+                            //case of clouds dropdown
+                            if (field.name.indexOf('cloud_id') != -1 ) {                                
+                                this.set("fields." + ind + ".options", this._makeDdOptions('title', 'clouds'));
+                            }                        
 
-                                if (p.startsWith("$.")) {
-                                    p = this.form[p.slice(2)];
+                            //case of location dropdown
+                            if (field.name.indexOf('location_id') != -1) {
+                                if (field.showIf){
+                                    var d = this.fields.find(function(f){
+                                        return f.name == field.showIf.fieldName;
+                                    });
+                                    this.set("fields." + ind + ".options", this._makeDdOptions('id', 'clouds', d.value, 'locations'));
                                 }
+                            }
 
-                                if (inputModel.hasOwnProperty(p)) {
-                                    inputModel = inputModel[p];
+                            //case of sizes dropdown
+                            if (field.name.indexOf('size_id') != -1) {
+                                if (field.showIf){
+                                    var d = this.fields.find(function(f){
+                                        return f.name == field.showIf.fieldName;
+                                    });
+                                    this.set("fields." + ind + ".options", this._makeDdOptions('id', 'clouds', d.value, 'sizes'));
                                 }
                             }
 
-                            var updatedOptions = [];
-
-                            for (var prop in inputModel) {
-                                var dropdownItem = {};
-                                if (inputModel[prop].hasOwnProperty("title")) {
-                                    dropdownItem.title = inputModel[prop].title;
-                                } else if (inputModel[prop].hasOwnProperty("name")) {
-                                    dropdownItem.title = inputModel[prop].name;
-                                } else if (inputModel[prop].hasOwnProperty("id")) {
-                                    dropdownItem.title = inputModel[prop].id;
+                            //case of images dropdown
+                            if (field.name.indexOf('image_id') != -1) {                    
+                                if (field.showIf){
+                                    var d = this.fields.find(function(f){
+                                        return f.name == field.showIf.fieldName;
+                                    });
+                                    this.set("fields." + ind + ".options", this._makeDdOptions('name', 'clouds', d.value,'images'));
                                 }
-                                dropdownItem.val = inputModel[prop].id;
-                                updatedOptions.push(dropdownItem);
+                                
+                            }
 
-                            }
-                            for (var index in this.fields) {
-                                var existingField = this.fields[index];
-                                if (existingField.name == field.name) {
-                                    this.set("fields." + index + ".options", updatedOptions);
-                                }
-                            }
+                            //case of key dropdown
+                            if (field.name.indexOf('key') != -1) {
+                                this.set("fields." + ind + ".options", this._makeDdOptions('name', 'keys'));
+                            }   
                         }
-
-                        // if (this.yaml){
-                        //     if (field.unyaml) {
-                        //         field.show = true;
-                        //     }
-                        //     else {
-                        //         field.show = false;
-                        //     }
-                        // }
-
+                        
                         return field.type == value;
                     }
 
