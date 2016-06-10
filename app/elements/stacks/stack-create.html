@@ -3,8 +3,6 @@
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../app-form/app-form.html">
-<link rel="import" href="../app-form/app-form-copy.html">
-<link rel="import" href="../app-form/app-test.html">
 <dom-module id="stack-create">
     <template>
         <style is="custom-style" include="forms"></style>
@@ -85,7 +83,7 @@
                 </div>
             </paper-material>
            
-            <app-form withyaml="true" model=[[model]] fields="[[fields]]" templateid="[[template.id]]" workflow="install" url="/api/v1/stacks" on-request="_handleRequest" on-response="_handleResponse" on-error="_handleError" btncontent="create stack"></app-form>
+            <app-form askname="true" askdescription="true" askdeploy="true" yamlimputs="true" model=[[model]] fields="[[fields]]" templateid="[[template.id]]" workflow="install" url="/api/v1/stacks" on-request="_handleRequest" on-response="_handleResponse" on-error="_handleError" btncontent="create stack"></app-form>
 
         </div>
 
@@ -205,31 +203,7 @@
                         }
                     }
 
-                    var ret = [{
-                        name: "name",
-                        label: "Stack Name",
-                        type: "text",
-                        value: "",
-                        isLead: true,
-                        defaultValue: "",
-                        placeholder: "",
-                        errorMessage: "Please enter a name for the stack",
-                        show: true,
-                        required: true,
-                        unyaml: true
-                    }, {
-                        name: "description",
-                        label: "Stack Description",
-                        type: "textarea",
-                        value: "",
-                        defaultValue: "",
-                        placeholder: "",
-                        helptext: "Choose a usefull description for your stack",
-                        errorMessage: "Please enter stacks's description",
-                        show: true,
-                        required: false,
-                        unyaml: true
-                    }];
+                    var ret = [];
 
                     if (template && template.inputs) {
                         template.inputs.forEach(function(inp) {
@@ -237,304 +211,48 @@
                             inp['defaultValue'] = yaml_array[inp.name];
 
                             // make key dropdown
-                            if(inp.name == "key") {
-                                inp.type = 'dropdown';
-                                inp.query = ["keysArray"];
-                            }
+                            // if(inp.name == "key") {
+                            //     inp.type = 'dropdown';
+                            //     inp.query = ["keysArray"];
+                            // }
 
                             // make cloud dropdown
-                            if(inp.name == "cloud_id") {
-                                inp.type = 'dropdown';
-                                inp.query = ["cloudsArray"];
-                            }
+                            // if(inp.name == "cloud_id") {
+                            //     inp.type = 'dropdown';
+                            //     inp.query = ["cloudsArray"];
+                            // }
 
                             // make image dropdown & dependent on cloud
-                            if(inp.name == "image_id") {
-                                inp.show = false;
-                                inp.type = 'dropdown';
-                                inp.query = ["clouds","$.cloud_id", "imagesArray"],
-                                inp.showIf = {
-                                    fieldName: "cloud_id",
-                                    fieldExists: true
-                                }
-                            }
+                            // if(inp.name == "image_id") {
+                            //     inp.show = false;
+                            //     inp.type = 'dropdown';
+                            //     inp.query = ["clouds","$.cloud_id", "imagesArray"],
+                            //     inp.showIf = {
+                            //         fieldName: "cloud_id",
+                            //         fieldExists: true
+                            //     }
+                            // }
 
                         
                             ret.push(inp);
                         });
                     }
 
-                    ret.push({
-                        name: "deploy",
-                        label: "Deploy Now",
-                        type: "toggle",
-                        value: true,
-                        defaultValue: true,
-                        placeholder: true,
-                        helptext: "Enable this option to deploy your stack now",
-                        errorMessage: "",
-                        show: true,
-                        required: false,
-                        unyaml: true
-                    });
+                    // ret.push({
+                    //     name: "deploy",
+                    //     label: "Deploy Now",
+                    //     type: "toggle",
+                    //     value: true,
+                    //     defaultValue: true,
+                    //     placeholder: true,
+                    //     helptext: "Enable this option to deploy your stack now",
+                    //     errorMessage: "",
+                    //     show: true,
+                    //     required: false
+                    // });
 
                     this.set('fields', ret);
 
-                    //return ret;
-                    /*
-                        {
-
-                        },{
-                            name: "key_name",
-                            label: "SSH Key",
-                            type: "dropdown",
-                            value: "",
-                            defaultValue: "",
-                            errorMessage: "Please choose an ssh key",
-                            helptext: "You can choose a key from your existing keys",
-                            show: true,
-                            required: true,
-                            query: ["keysArray"],
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "worker_name",
-                            label: "Worker name",
-                            type: "text",
-                            value: "",
-                            defaultValue: "GigaDemoFirstWorker",
-                            placeholder: "",
-                            helptext: "Your current mist installation URI",
-                            errorMessage: "Please enter mist URI",
-                            helptext: "The machine name of the first kubernetes worker. You can scale up workers later. Name must be unique in cloud.",
-                            show: true,
-                            required: true,
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "master_name",
-                            label: "Master name",
-                            type: "text",
-                            value: "",
-                            defaultValue: "GigaDemoMaster",
-                            placeholder: "",
-                            errorMessage: "Please enter a name for the master",
-                            helptext: "The machine name of kubernetes master. Name must be unique in cloud.",
-                            show: true,
-                            required: true,
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "cloud_id",
-                            label: "Cloud",
-                            type: "dropdown",
-                            value: "",
-                            defaultValue: "",
-                            errorMessage: "Please choose an cloud",
-                            helptext: "Choose on which one of your clouds you want your stack deployed",
-                            show: true,
-                            required: true,
-                            query: ["cloudsArray"],
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "image_id",
-                            label: "Image",
-                            type: "dropdown",
-                            value: "",
-                            defaultValue: "ami-4f4acd3c",
-                            errorMessage: "Please choose an image",
-                            helptext: "Choose an image for the machines.",
-                            show: false,
-                            required: true,
-                            query: ["clouds","$.cloud_id", "imagesArray"],
-                            andshowIf: {
-                                fieldName: "cloud_id",
-                                fieldExists: true
-                            },
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "size_id",
-                            label: "Size",
-                            type: "dropdown",
-                            value: "",
-                            defaultValue: "c1.medium",
-                            errorMessage: "Please choose a size for your machines",
-                            helptext: "Choose the size for your machines.",
-                            show: false,
-                            required: true,
-                            query: ["clouds","$.cloud_id", "sizesArray"],
-                            andshowIf: {
-                                fieldName: "cloud_id",
-                                fieldExists: true
-                            },
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "location_id",
-                            label: "Location",
-                            type: "dropdown",
-                            value: "",
-                            defaultValue: "0",
-                            helptext: "Choose a host location for your machines.",
-                            errorMessage: "Please enter a location",
-                            show: false,
-                            required: true,
-                            query: ["clouds","$.cloud_id", "locationsArray"],
-                            andshowIf: {
-                                fieldName: "cloud_id",
-                                fieldExists: true
-                            },
-                            showIf: {
-                                fieldName: "yaml_or_form",
-                                fieldValues: ["form"]
-                            }
-                        },{
-                            name: "coreos",
-                            label: "coreos",
-                            type: "toggle",
-                            value: true,
-                            defaultValue: true,
-                            placeholder: true,
-                            helptext: "",
-                            errorMessage: "",
-                            show: true,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "ssh_user",
-                            label: "SSH User",
-                            type: "text",
-                            value: "ubuntu",
-                            defaultValue: "ubuntu",
-                            placeholder: "",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "private_key_path",
-                            label: "Private Key Path",
-                            type: "text",
-                            value: "id-rsa",
-                            defaultValue: "id-rsa",
-                            placeholder: "",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "monitoring",
-                            label: "Monitoring",
-                            type: "toggle",
-                            value: false,
-                            defaultValue: false,
-                            placeholder: "",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "key_external_resource",
-                            label: "key_external_resource",
-                            type: "toggle",
-                            value: true,
-                            defaultValue: true,
-                            placeholder: "",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "worker_external_resource",
-                            label: "worker_external_resource",
-                            type: "toggle",
-                            value: false,
-                            defaultValue: false,
-                            placeholder: "",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "worker_external_resource_id",
-                            label: "worker_external_resource_id",
-                            type: "text",
-                            value: "i-ebb8c563",
-                            defaultValue: "i-ebb8c563",
-                            placeholder: "i-ebb8c563",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "worker_configured",
-                            label: "worker_configured",
-                            type: "toggle",
-                            value: false,
-                            defaultValue: false,
-                            placeholder: false,
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "master_external_resource",
-                            label: "master_external_resource",
-                            type: "toggle",
-                            value: false,
-                            defaultValue: false,
-                            placeholder: false,
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "master_external_resource_id",
-                            label: "master_external_resource_id",
-                            type: "text",
-                            value: "i-3fb9c4b7",
-                            defaultValue: "i-3fb9c4b7",
-                            placeholder: "i-3fb9c4b7",
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },{
-                            name: "master_configured",
-                            label: "master_configured",
-                            type: "toggle",
-                            value: false,
-                            defaultValue: false,
-                            placeholder: false,
-                            helptext: "",
-                            errorMessage: "",
-                            show: false,
-                            required: true,
-                            disabled: true
-                        },]*/
                 },
 
                 _computeFieldType: function(field, value, show) {

@@ -49,17 +49,30 @@
         </style>
 
         <paper-material>
+            <template is="dom-if" if="[[askname]]">
+                <div class="grid-row">
+                    <paper-input class="xs12 m6" id="name" placeholder="" label="Name" value="" auto-validate required="true" error-message="A name is required"></paper-input>
+                    <div class="field-helptext xs12 m6"></div>
+                    <hr class="xs12" />
+                </div>
+            </template>
+            <template is="dom-if" if="[[askdescription]]">
+                <div class="grid-row">
+                    <paper-textarea class="xs12 m6" id="description" label="Description" rows="2" max-rows="15" value="" placeholder="" auto-validate required="false"></paper-textarea>
+                    <div class="field-helptext xs12 m6">An optional description</div>
+                </div>
+            </template>
             <div class="grid-row">
-                <template is="dom-if" if="[[withyaml]]">
+                <template is="dom-if" if="[[yamlimputs]]">
                     <paper-radio-group id="yaml" selected="{{yaml_or_form}}" class="xs12 m6">
                         <paper-radio-button name="yaml">Yaml</paper-radio-button>
                         <paper-radio-button name="form">Form</paper-radio-button>
                     </paper-radio-group>
                     <div class="field-helptext xs12 m6">Choose the format you want to fill in the inputs</div>
                 </template>
-            </div>
-            <!-- <div class="grid-row" hidden$="[[yaml]]"> -->
-            <div class="grid-row">
+            </div>            
+            <div class="grid-row" hidden$="[[yaml]]">
+            <!-- <div class="grid-row"> -->
                 <template is="dom-repeat" items="{{fields}}" as="field">
                     <template is="dom-if" if="[[_computeFieldType(field, 'text', field.show)]]">
                         <paper-input class="xs12 m6" id="[[field.name]]" placeholder="[[field.placeholder]]" label="[[field.label]]" value="{{field.value}}" auto-validate required="[[field.required]]" error-message="[[field.errorMessage]]" disabled="[[field.disabled]]"></paper-input>
@@ -93,16 +106,22 @@
                         </div>
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
-                    <template is="dom-if" if="[[field.isLead]]">
-                        <hr class="xs12" />
-                    </template>
                 </template>
+
             </div>
-            <!-- <div class="grid-row" hidden$="[[!yaml]]"> -->
-            <div class="grid-row">
-                <template is="dom-if" if="[[withyaml]]">
+            <div class="grid-row" hidden$="[[!yaml]]">
+            <!-- <div class="grid-row"> -->
+                <template is="dom-if" if="[[yamlimputs]]">
                     <paper-textarea class="xs12 m6" id="yaml" label="yaml inputs" rows="2" value="{{yamlText}}" placeholder="{{computeYaml}}" auto-validate required="{{computeYamlRequired}}" error-message="You chose YAML input bur Yaml field is empty"></paper-textarea>
                     <div class="field-helptext xs12 m6">Enter the stack inputs in yaml format</div>
+                </template>
+            </div>
+            <div class="grid-row">
+                <template is="dom-if" if="[[askdeploy]]">
+                    <div class="xs12 m6">
+                        <paper-toggle-button checked="true">Deploy now</paper-toggle-button>
+                    </div>
+                    <div class="field-helptext xs12 m6">Enable this option to deploy your stack now</div>
                 </template>
             </div>
             <div class="grid-row">
@@ -159,7 +178,7 @@
                         type: String,
                         computed: '_getHeaderStyle(section)'
                     },
-                    withyaml: {
+                    yamlimputs: {
                         type: Boolean,
                         value: true
                     },
@@ -230,8 +249,12 @@
                     },
                     yaml: {
                         type: Boolean,
+                        value: false,
                         computed: '_yaml(yaml_or_form)'
-                    }
+                    },
+                    askname: Boolean,
+                    askdescription: Boolean,
+                    askdeploy: Boolean,
 
                     // spot
                 },
