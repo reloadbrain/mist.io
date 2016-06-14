@@ -7,10 +7,36 @@
 <a class="ui-btn policy-rule-button policy-rule-action ui-btn-a ui-btn-inline ui-caps ui-shadow" {{action "openRuleActionPopup" target=view}}>{{rule.action}}</a>
 <a class="ui-btn policy-rule-button policy-rule-identification ui-btn-a ui-btn-inline ui-caps ui-shadow" {{action "openRuleResourceIdentificationPopup" target=view}}>{{rule.identification}}</a>&nbsp;
 {{#if view.hasInput}}
-    {{#if view.isID}}
+    {{#if rule.isID}}
         {{input value=rule.rid placeholder="resource id"}}
-    {{else}}
+    {{else if rule.isTags}}
         {{input value=rule.tagsText placeholder="resource tags"}}
+    {{else}}
+        <div data-role="collapsible"
+            data-iconpos="right"
+            data-collapsed-icon="carat-d"
+            data-expanded-icon="carat-u"
+            class="mist-select">
+            {{#if view.isCloud}}
+                <h4>{{rule.selectedResource.title}}</h4>
+                <ul data-role="listview">
+                    {{#each view.resourcesOptions as |option|}}
+                        <li data-icon="false">
+                            <a {{action "selectResource" option target=view}}>{{option.title}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{else}}
+                <h4>{{rule.selectedResource.name}}</h4>
+                <ul data-role="listview">
+                    {{#each view.resourcesOptions as |option|}}
+                        <li data-icon="false">
+                            <a {{action "selectResource" option target=view}}>{{option.name}}</a>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{/if}}
+        </div>
     {{/if}}
 {{/if}}
 

@@ -197,6 +197,7 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
                 // action to be All since bad combinations should be avoided
                 if (args.properties.key == 'rtype') {
                     rule.set('action', 'all');
+                    rule.set('selectedResource', null);
                 }
 
                 // When identification changes
@@ -204,7 +205,8 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
                 if (key == 'identification') {
                     rule.setProperties({
                         rid: null,
-                        rtags: {}
+                        rtags: {},
+                        selectedResource: null
                     });
 
                     if (['add', 'create'].indexOf(rule.get('action')) != -1) {
@@ -222,6 +224,8 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
                         rtags: {}
                     });
                 }
+
+                this._updateView();
             },
 
             editOperator: function(args) {
@@ -261,43 +265,42 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
                             operator: rule.operator,
                             action: rule.action == 'all' || rule.action === '' ? '' : rule.action,
                             rtype: rule.rtype == 'all' || rule.rtype === '' ? '' : rule.rtype,
-                            rid: rule.rid,
+                            rid: rule.selectedResource && rule.selectedResource.id ?  rule.selectedResource.id : rule.rid,
                             rtags: this._transformRuleTags(rule.get('tagsText'))
                         };
                     }, this);
 
-                if (!this._validateRTags(payloadRules)) {
-                    Mist.notificationController.timeNotify('You can use only these chars to declare tags: a-z, 0-9, _, -', 2000);
-                    return;
-                }
+                // if (!this._validateRTags(payloadRules)) {
+                //     Mist.notificationController.timeNotify('You can use only these chars to declare tags: a-z, 0-9, _, -', 2000);
+                //     return;
+                // }
 
                 console.log(payloadRules);
 
-                var that = this;
-                that.set('updatingRules', true);
-                Mist.ajax
-                    .PUT('/org/' + team.organization.id + '/teams/' + team.id + '/policy', {
-                        policy: {
-                            operator: team.policy.operator,
-                            rules: payloadRules
-                        }
-                    })
-                    .success(function() {
-                        Mist.notificationController.notify('Team\'s ' + team.name + ' policy was updated successfully!');
-                        // that._updateRules(team, payloadRules);
-                    })
-                    .error(function(message) {
-                        Mist.notificationController.notify(message);
-                    })
-                    .complete(function(success) {
-                        that.set('updatingRules', false);
-                        if (args.callback)
-                            args.callback(success);
-                    });
+                // var that = this;
+                // that.set('updatingRules', true);
+                // Mist.ajax
+                //     .PUT('/org/' + team.organization.id + '/teams/' + team.id + '/policy', {
+                //         policy: {
+                //             operator: team.policy.operator,
+                //             rules: payloadRules
+                //         }
+                //     })
+                //     .success(function() {
+                //         Mist.notificationController.notify('Team\'s ' + team.name + ' policy was updated successfully!');
+                //         // that._updateRules(team, payloadRules);
+                //     })
+                //     .error(function(message) {
+                //         Mist.notificationController.notify(message);
+                //     })
+                //     .complete(function(success) {
+                //         that.set('updatingRules', false);
+                //         if (args.callback)
+                //             args.callback(success);
+                //     });
             },
 
             getTeam: function(teamId) {
-                console.log(teamId, this.get('model'), Mist.teamsController.model, this.model.findBy('id', teamId));
                 return this.model.findBy('id', teamId);
             },
 
@@ -314,6 +317,12 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
             //
             // Private Methods
             //
+
+            _updateView: function() {
+                Ember.run.scheduleOnce('afterRender', this, function() {
+                    $('body').enhanceWithin();
+                });
+            },
 
             _addTeam: function(team, newTeam) {
                 var team = Ember.Object.create({

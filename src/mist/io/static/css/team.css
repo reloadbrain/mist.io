@@ -182,6 +182,56 @@
     height: 18px;
     margin-right: 5px;
 }
+#single-team-page .mist-select {
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+}
+#single-team-page .mist-select .ui-collapsible-heading .ui-collapsible-heading-toggle {
+    text-transform: capitalize;
+    color: #444 !important;
+    background-color: #fff !important;
+    border: 1px solid #b5b5b5 !important;
+    font-size: 14px;
+    padding-left: .75em !important;
+    line-height: 21px;
+    padding-top: 5.5px !important;
+    padding-bottom: 5.5px !important;
+    margin: 0;
+}
+#single-team-page .mist-select .ui-collapsible-content {
+    max-height: 120px;
+    overflow-y: auto;
+}
+#single-team-page .mist-select .ui-collapsible-content .ui-listview {
+    margin: 0;
+    border: 1px solid #b5b5b5;
+    margin: -1px 0 0 !important;
+}
+#single-team-page .mist-select .ui-collapsible-content .ui-listview .ui-btn,
+#single-team-page .mist-select .ui-collapsible-heading-toggle {
+    line-height: 21px;
+    padding-top: 5.5px !important;
+    padding-bottom: 5.5px !important;
+    font-size: 14px;
+}
+#single-team-page .mist-select .ui-collapsible-content .ui-listview .ui-btn {
+    background-color: #fff;
+    padding-left: .75em !important;
+    border: none;
+}
+#single-team-page .mist-select .ui-collapsible-heading.ui-collapsible-heading-collapsed > a:after {
+    content: '\0072';
+}
+#single-team-page .mist-select .ui-collapsible-heading > a:after {
+    content: '\0073';
+}
+#single-team-page .mist-select .ui-collapsible-heading > a:after {
+    background-image: none;
+    font-size: 14px;
+    margin-top: -6px;
+    color: #444;
+}
 .label-pending {
     background-color: #d96557;
     color: #fff;

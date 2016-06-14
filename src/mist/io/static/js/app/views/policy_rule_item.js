@@ -25,8 +25,37 @@ define('app/views/policy_rule_item', ['ember'],
             // Computed Properties
             //
 
+            resourcesOptions: Ember.computed('rule.rtype', function() {
+                var type = this.get('rule.rtype'),
+                    items = [];
+
+                if (type == 'cloud') {
+                    items = Mist.cloudsController.model;
+                } else if (type == 'machine') {
+                    items = Mist.cloudsController.model
+                        .map(function(cloud) {
+                            return cloud.machines.model;
+                        })
+                        .reduce(function(a, b) {
+                            return a.concat(b);
+                        }, []);
+                } else if (type == 'script') {
+                    items = Mist.scriptsController.model;
+                } else if (type == 'key') {
+                    items = Mist.keysController.model;
+                } else {
+                    items = [];
+                }
+                console.log(this.rule.rtype, items);
+                return items;
+            }),
+
             orderIndex: Ember.computed('index', function() {
                 return this.get('index') + 1 + '.';
+            }),
+
+            isCloud: Ember.computed('rule.rtype', function() {
+                return this.get('rule.rtype') == 'cloud';
             }),
 
             isLast: Ember.computed('rule', 'team.policy.rules.[]', function() {
@@ -38,10 +67,6 @@ define('app/views/policy_rule_item', ['ember'],
             isFirst: Ember.computed('rule', 'team.policy.rules.[]', function() {
                 var rules = this.get('team.policy.rules');
                 return rules.indexOf(this.get('rule')) === 0;
-            }),
-
-            isID: Ember.computed('rule.identification', function() {
-                return this.get('rule.identification') == 'where id';
             }),
 
             hasInput: Ember.computed('rule.identification', function() {
@@ -101,6 +126,16 @@ define('app/views/policy_rule_item', ['ember'],
                         rule: this.get('rule')
                     });
                 },
+
+                selectResource: function(option) {
+                    console.log(option);
+                    this.set('rule.selectedResource', option);
+                    $('.mist-select.ui-collapsible')
+                        .collapsible()
+                        .collapsible('collapse')
+                        .addClass('selected');
+                    this._updateView();
+                }
             },
 
             //

@@ -15,6 +15,7 @@ define('app/models/policy_rule', ['app/models/base'],
             rtype: null,
             rid: null,
             rtags: {},
+            selectedResource: null,
 
             //
             // Computed Properties
@@ -36,10 +37,18 @@ define('app/models/policy_rule', ['app/models/base'],
             }),
 
             isID: Ember.computed('identification', function() {
-                return this.get('identification') == 'id';
+                return this.get('identification').toLowerCase() == 'where id';
             }),
 
-            tagsText: Ember.computed('isID', 'rtags', function() {
+            isTags: Ember.computed('identification', function() {
+                return this.get('identification').toLowerCase() == 'where tags';
+            }),
+
+            isResource: Ember.computed('identification', function() {
+                return this.get('identification').toLowerCase() == 'where resource';
+            }),
+
+            tagsText: Ember.computed('rtags', function() {
                 var rtags = this.get('rtags'),
                     tagsStr = '';
 
