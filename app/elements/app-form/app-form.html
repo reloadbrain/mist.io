@@ -269,9 +269,13 @@
 
                         var yaml_inputs = [];
                         fields.base.forEach(function(f, index){    
-                            if(!f.unyaml && yaml_inputs[index] != f.name+': '+ f.value + '\n'){
-                                f.value = f.value ? f.value : f.defaultValue;
-                                yaml_inputs[index] = f.name+': '+ f.value + '\n';
+                            if(yaml_inputs[index] != f.name+': '+ f.value + '\n'){
+                                var v = !f.value ? f.defaultValue : f.value;
+                                if (v == undefined) {
+                                    v = '';
+                                }
+                                yaml_inputs[index] = f.name+': '+ v + '\n';
+                                console.log(f.name, f.value)
                             }
                         });
                         var yi = yaml_inputs.join('');
@@ -292,7 +296,6 @@
                             if(el){
                                 if (el.type == 'dropdown'){
                                     //dropdown fields need other treatment
-                                    
                                     el.value = newvalue;
                                 }
                                 else {
