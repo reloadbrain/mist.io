@@ -188,7 +188,7 @@
     vertical-align: middle;
 }
 #single-team-page .mist-select .ui-collapsible-heading .ui-collapsible-heading-toggle {
-    text-transform: capitalize;
+    text-transform: none;
     color: #444 !important;
     background-color: #fff !important;
     border: 1px solid #b5b5b5 !important;

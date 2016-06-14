@@ -87,6 +87,16 @@ define('app/views/policy_rule_item', ['ember'],
 
             _updateView: function() {
                 Ember.run.scheduleOnce('afterRender', this, function() {
+                    // Render collapsibles
+                    if ($('.ui-collapsible').collapsible) {
+                        $('.ui-collapsible').collapsible().enhanceWithin();
+                    }
+
+                    // Render listviews
+                    if ($('.ui-listview').listview) {
+                        $('.ui-listview').listview().listview('refresh');
+                    }
+                    
                     $('body').enhanceWithin();
                 });
             },
@@ -134,7 +144,6 @@ define('app/views/policy_rule_item', ['ember'],
                         .collapsible()
                         .collapsible('collapse')
                         .addClass('selected');
-                    this._updateView();
                 }
             },
 
@@ -144,7 +153,7 @@ define('app/views/policy_rule_item', ['ember'],
 
             identificationObserver: function() {
                 Ember.run.once(this, '_updateView');
-            }.observes('rule.identification')
+            }.observes('rule.identification', 'rule.rtype', 'rule.selectedResource')
         });
     }
 )

@@ -224,8 +224,6 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
                         rtags: {}
                     });
                 }
-
-                this._updateView();
             },
 
             editOperator: function(args) {
@@ -317,12 +315,6 @@ define('app/controllers/teams', ['app/controllers/base_array', 'app/models/team'
             //
             // Private Methods
             //
-
-            _updateView: function() {
-                Ember.run.scheduleOnce('afterRender', this, function() {
-                    $('body').enhanceWithin();
-                });
-            },
 
             _addTeam: function(team, newTeam) {
                 var team = Ember.Object.create({
