@@ -83,7 +83,7 @@
                         <div class="field-helptext xs12 m6">[[field.helptext]]</div>
                     </template>
                     <template is="dom-if" if="[[_computeFieldType(field, 'radio', field.show, index, model.clouds)]]">
-                        <paper-radio-group selected="{{field.value}}" class="xs12 m6" disabled="[[field.disabled]]">
+                        <paper-radio-group id="[[field.name]]" selected="{{field.value}}" class="xs12 m6" disabled="[[field.disabled]]">
                             <template is="dom-repeat" items="[[field.options]]" as="option">
                                 <paper-radio-button name="[[option.val]]">[[option.title]]</paper-radio-button>
                             </template>
@@ -94,7 +94,7 @@
                         <paper-dropdown-menu class="dropdown-block xs12 m6" label="[[field.label]]" horizontal-align="left" disabled="[[field.disabled]]">
                             <paper-menu id="[[field.name]]" attr-for-selected="value" selected="{{field.value}}" class="dropdown-content">
                                 <template is="dom-repeat" items="[[field.options]]" as="option">
-                                    <paper-item value="[[option.val]]">[[option.title]]</paper-item>
+                                    <paper-item value="[[option.val]]" id$="option-[[index]]">[[option.title]]</paper-item>
                                 </template>
                             </paper-menu>
                         </paper-dropdown-menu>
@@ -275,7 +275,7 @@
                                     v = '';
                                 }
                                 yaml_inputs[index] = f.name+': '+ v + '\n';
-                                console.log(f.name, f.value)
+                                //console.log(f.name, f.value)
                             }
                         });
                         var yi = yaml_inputs.join('');
@@ -291,12 +291,35 @@
                         var newvalue = yt[f.name];
                         if (f.value != newvalue){
                             f.value = newvalue;
-
                             var el = document.querySelector('#'+f.name);
                             if(el){
-                                if (el.type == 'dropdown'){
-                                    //dropdown fields need other treatment
-                                    el.value = newvalue;
+                                if (f.type == 'dropdown' && this.yaml){
+                                    var options = f.options;
+                                    // el.value = newvalue;
+                                    console.log(f.options);
+                                    if (options) {
+                                        el.selected = options.find(function(option){
+                                            return option.value == newvalue;
+                                        });
+                                    }
+
+                                    var newOptionIndex = -1;
+                                    
+                                    options.find(function(option, index){
+                                            if (option.value == newvalue) 
+                                                newOptionIndex = index
+                                        return option.value == newvalue;
+                                    });
+                                    
+                                    el.dispatchEvent(new CustomEvent('iron-activate', {
+                                        bubbles: true,
+                                        cancelable: true,
+                                        detail: {
+                                            item: document.querySelector('option'+ newOptionIndex),
+                                            selected: newOptionIndex
+                                        }
+                                    }));
+                                    console.log('DDROPDOWN', newvalue, newOptionIndex);
                                 }
                                 else {
                                     el.value = newvalue;
@@ -336,7 +359,7 @@
                         dditem.val = m[p].id;
                         ddoptions.push(dditem);
                     }
-                    console.log('ddoptions',ddoptions);
+                    //console.log('ddoptions',ddoptions);
                     return ddoptions;
                 },
                 _computeFieldType: function(field, value, show, index, model) {
