@@ -21,12 +21,12 @@
                 right: 0;
             }
 
-            :host >::content paper-input-container {
+            :host>::content paper-input-container {
                 padding-top: 16px;
                 padding-bottom: 16px;
             }
 
-            .grid-row > * {
+            .grid-row> * {
                 margin-top: 8px;
                 margin-bottom: 8px;
             }
@@ -404,7 +404,7 @@
                     this.$.formAjax.generateRequest();
 
                     this.set('showProgress', true);
-                    this.async(function(){
+                    this.async(function() {
                         this.set('showProgress', false);
                     }, 2000);
                     this.set('sendingData', true);
