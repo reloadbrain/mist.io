@@ -44,7 +44,7 @@
                         Add Tunnel
                     </h2>
                     <div class="subtitle">
-                        You can add tunnels to your networks by providing a list of cidrs ips.
+                        You can add tunnels to your networks by providing a list of networks in CIDR notation.
                     </div>
                 </div>
             </paper-material>
@@ -120,7 +120,7 @@
                         value: "",
                         defaultValue: "",
                         errorMessage: "Please enter tunnel's cidrs",
-                        helptext: "These cidrs ..",
+                        helptext: "e.g. 10.0.0.0/24",
                         show: true,
                         required: true
                     }, {
