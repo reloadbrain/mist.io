@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+
+<dom-module id="search-page">
+    <template>
+        <style is="custom-style" include="single-page"></style>
+        <style is="custom-style" include="tags-and-labels"></style>
+        <style include="shared-styles">
+        :host {
+            display: block;
+        }
+        paper-material {
+            display: block;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .flex-horizontal-with-ratios {
+            @apply(--layout-horizontal);
+        }
+        .flexchild {
+            @apply(--layout-flex);
+        }
+        a {
+            color: black;
+            text-decoration: none;
+        }
+        </style>
+
+        <div id="content">
+
+        </div>
+    </template>
+    <script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'search-page',
+
+            properties: {
+                model: {
+                    type: Object
+                },
+            },
+        });
+    })();
+    </script>
+</dom-module>
