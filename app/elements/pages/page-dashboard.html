@@ -122,10 +122,15 @@
             align-items: flex-start;
             flex-direction: column;
             flex: 1 50%;
+            min-height: 330px;
+        }
+        .right {
+            min-height: 806px;
         }
         .logs {
             width: 100%;
             flex: 1 100%;
+            height: 602px;
         }
         log-list,
         .graphs {
@@ -135,6 +140,7 @@
         }
         log-list {
             display: block;
+            height: 602px;
         }
 
         @media (max-width: 489px) {
@@ -306,7 +312,7 @@
                             <polyana-dashboard dashboard="[[dashboard]]" datasources="[[datasources]]" replace-targets="[[replaceTargets]]"></polyana-dashboard>
                         </paper-material>
                     </div>
-                    <div class="left">
+                    <div class="right">
                         <div class="costs">
                             <app-costs model="[[model]]" sections="[[sections]]">
                             </app-costs>
