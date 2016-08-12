@@ -172,6 +172,31 @@ def load_staging_l_images():
         return json.load(fobj)
 
 
+
+@pytest.fixture(scope='module',params=CLOUDS_CREATE_MACHINE, ids=CLOUD_NAMES)
+def machine(request,org, cloud, key):
+    cdict = request.param
+    job_id = uuid.uuid4().hex
+    cloud_id = cloud.id
+    key_id = key.id
+    machine_name = 'kalokalokairi'
+
+    tags = {'dwse': 'dokimi'}
+
+    print "Create machine"
+    machine = create_machine(user=org, cloud_id=cloud_id, key_id=key_id,
+                              machine_name=machine_name, ips=None,
+                              monitoring=False, ssh_port=22, job_id=job_id,
+                             **cdict)
+    def fin():
+        print ("destroy machine machine")
+        destroy_machine(org, cloud.id, machine['id'])
+
+    request.addfinalizer(fin)
+
+    return machine
+
+
 def unicode_to_str(data):
     if isinstance(data, dict):
         return {unicode_to_str(key): unicode_to_str(value)
@@ -263,29 +288,6 @@ def test_list_sizes(cloud, load_staging_l_sizes):
         ref = load_staging_l_sizes.get(cloud.ctl.provider)
         res = diff(ref, response, ignore_order=True)
         compare_fields(res)
-
-@pytest.fixture(scope='module',params=CLOUDS_CREATE_MACHINE, ids=CLOUD_NAMES)
-def machine(request,org, cloud, key):
-    cdict = request.param
-    job_id = uuid.uuid4().hex
-    cloud_id = cloud.id
-    key_id = key.id
-    machine_name = 'kalokalokairi'
-
-    tags = {'dwse': 'dokimi'}
-
-    print "Create machine"
-    machine = create_machine(user=org, cloud_id=cloud_id, key_id=key_id,
-                              machine_name=machine_name, ips=None,
-                              monitoring=False, ssh_port=22, job_id=job_id,
-                             **cdict)
-    def fin():
-        print ("destroy machine machine")
-        destroy_machine(org, cloud.id, machine['id'])
-
-    request.addfinalizer(fin)
-
-    return machine
 
 
 def test_create_machine_list_machines(cloud, machine):
