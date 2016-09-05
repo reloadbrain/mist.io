@@ -14,6 +14,10 @@ from mist.core.user.models import Organization, User
 
 import mist.io.clouds.models as models
 
+from mist.core.methods import set_machine_tags
+from mist.io.methods import create_machine, destroy_machine
+from mist.core.keypair.models import Keypair
+
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,11 +61,17 @@ def load_clouds_from_config():
                            (provider, models.CLOUDS.keys()))
         if 'name' not in cdict:
             cdict['name'] = provider
+        if 'fields' not in cdict:
+            cdict['fields'] = {}
+        if 'create_machine_params' not in cdict:
+            cdict['create_machine_params'] = {}
     print "Loaded %d clouds." % len(clouds)
     return clouds
 
 
 CLOUDS = load_clouds_from_config()
+CLOUDS_CREATE_MACHINE = [cdict['create_machine_params']
+                         for cdict in CLOUDS]
 CLOUD_NAMES = [cdict['name'] for cdict in CLOUDS]
 
 
@@ -92,15 +102,36 @@ def org(request):
     return org
 
 
+@pytest.fixture(scope='module')
+def key(request, org):
+    """Fixture to create an SSH Keypair with proper cleanup"""
+
+    key = Keypair()
+    key.generate()
+    name = uuid.uuid4().hex
+    print "Creating key '%s'." % name
+    key = Keypair(name=name, public=key.public, private=key.private, owner=org)
+    key.save()
+
+    def fin():
+        """Finalizer to clean up organization after tests"""
+        print "Deleting key '%s'." % name
+        key.delete()
+
+    request.addfinalizer(fin)
+
+    return key
+
+
 @pytest.fixture(scope='module', params=CLOUDS, ids=CLOUD_NAMES)
 def cloud(request, org):
     """Fixture to create clouds from config file with proper cleanup"""
 
     cdict = request.param
-    name = cdict.pop('name')
-    cls = models.CLOUDS[cdict.pop('provider')]
+    name = cdict['name']
+    cls = models.CLOUDS[cdict['provider']]
     print "Creating cloud '%s'." % name
-    cloud = cls.add(org, name, **cdict)
+    cloud = cls.add(org, name, **cdict['fields'])
 
     def fin():
         """Finalizer clean up cloud after tests"""
@@ -142,6 +173,31 @@ def load_staging_l_images():
     print "Reading images from path '%s'." % path
     with open(path) as fobj:
         return json.load(fobj)
+
+
+
+@pytest.fixture(scope='module', params=CLOUDS_CREATE_MACHINE)#, ids=CLOUD_NAMES)
+def machine(request,org, cloud, key):
+    cdict = request.param
+    job_id = uuid.uuid4().hex
+    cloud_id = cloud.id
+    key_id = key.id
+    machine_name = 'kalokalokairi'
+
+    tags = {'dwse': 'dokimi'}
+
+    print "Create machine"
+    machine = create_machine(user=org, cloud_id=cloud_id, key_id=key_id,
+                              machine_name=machine_name, ips=None,
+                              monitoring=False, ssh_port=22, job_id=job_id,
+                             **cdict)
+    def fin():
+        print ("destroy machine machine")
+        destroy_machine(org, cloud.id, machine['id'])
+
+    request.addfinalizer(fin)
+
+    return machine
 
 
 def unicode_to_str(data):
@@ -235,3 +291,17 @@ def test_list_sizes(cloud, load_staging_l_sizes):
         ref = load_staging_l_sizes.get(cloud.ctl.provider)
         res = diff(ref, response, ignore_order=True)
         compare_fields(res)
+
+
+def test_create_machine_list_machines(cloud, machine):
+
+    machines = cloud.ctl.list_machines()
+    print len(machines)
+
+    for m in machines:
+        if m['name'] == machine['name']:
+            print "success"
+            # for key, value in machine.iteritems():
+            #     if key=='tags':
+            #         assert value==tags
+
