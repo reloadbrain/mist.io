@@ -235,3 +235,65 @@ def test_list_sizes(cloud, load_staging_l_sizes):
         ref = load_staging_l_sizes.get(cloud.ctl.provider)
         res = diff(ref, response, ignore_order=True)
         compare_fields(res)
+
+
+def test_proper_list_machines(cloud):
+    response = cloud.ctl.list_machines()
+    print len(response)
+
+    if response:
+        assert len(response) != 0
+
+        machine_dict = response[0]
+        machine_keys = machine_dict.keys()
+
+        assert sorted(['extra', 'can_start', 'created',
+                       'name', 'state','size', 'tags']) == sorted(machine_keys)
+
+
+def test_proper_list_locations(cloud):
+    response = cloud.ctl.list_locations()
+    print len(response)
+
+    if response:
+        assert len(response) != 0
+
+        location_dict = response[0]
+        location_keys = location_dict.keys()
+
+        assert sorted(['id', 'country', 'name']) == sorted(location_keys)
+
+
+def test_proper_list_image(cloud):
+    response = cloud.ctl.list_images()
+    print len(response)
+
+    if response:
+        assert len(response) > 5
+
+        image_dict = response[0]
+        image_keys = image_dict.keys()
+
+        assert sorted(['extra', 'star', 'id', 'name']) == sorted(image_keys)
+
+        for image_dict in response:
+            if image_dict['name'].split(' ')[0].lower() == 'ubuntu':
+                assert True
+                break
+
+
+def test_proper_list_sizes(cloud):
+    response = cloud.ctl.list_sizes()
+    print len(response)
+
+    if response:
+        assert len(response) > 3
+
+        size_dict=response[0]
+        size_keys = size_dict.keys()
+        assert sorted(['bandwidth', 'disk', 'name', 'extra',
+                'price', 'ram', 'driver', 'id'])== sorted(size_keys)
+
+        if size_dict['driver'].split(' ')[0].lower() in \
+                cloud.__class__.__name__[:-5].lower():
+            assert True
