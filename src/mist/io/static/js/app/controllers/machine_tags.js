@@ -66,10 +66,10 @@ define('app/controllers/machine_tags', ['ember'],
                             payload[tag.key] = tag.value
                         }
                     });
-
                     that.set('addingTag', true);
                     Mist.ajax.POST('/api/v1/clouds/' + machine.cloud.id + '/machines/' + machine.id + '/tags', {
-                        'tags': payload
+                        'tags': payload,
+                        'flush': true
                     })
                     .success(function () {
                         that._updateTags(tags);
@@ -101,6 +101,7 @@ define('app/controllers/machine_tags', ['ember'],
                     if (tag.value){
                         payload["value"] = tag.value
                     }
+                    payload['flush'] = true;
                     Mist.ajax.DELETE('/api/v1/clouds/' + machine.cloud.id + '/machines/' + machine.id + '/tags/' + tag.key, payload)
                     .success(function () {
                         that._removeDeletedTag(tag);
