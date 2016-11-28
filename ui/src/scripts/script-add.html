@@ -150,11 +150,11 @@
                         }],
                         helptext: "Specify the type of your script source."
                     }, {
-                        name: "script",
+                        name: "script_url",
                         label: "Url *",
                         type: "text",
                         value: "http://",
-                        defaultValue: "http://",
+                        defaultValue: "",
                         placeholder: "",
                         show: false,
                         required: true,
@@ -165,17 +165,24 @@
                         errorMessage: "Please enter a url",
                         helptext: "Specify the url where the script is located."
                     }, {
-                        name: "script",
+                        name: "script_github",
                         label: "Github Repo *",
                         type: "text",
                         value: "",
                         defaultValue: "",
-                        placeholder: "https://github.com/owner/repo",
+                        placeholder: "",
                         show: false,
                         required: true,
                         showIf: {
                             fieldName: "location_type",
                             fieldValues: ["github"]
+                        },
+                        placeholderIf: {
+                            fieldName: "location_type",
+                            fieldOptions: {
+                                "executable": "",
+                                "ansible": ""
+                            }
                         },
                         errorMessage: "Please enter a github repo",
                         helptext: "Specify the github repo where the script is located."
