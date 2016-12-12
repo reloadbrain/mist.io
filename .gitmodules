@@ -7,3 +7,7 @@
 [submodule "ui/timerange-picker"]
 	path = ui/mist_components/timerange-picker
 	url = ../timerange-picker.git
+[submodule "ui/mist_components/vaadin-grid"]
+	path = ui/mist_components/vaadin-grid
+	url = https://github.com/mistio/vaadin-grid.git
+	branch = 2.0-mist
