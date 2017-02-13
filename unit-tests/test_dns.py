@@ -55,15 +55,16 @@ def test_create_zone(cloud):
     global __num_zones__
     global __num_records__
 
-    domain = "domain.com"
-    type = 'master'
-    ttl = 3600
+    kwargs = {}
+    kwargs['domain'] = "domain.com"
+    kwargs['type'] = 'master'
+    kwargs['ttl'] = 3600
 
     __num_zones__ = len(Zone.objects(cloud=cloud, deleted=None))
     print "Zones initially %d" % __num_zones__
     __num_records__ = len(Record.objects(deleted=None))
-    print "**** Create DNS zone with domain %s" % domain
-    cloud.ctl.dns.create_zone(domain, type, ttl)
+    print "**** Create DNS zone with domain %s" % kwargs['domain']
+    cloud.ctl.dns.create_zone(kwargs)
 
     zones = Zone.objects(deleted=None)
     for zone in zones:
@@ -116,12 +117,15 @@ def test_create_record(cloud):
     global __num_records__
     zone = Zone.objects.get(owner=cloud.owner, id=__zone_id__)
 
-    name = "gogogo"
-    type = "A"
-    data = "1.2.3.4"
-    ttl = 172800
-    print "**** Create type %s DNS record with name %s" % (type, name)
-    zone.ctl.create_record(name, type, data, ttl)
+    kwargs = {}
+    kwargs['name'] = "blog"
+    kwargs['type'] = 'A'
+    kwargs['data'] = "1.2.3.4"
+    kwargs['ttl'] = 172800
+
+    print "**** Create type %s DNS record with name %s" % (kwargs['type'],
+                                                           kwargs['name'])
+    zone.ctl.create_record(kwargs)
     print "**** DNS record created succesfully"
     record = Record.objects.get(zone=zone, type='A')
     __record_id__ = record.id
