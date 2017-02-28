@@ -6,7 +6,6 @@ import requests
 
 from misttests.api.utils import *
 
-# from misttests.config import get_value_of
 
 bash_script_no_shebang = """
 touch ~/bla
@@ -103,6 +102,7 @@ def get_random_key_name(existing_keys):
         keys = get_keys_with_id(random_key_name, existing_keys)
         if len(keys) == 0:
             return random_key_name
+
 
 def destroy_machine(log, mist_core, api_token, cloud_id, machine_id):
     mist_core.list_machines(cloud_id=cloud_id, api_token=api_token).get()
