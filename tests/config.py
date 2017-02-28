@@ -49,7 +49,6 @@ def get_setting(setting, default_value=None, priority='config_file'):
     else:
         setting = test_settings.get(setting, os.environ.get(setting, default_value))
 
-
     if type(setting) == type(default_value):
         return setting
 
