@@ -26,7 +26,7 @@ def remove_user_if_exists(core_uri, user_email):
         "email": user_email
     }
 
-    re = requests.delete(url, data=json.dumps(payload))
+    requests.delete(url, data=json.dumps(payload))
 
 
 def setup_org_if_not_exists(org_name, owner_email, clean_org=True, add_cloud=True):
